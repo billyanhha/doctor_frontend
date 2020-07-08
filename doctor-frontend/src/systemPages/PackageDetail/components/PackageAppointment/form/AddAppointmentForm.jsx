@@ -32,7 +32,7 @@ const AddAppointmentForm = (props) => {
 
         workingSlot();
 
-    }, [props?.dateInfo]);
+    }, [props?.dateInfo.date]);
 
     const clearData = () => {
         setservices([])
@@ -40,11 +40,12 @@ const AddAppointmentForm = (props) => {
     }
 
 
-    const workingSlot = () => {
+    const workingSlot = () => { // set working slot
         const dateTime = moment(props?.dateInfo.date).format('HH:mm:ss');
         let arr = [];
+        let slotID = '';
         const slotData = { ...slot }
-        if (dateTime === '00:00:00') {
+        if (dateTime === '00:00:00') { // month choose
             timeTableData.forEach(element => {
                 if (moment(props?.dateInfo?.date).isSame(moment(element?.date), 'day')) {
                     delete slotData[element?.slot_id]
@@ -60,15 +61,16 @@ const AddAppointmentForm = (props) => {
             arr = Object.keys(slotData).map((value, index) => {
                 return value
             })
-            setslot("" + (arr[0] || ""))
-        } else {
+            slotID  = "" + (arr[0] || "");
+        } else { // week ,
             Object.keys(slot).forEach(ele => {
                 if (slot[ele].from === dateTime && moment().isBefore(moment(props?.dateInfo.date))) {
                     arr.push(ele)
-                    setslot("" + ele)
+                    slotID = "" + ele
                 }
             })
         }
+        setslot(slotID)
         setarr(arr)
     }
 
