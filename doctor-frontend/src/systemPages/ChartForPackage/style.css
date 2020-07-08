@@ -1,0 +1,24 @@
+.chart-div{
+    background: #fff;   
+    /* display: flex; */
+    padding: 0 10%;
+}
+
+.lineChart-div{
+    background: #fff;
+    /* width: 50%; */
+}
+
+.barChart-div{
+    background: #fff;
+    /* width: 50%; */
+}
+
+.tab-change-div{
+    padding: 1%;
+}
+@media only screen and (max-width: 768px) {
+    .chart-div{
+        display: block;
+    }
+}

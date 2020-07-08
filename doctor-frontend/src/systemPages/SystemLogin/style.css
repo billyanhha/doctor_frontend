@@ -1,0 +1,16 @@
+
+.system-login{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #F8F9FA;
+}
+
+
+.system-login-form{
+    max-width: 500px;
+    border: 1px solid #fff;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 10px 20px;
+}

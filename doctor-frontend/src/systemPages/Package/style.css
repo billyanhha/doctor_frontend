@@ -1,0 +1,151 @@
+.default-center-div{
+    padding: 50px 10%;
+}
+
+.package-filter{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.search-input{
+    width: 70%;
+}
+
+.package-table{
+    margin-top: 50px;
+}
+
+@media only screen and (max-width: 768px) {
+    .default-center-div{
+        padding: 50px 10px;
+    }
+
+    .search-input{
+        width: 90%;
+    }
+
+    .search-input{
+        margin-bottom: 10px;
+    }
+  }
+
+  .profile-div {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+  }
+  
+  .profile-div .right-bar {
+    -webkit-box-flex: 1;
+        -ms-flex: 1;
+            flex: 1;
+    background-color: #f2f7fa;
+  }
+  
+  .profile-div .profile-content {
+    -webkit-box-flex: 4;
+        -ms-flex: 4;
+            flex: 4;
+    width: 100%;
+    padding: 20px;
+    background-color: white;
+  }
+  
+  .profile-div .profile-content .profile-header {
+    font-size: 1.5rem;
+  }
+  
+  .profile-div .profile-content .profile-form-update {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    width: 100%;
+    height: -webkit-fit-content;
+    height: -moz-fit-content;
+    height: fit-content;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -ms-flex-line-pack: center;
+        align-content: center;
+  }
+  
+  .profile-div .profile-content .profile-form-update .profile-info {
+    margin: 50px 0;
+  }
+  
+  .profile-div .profile-content .profile-form-update .main-form {
+    width: 40%;
+    margin-left: 10%;
+  }
+  
+  
+  .profile-div .profile-content .profile-form-update .main-form .profile-indentify {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+  }
+  
+  .profile-div .profile-content .profile-form-update .main-form .profile-indentify .indentify-item {
+    width: 120px;
+  }
+  
+  .profile-div .profile-content .profile-form-update .profile-form-end {
+    width: 250px;
+    margin: 50px auto;
+  }
+  
+  .profile-div .profile-avatar-div {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    border-radius: 20px;
+    -webkit-box-shadow: 0 0 8px 2px #dadada;
+            box-shadow: 0 0 8px 2px #dadada;
+  }
+  
+  .profile-div .profile-avatar-div:hover #Avatar-icon {
+    border: none;
+    -webkit-box-shadow: 0 0 8px 2px #dadada;
+            box-shadow: 0 0 8px 2px #dadada;
+  }
+  
+  .profile-div .profile-avatar-div #Avatar-profile {
+    border-radius: 20px;
+    max-width: 100%;
+    max-height: 100%;
+    vertical-align: middle;
+  }
+  
+  .profile-div .profile-avatar-div #Avatar-icon {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 30px;
+    height: 30px;
+    background-color: white;
+    -webkit-box-shadow: none;
+            box-shadow: none;
+    border: 2px solid #00bc9a;
+    border-radius: 50%;
+    -webkit-transform: translate(10%, 20%);
+            transform: translate(10%, 20%);
+    display: -webkit-box !important;
+    display: -ms-flexbox !important;
+    display: flex !important;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+  }
+  

@@ -1,0 +1,77 @@
+/*  ☆☆☆☆☆
+    Front-end Squad: Plz pay attention and consider about font-weight, font-size, high-constast colors.
+    For better UX:
+        Customize the properties so that even the elderly can read them.
+        And of course, FRIENDLY LANGUAGE for Vietnamese doctors.
+        If possible, we should use: vh, vw, em, rem, % instead of px.
+    For css properties form: Position → Size → Theme → Fonts
+    Happy coding. Thank you!
+*/
+
+body {
+    font-family: 'Open Sans', sans-serif !important;
+    font-weight: 600;
+    /* Easy to read → Semi-bold by default */
+}
+
+.default-div {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100vh;
+}
+
+.loading-bar {
+    height: 2px;
+    background-color: #40A9FF;
+}
+
+.hightlight {
+    color: #40A9FF
+}
+
+.primary-color {
+    color: #40A9FF !important;
+}
+
+.logo {
+    width: 100px;
+    height: 100px;
+}
+
+
+
+.spin {
+    padding: 30px 50px;
+    margin: 20px 0;
+}
+
+.table-id {
+    word-break: break-all;
+
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}

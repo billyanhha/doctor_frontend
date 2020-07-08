@@ -1,0 +1,168 @@
+
+
+.package-appointment{
+    padding: 30px ;
+    border-radius: 10px;
+    margin: 20px 0;
+    background-color: #F2F7FA;
+}
+
+.package-service, .package-appointment-list{
+    /* height: ; */
+    
+}
+
+
+
+.package-appointment-list-appointment{
+    max-height: calc(750px);
+    overflow: auto;
+    scroll-behavior: smooth;
+}
+
+
+
+.package-service-title{
+    font-size: 20px;
+}
+
+.package-service-small, .package-service-description-note{
+    font-size: 13px;
+}
+
+.package-service-description-note{
+    margin:  10px 0;
+}
+
+.line{
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 0.5px solid #dadada;
+    margin: 10px 0;
+    padding: 0;
+    /* width: 20px; */
+}
+
+.package-service-description{
+    margin: 20px 20px 20px 0px;
+    padding: 10px 7px;
+    border-radius: 5px;
+    padding: 10px;
+    color: #595959;
+    background-color: #fff;
+    position: relative;
+}
+
+.package-service-description-chosen{
+    transition: all .3s ease-in-out;
+}
+
+
+
+.package-service-description-list{
+    max-height: 500px;
+    overflow: auto;
+    scroll-behavior: smooth;
+}
+
+.package-appointment-list-item{
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 20px 0px;
+    margin-right: 15px;
+    position: relative;
+}
+
+.package-appointment-list-item:first-child {
+    margin-top: 0px;
+}
+
+.expired{
+    border-left: 10px solid #F3F3F3;
+}
+
+.comming-soon {
+    border-left: 10px solid #EC6150;
+}
+
+.future {
+    border-left: 10px solid #448AFF;
+}
+
+.service-select{
+    padding: 5px 10px;
+    transition: all .3s ease-in-out;
+    border-bottom: 1px solid #dadada;
+}
+
+.service-select-warn {
+    color: red;
+}
+
+.service-select:hover{
+    background-color: #448AFF;
+    color: #fff;
+}
+
+.service-select-name{
+    font-size: 18px;
+}
+
+.service-select-description{
+    font-size: 15px;
+}
+
+.status-detail{
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.service-tag{
+    margin: 3px 0px  !important;
+    margin-right: 5px !important;
+}
+
+.package-appointment-date{
+    font-size: 17px;
+}
+
+.my-calendar{
+    padding: 10px 20px;
+    background-color: #fff;
+    overflow: auto;
+}
+
+.fc-timegrid-slots  { 
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.fc-timegrid-slots > table {
+    height: 100% !important;
+
+}
+
+.current-package-appointment {
+    background-color: #F2F7FA;
+    color: #fff
+}
+
+.not-package-appointment {
+    background-color: #dadada;
+    /* cursor: no-drop !important; */
+    color: #448AFF;
+    position: relative;
+    cursor: pointer;
+}
+
+.slotlabel{
+    cursor: pointer;
+}
+
