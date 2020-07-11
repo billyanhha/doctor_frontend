@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import _, { fill } from 'lodash'
+import { Link } from 'react-router-dom';
+import { Link as LinkScroll, Element, Events } from 'react-scroll';
+
+import _ from 'lodash'
 import moment from 'moment';
 import axios from '../../axios'
 import { Modal, Spin } from 'antd';
-import { CalendarTwoTone, ScheduleTwoTone, ClockCircleTwoTone, MobileTwoTone, EnvironmentTwoTone } from '@ant-design/icons';
+import { CalendarTwoTone, ClockCircleTwoTone, MobileTwoTone, EnvironmentTwoTone, LoadingOutlined } from '@ant-design/icons';
 
 import {
     getAppointmentsFromTo, getAppointmentsDetail, getPatientDetail, resetStateDetail
@@ -15,6 +18,7 @@ import Navbar from '../../components/Navbar';
 import './style.css';
 
 const DoctorDashboard = (props) => {
+    const loadingIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
     const dispatch = useDispatch();
     const { isLoad } = useSelector(state => state.ui);
     const { token } = useSelector(state => state.auth);
@@ -115,7 +119,6 @@ const DoctorDashboard = (props) => {
             scrollID = 0;
 
             fillToTimeTable.splice(0, 1);
-            console.log(fillToTimeTable)
             setApmBasicDetail(getBasicDetail)
             setAppointments(fillToTimeTable);
         } else {
@@ -165,25 +168,26 @@ const DoctorDashboard = (props) => {
             <div className="timetable-hour-to">{slots?.hour_to?.substring(0, 5)}</div>
         </div>
     );
+
     const renderTimeTable = appointments?.length == 1 || _.isEmpty(appointments) || _.isEmpty(apmBasicDetail)
         ? <div className="no-appointment">Tuần này bạn không có lịch làm việc</div>
         : appointments.map(appointments =>
             <div key={appointments.index} className={appointments.value == "Work" ? "timetable-block-work " + colorBlock[appointments.colorID] : ""}>
-                <a className={appointments.scrollID == null ? "scroll-disable" : "scroll-appointment"} href={"#" + appointments.scrollID}>
+                <LinkScroll activeClass="active" to={appointments.scrollID} spy={true} containerId="all-appointments">
                     {appointments.colorID == null ? "" :
                         <div className="block-content">
-                            {/* <span>{apmBasicDetail[appointments.scrollID]?.patient_name?.substring(apmBasicDetail[appointments.scrollID]?.patient_name.indexOf(' '))}</span><br /> */}
-                            <span>{apmBasicDetail[appointments.scrollID]?.patient_name}</span><br />
+                            <span>{apmBasicDetail[appointments.scrollID]?.patient_name.match(/([\s]+)/g).length >= 4 ? apmBasicDetail[appointments.scrollID]?.patient_name.split(' ').slice(-4,).join(' ') : apmBasicDetail[appointments.scrollID]?.patient_name}</span><br />
                         </div>
                     }
-                </a>
+                </LinkScroll>
             </div>
         );
 
     const renderAppointments = appointments?.length == 1 || _.isEmpty(appointments)
         ? <div className="no-appointment">Không có cuộc hẹn trong tuần này</div>
         : apmBasicDetail.map((detail) =>
-            <div key={detail?.appointment_id}>
+            <Element key={detail?.appointment_id} name={detail.scrollID} >
+                {/* <div key={detail?.appointment_id}> */}
                 <div className="dashboard-each-day">
                     <div className="dashboard-day-appointments">
                         {apmBasicDetail[detail.scrollID]?.date == apmBasicDetail[detail.scrollID - 1]?.date ? "" : moment(new Date()).format("YYYY-MM-DD") == apmBasicDetail[detail.scrollID]?.date ? "Hôm nay, " + moment(detail.date).format("DD/MM") : "" + moment(detail.date).format("DD/MM")}
@@ -203,7 +207,8 @@ const DoctorDashboard = (props) => {
                         </div>
                     </div>
                 </div>
-            </div>
+                {/* </div> */}
+            </Element>
         );
 
 
@@ -244,54 +249,60 @@ const DoctorDashboard = (props) => {
     useEffect(() => {
         getSlot();
     }, []);
-
+    
     return (
-        <div className="default-div">
-            <Navbar />
-            <Spin size="large" spinning={isLoad}  >
+        <Spin size="large" tip="Đang kết nối..." spinning={isLoad}  >
+            <div className="time-table-wrapper">
+                <Navbar />
                 <div className="doctor-time-table">
-                    <div className="dashboard-appointments my-scrollbar" id="scrollbar-hhs">
+                    <div className="dashboard-appointments" id="scrollbar-hhs">
                         <div className="dashboard-appointments-title">Các cuộc hẹn</div>
-                        <div className="dashboard-appointments-content">
+                        <div className="dashboard-appointments-content" id="all-appointments">
                             {renderAppointments}
                         </div>
                     </div>
                     <Modal centered visible={shouldVisible} onCancel={resetDetail} width={450} footer={null}>
-                        <div className="show-appointment-detail">
-                            <div className="timetable-section-name">Thông tin cuộc hẹn</div>
-                            <div className="timetable-section-content">
-                                <div><CalendarTwoTone twoToneColor="#47c7be" /> {moment(new Date()).format("YYYY-MM-DD") == appointmentDetail?.date ? "Hôm nay, " :
-                                    moment(appointmentDetail?.date).day() == 0 ? dayOfWeek[6] + ", " : dayOfWeek[moment(appointmentDetail?.date).day() - 1] + ", "}
-                                    {appointmentDetail?.date ? moment(appointmentDetail?.date).format('DD/MM/YYYY') : "Chưa có ngày khám"}
-                                </div>
-                                <div><ClockCircleTwoTone twoToneColor="#47c7be" /> {appointmentDetail?.slot_id && slots[appointmentDetail?.slot_id - 1]?.hour_from
-                                    ? slots[appointmentDetail.slot_id - 1].hour_from.substring(0, 5) + " - " + slots[appointmentDetail.slot_id - 1].hour_to.substring(0, 5)
-                                    : "Chưa có giờ khám"}
-                                </div>
-                                <div><EnvironmentTwoTone twoToneColor="#47c7be" /> {appointmentDetail?.address ?? "Không có địa điểm khám"}</div>
-                                <div><EnvironmentTwoTone twoToneColor="#47c7be" /> {appointmentDetail?.phone ?? "Không có số điện thoại"}</div>
-                                {/* <div><span className="specification">Huyết áp: </span>{appointmentDetail?.blood_pressure ? appointmentDetail.blood_pressure : "Không có ghi chép"}</div>
+                        <Spin indicator={loadingIcon} size="large" tip="Đang kết nối..." spinning={isLoad}  >
+                            <div className="show-appointment-detail">
+                                <div className="timetable-section-name">Thông tin cuộc hẹn</div>
+                                <div className="timetable-section-content">
+                                    <div><CalendarTwoTone twoToneColor="#47c7be" /> {moment(new Date()).format("YYYY-MM-DD") == appointmentDetail?.date ? "Hôm nay, " :
+                                        moment(appointmentDetail?.date).day() == 0 ? dayOfWeek[6] + ", " : dayOfWeek[moment(appointmentDetail?.date).day() - 1] + ", "}
+                                        {appointmentDetail?.date ? moment(appointmentDetail?.date).format('DD/MM/YYYY') : "Chưa có ngày khám"}
+                                    </div>
+                                    <div><ClockCircleTwoTone twoToneColor="#47c7be" /> {appointmentDetail?.slot_id && slots[appointmentDetail?.slot_id - 1]?.hour_from
+                                        ? slots[appointmentDetail.slot_id - 1].hour_from.substring(0, 5) + " - " + slots[appointmentDetail.slot_id - 1].hour_to.substring(0, 5)
+                                        : "Chưa có giờ khám"}
+                                    </div>
+                                    <div><EnvironmentTwoTone twoToneColor="#47c7be" /> {appointmentDetail?.address ?? "Không có địa điểm khám"}</div>
+                                    {/* appointmentDetail?.phone.replace(/84?/, '(+84) ')  */}
+                                    <div><MobileTwoTone twoToneColor="#47c7be" /> {appointmentDetail?.phone ?? "Không có số điện thoại"}</div>
+                                    {/* <div><span className="specification">Huyết áp: </span>{appointmentDetail?.blood_pressure ? appointmentDetail.blood_pressure : "Không có ghi chép"}</div>
                                 <div><span className="specification">Mạch: </span>{appointmentDetail?.pulse ?? "Không có ghi chép"}</div> moment(new Date()).day() == 0 ? 7 : moment(new Date()).day()
                                 <div><span className="specification">Nhiệt độ cơ thể: </span>{appointmentDetail?.temperature ?? "Không có ghi chép"}</div> */}
-                                <div><span className="specification">Ghi chú: </span>{appointmentDetail?.note ?? "Không có ghi chép"}</div>
-                            </div>
-                        </div>
-                        <div className="show-patient-detail">
-                            <div className="timetable-section-name">Thông tin bệnh nhân</div>
-                            <div className="timetable-section-content-card">
-                                <div className="timetable-section-content">
-                                    <div className="timetable-detail-info timetable-detail-info-card">
-                                        <img src={patientDetail?.avatarurl} alt="Avatar" className="timetable-avatar timetable-avatar-card" />
-                                        <div className="timetable-detail-info-basic timetable-detail-info-basic-card">
-                                            <div className="patient-name">{patientDetail?.fullname ?? "Ẩn danh"}</div>
-                                            <div className="patient-phone"><MobileTwoTone /> {patientDetail?.phone ?? "Không có"}</div>
-                                        </div>
-                                    </div>
-                                    <div><span className="specification">Giới tính: </span>{!patientDetail?.gender ? "Không có dữ liệu" : patientDetail?.gender == "Male" ? "Nam" : "Nữ"}</div>
-                                    <div><span className="specification">Ngày sinh: </span>{patientDetail?.dateofbirth ? moment(patientDetail?.dateofbirth).format('DD/MM/YYYY') : "Không có thông tin"}</div>
+                                    <br />
+                                    <div><span className="specification">Ghi chú: </span>{appointmentDetail?.note || appointmentDetail?.note !== "" ? appointmentDetail?.note : "Không có ghi chép"}</div>
+                                    <div className="show-appointment-show-more"><Link target="_blank" to={"/package/" + appointmentDetail?.package_id ?? ""}>Chi tiết</Link></div>
+
                                 </div>
                             </div>
-                        </div>
+                            <div className="show-patient-detail">
+                                <div className="timetable-section-name">Thông tin bệnh nhân</div>
+                                <div className="timetable-section-content-card">
+                                    <div className="timetable-section-content">
+                                        <div className="timetable-detail-info timetable-detail-info-card">
+                                            <img src={patientDetail?.avatarurl} alt="Avatar" className="timetable-avatar timetable-avatar-card" />
+                                            <div className="timetable-detail-info-basic timetable-detail-info-basic-card">
+                                                <div className="patient-name">{patientDetail?.fullname ?? "Ẩn danh"}</div>
+                                                {/* <div className="patient-phone"><MobileTwoTone /> {patientDetail?.phone ?? "Không có"}</div> */}
+                                            </div>
+                                        </div>
+                                        <div><span className="specification">Giới tính: </span>{!patientDetail?.gender ? "Không có dữ liệu" : patientDetail?.gender == "Male" ? "Nam" : "Nữ"}</div>
+                                        <div><span className="specification">Ngày sinh: </span>{patientDetail?.dateofbirth ? moment(patientDetail?.dateofbirth).format('DD/MM/YYYY') : "Không có thông tin"}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </Spin>
                     </Modal>
                     <div className="dashboard-timetable">
                         <div className="dashboard-timetable-title">Lịch trình</div>
@@ -317,8 +328,8 @@ const DoctorDashboard = (props) => {
                         </div>
                     </div>
                 </div>
-            </Spin>
-        </div>
+            </div>
+        </Spin >
     );
 };
 

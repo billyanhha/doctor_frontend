@@ -1,17 +1,25 @@
+@import './_responsive.css';
+
+.time-table-wrapper {
+    display: flex;
+    flex-flow: column;
+    width: 100vw;
+    height: 100vh;
+    max-height: 100vh;
+    overflow-x: hidden;
+}
+
 .doctor-time-table {
+    width: 100%;
+    height: calc(100vh - 120px);
     display: flex;
     background-color: #FFF;
     font-weight: bold;
 }
 
 .dashboard-appointments {
-    padding: 20px;
-
-    height: 82vh;
     width: 25%;
-    overflow: auto;
     background-color: #f2f7fa;
-    scroll-behavior: smooth;
 }
 
 .dashboard-appointments-title {
@@ -139,6 +147,25 @@
             color-stop(0.86, rgb(28, 58, 148))); */
 }
 
+#all-appointments::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+#all-appointments::-webkit-scrollbar {
+    width: 10px;
+}
+
+#all-appointments::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-image: -webkit-gradient(linear,
+            left bottom,
+            left top,
+            color-stop(0.44, rgb(85, 231, 204)),
+            color-stop(0.72, rgb(32, 214, 181)),
+            color-stop(0.86, rgb(0, 206, 168)));
+}
+
 .show-appointment-detail {
     font-weight: 500;
     color: #385a71;
@@ -146,12 +173,12 @@
 
 .timetable-section-name {
     font-weight: bold;
-    font-size: 0.8rem;
+    font-size: 1rem;
     margin-bottom: 10px;
 }
 
 .timetable-section-content {
-    padding: 10px;
+    /* padding: 10px; */
     font-size: 1rem;
 }
 
@@ -169,6 +196,13 @@
 .timetable-section-content .patient-name {
     margin-left: 20px;
     font-size: 1.2rem;
+}
+
+.timetable-section-content .show-appointment-show-more {
+    text-align: right;
+    font-weight: bold;
+    font-size: 1rem;
+    margin-bottom: 20px;
 }
 
 .timetable-detail-info-card {
@@ -189,8 +223,8 @@
 /* ============== Time Table part ============== */
 .dashboard-timetable {
     padding: 20px 50px 0 50px;
-    height: fit-content;
     width: 75%;
+    height: 100%;
 }
 
 .dashboard-timetable-title {
@@ -202,7 +236,7 @@
 
 .dashboard-timetable-main {
     width: 100%;
-    height: calc(80vh - 50px);
+    height: 80%;
 }
 
 .dashboard-timetable-main button {
@@ -221,6 +255,13 @@
     background-color: #00BC9A;
     color: white;
     cursor: pointer;
+}
+
+.dashboard-appointments-content {
+    padding: 20px;
+    height: calc(100% - 50px);
+    overflow: auto;
+    scroll-behavior: smooth;
 }
 
 .dashboard-appointments-content .no-appointment {
@@ -301,12 +342,13 @@
 
 .timetable .timetable-content div {
     box-shadow: inset 1px 0 0 #ECEFF1, inset 0 1px 0 0 #ECEFF1;
+    overflow: hidden;
 }
 
 .timetable .timetable-content .no-appointment {
     position: absolute;
-    top: 60%;
-    left: 55%;
+    top: 55%;
+    left: 60%;
     box-shadow: none;
     color: #00BC9A;
 }
@@ -326,20 +368,23 @@
 .block-content {
     display: flex;
     justify-content: center;
+    align-items: center;
+    text-align: center;
     width: 100%;
     height: 100%;
+    max-width: 100%;
     box-shadow: none !important;
     font-weight: 550;
+    padding: 2px;
 }
 
 .block-content span {
-    align-self: center;
 
     /*Its work but hmm..., UX is bad*/
-    text-overflow: ellipsis;
+    /* text-overflow: ellipsis;
     white-space: nowrap;
-    overflow: hidden;
-    max-width: 100px;
+    overflow: hidden; */
+    max-width: 100%;
 }
 
 .scroll-appointment {
@@ -532,3 +577,91 @@
     background: #fbfbfc;
     color: #87a1ad;
 }
+
+@media screen and (max-width: 1600px) {}
+
+/* HD monitor & older TV, Wacom */
+@media screen and (max-width: 1366px) {}
+
+/* Ipad Pro, Tablet, Wacom, Monitor */
+@media screen and (max-width: 1280px) {}
+
+/* Ipad Pro, Tablet */
+@media screen and (max-width: 1024px) {
+    .time-table-wrapper {
+        overflow: auto;
+    }
+
+    .doctor-time-table {
+        display: block;
+    }
+
+    .timetable-detail-info-basic {
+        padding: 0;
+        padding-left: 20px;
+        width: fit-content;
+    }
+
+    .dashboard-appointments {
+        width: 100%;
+        margin-bottom: 20px;
+        padding: 0 20px;
+    }
+
+    .dashboard-day-appointments {
+        height: 10px;
+    }
+
+    .dashboard-each-appointment {
+        width: 350px;
+        margin-right: 20px;
+        border-radius: 10px;
+    }
+
+    .dashboard-appointments-title {
+        height: fit-content;
+        text-align: left;
+        font-size: 1.5rem;
+        color: #000;
+    }
+
+    .dashboard-appointments-content {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .dashboard-timetable {
+        width: 100%;
+        height: 60%;
+        padding: 0 20px;
+    }
+
+    .dashboard-timetable-main {
+        height: 100%;
+    }
+
+    .appointment-detail-date .appointment-detail-showmore {
+        width: 100%;
+        padding: 0;
+        padding-top: 10px;
+        font-size: 0.8rem;
+    }
+
+    .timetable .timetable-content .no-appointment {
+        top: 50%;
+        left: 40%;
+    }
+
+    #all-appointments::-webkit-scrollbar {
+        height: 10px;
+    }
+}
+
+/* Ipad */
+@media screen and (max-width: 800px) {}
+
+/* Phone */
+@media screen and (max-width: 600px) {}
+
+/* Smaller phone */
+@media screen and (max-width: 320px) {}
