@@ -8,15 +8,15 @@ export default {
         name: 'Sắp tới'
     },
     '9990c777-813e-411b-94ca-56721bbfc574': {
-        color: '#F3F3F3',
+        color: '#dadada',
         name :'Khách hàng đã hủy'
     },
     'd6703271-e841-4563-bd63-92c7f1669281': {
-        color: '#F3F3F3',
+        color: '#dadada',
         name :'Bác sĩ đã hủy'
     },
     '1a51a953-dce0-449b-9491-6695e3c13c72': {
-        color: '#F3F3F3',
+        color: '#dadada',
         name :'Hệ thống đã hủy'
     },
     'd4867f3a-96ed-471c-a0b9-721b878e4104': {
