@@ -66,7 +66,7 @@ const Package = () => {
                         />
                         <br/>
                         <a onClick={()=>showModal(data?.patient_id)}>{data.patient_name} </a>
-                        <Patient handleCancel = {handleCancel}  visible = {visible}/>
+                        <Patient handleCancel = {handleCancel}  visible = {visible} patientAddress={data?.address} doctorAddress={currentDoctor?.address}/>
                     </div>
                 )
             }
@@ -104,8 +104,6 @@ const Package = () => {
     useEffect(() => {
         handleFirstSearch('', currentKey, currentSearchBy)
     }, []);
-
-
 
     const renderMenuStatus = statusData.status.map((value, index) => {
         return (

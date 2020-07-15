@@ -70,7 +70,7 @@ const DoctorNewFeedTab = (props) => {
 
     // console.log(notAssignDuplicatedPackage);
     // console.log(notAssignNotDuplicatedPackage);
-    console.log(assignNotDuplicatedPackage);
+    console.log(assignDuplicatedPackage);
     // console.log(isOutOfData);
     const onClickOnNotAssign = (value) => {
         const info = notAssignNotDuplicatedPackage?.filter((info, key) => {
@@ -113,7 +113,26 @@ const DoctorNewFeedTab = (props) => {
             if (key === value)
                 return info;
         });
-        dispatch(doctorRejectPackage(currentDoctor?.id, info[0].package_id, rejectText));
+        dispatch(doctorRejectPackage(currentDoctor?.id, info[0]?.package_id, rejectText));
+        if (packageRejectUpdated) {
+            message.destroy();
+            message.success("Đã từ chối thành công với lý do: "+ rejectText)
+        } else {
+            message.destroy();
+            message.error("Đã từ chối thất bại")
+        }
+        const timer = setTimeout(() => window.location.reload(), 1000);
+        return () => clearTimeout(timer);
+    }
+
+    const rejectOnAssignDuplicated = (value) => {
+        const info = assignDuplicatedPackage?.filter((info, key) => {
+            console.log(key);
+            if (key === value)
+                return info;
+        });
+        console.log(info)
+        dispatch(doctorRejectPackage(currentDoctor?.id, info[0]?.package_id, rejectText));
         if (packageRejectUpdated) {
             message.destroy();
             message.success("Đã từ chối thành công với lý do: "+ rejectText)
@@ -326,8 +345,22 @@ const DoctorNewFeedTab = (props) => {
                                 >
                                     <button className="link-button-accept-div" id={value?.package_id}><span>Chấp nhận</span></button>
                                 </Popconfirm>)}
+
+                                {type === 4 && (<Popover
+                                    title="Bạn có chắc chắn không?"
+                                    
+                                    trigger="click"
+                                    content={(
+                                    <div>
+                                        <input required onChange={onChangeRejectText}/>
+                                        <button className="reject-button-input-div" onClick={e => { rejectOnAssignDuplicated(key); }}>Gửi</button>
+                                    </div>
+                                    )}
+                                >
+                                    <button className="link-button-reject-div" id={value?.package_id}><span>Từ chối</span></button>
+                                </Popover>)}
                                 
-                                {type === 3 && (<div>
+                                {(type === 3) && (<div>
                                     <Popover
                                     title="Xin hãy cho biết lý do chính đáng?"
                                     trigger="click"
