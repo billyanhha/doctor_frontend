@@ -72,6 +72,7 @@ const MapWith = (props) => {
 };
 
   useEffect(() => {
+    console.log(props);
     let { lat, lng } = props.doctorAddress;
     setPatientAddress(props.patientAddress);
     setDoctorAddress({ lat, lng });

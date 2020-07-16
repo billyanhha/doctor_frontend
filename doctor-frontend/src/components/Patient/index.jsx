@@ -54,8 +54,6 @@ const Patient = (props) => {
         }
     }, [patientAddress, doctorAddress]);
 
-    
-
     return (
         <div>
             <Modal
@@ -68,7 +66,6 @@ const Patient = (props) => {
                     <Button onClick={props.handleCancel}>Quay lại</Button>
                 ]}
             >
-                
                 <div>
                     <Spin size="large" spinning={isLoad}  >
 
@@ -88,10 +85,8 @@ const Patient = (props) => {
                                                 {patientInfo?.dateofbirth}</Timeline.Item>
                                             <Timeline.Item><p className="profile-form-label">Địa chỉ</p>
                                                 {patientInfo?.address}</Timeline.Item>
-
                                         </Timeline>
                                     </div>
-
                                 </div>
                                 <div style={{ width: '400px', height: '400px' }}>
                                     {ready && <DoctorGoogleMap patientAddress={patientAddress} doctorAddress={doctorAddress}/>}

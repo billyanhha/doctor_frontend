@@ -67,11 +67,8 @@ const DoctorNewFeedTab = (props) => {
         setRedirect(true);
     }, []);
 
+    console.log(notAssignNotDuplicatedPackage);
 
-    // console.log(notAssignDuplicatedPackage);
-    // console.log(notAssignNotDuplicatedPackage);
-    console.log(assignDuplicatedPackage);
-    // console.log(isOutOfData);
     const onClickOnNotAssign = (value) => {
         const info = notAssignNotDuplicatedPackage?.filter((info, key) => {
             if (key === value)
@@ -91,7 +88,6 @@ const DoctorNewFeedTab = (props) => {
 
     const acceptOnAssign = (value) => {
         const info = assignNotDuplicatedPackage?.filter((info, key) => {
-            console.log(key)
             if (key === value)
                 return info;
         });
@@ -109,7 +105,6 @@ const DoctorNewFeedTab = (props) => {
 
     const rejectOnAssign = (value) => {
         const info = assignNotDuplicatedPackage?.filter((info, key) => {
-            console.log(key);
             if (key === value)
                 return info;
         });
@@ -131,7 +126,6 @@ const DoctorNewFeedTab = (props) => {
             if (key === value)
                 return info;
         });
-        console.log(info)
         dispatch(doctorRejectPackage(currentDoctor?.id, info[0]?.package_id, rejectText));
         if (packageRejectUpdated) {
             message.destroy();
@@ -465,6 +459,10 @@ const DoctorNewFeedTab = (props) => {
         </div>)
     };
 
+    const onClickCommon = (e) =>{
+        console.log(e)
+    }
+
     return (
         <div className="default-div">
             <div>
@@ -503,7 +501,7 @@ const DoctorNewFeedTab = (props) => {
                                 active={active}
                                 onChange={active => { setActive(active); handleSearchAndSort(textSearch, sortBy, searchBy, radioButtonValue) }}
                             >
-                                <div key="a">Yêu cầu chung </div>
+                                <div onClick={onClickCommon} key="a">Yêu cầu chung </div>
                                 <div key="b">Yêu cầu được chỉ định </div>
                                 {/* <div key="d">Yêu cầu sắp hết hạn</div> */}
                             </Tab>
