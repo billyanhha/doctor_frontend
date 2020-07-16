@@ -95,6 +95,7 @@ function* watchGetNotAsignPackageQuery(action) {
         yield put(openLoading())
         const { token } = yield select(state => state.auth)
         const result = yield packageService.getNotAssignPackageQuery(action.doctorId, action.query, token);
+        console.log('vao day 1 lan roi nhe')
         if (!_.isEmpty(result) && !_.isEmpty(result.packages)) {
             yield put(notAssignPackageQuerySuccessful(result.packages));
         }

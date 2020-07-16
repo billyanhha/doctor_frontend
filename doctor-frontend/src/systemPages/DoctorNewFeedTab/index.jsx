@@ -57,7 +57,6 @@ const DoctorNewFeedTab = (props) => {
     const [searchBy, setSearchBy] = useState("name");
     const [redirect, setRedirect] = useState(false);
     const [radioButtonValue, setRadioButtonValue] = useState(false);
-    const [itemsPage, setItemsPage] = useState(0);
     const [rejectText, setRejectText] = useState("");
 
     useEffect(() => {
@@ -67,7 +66,9 @@ const DoctorNewFeedTab = (props) => {
         setRedirect(true);
     }, []);
 
-    console.log(notAssignNotDuplicatedPackage);
+    useEffect(()=>{
+        handleSearchAndSort(textSearch, sortBy, searchBy, radioButtonValue)
+    },[active]);
 
     const onClickOnNotAssign = (value) => {
         const info = notAssignNotDuplicatedPackage?.filter((info, key) => {
@@ -148,8 +149,12 @@ const DoctorNewFeedTab = (props) => {
     const handleSortByChange = ((key) => {
         let sort = key.key;
         setSortBy(sort);
-        handleSearchAndSort(textSearch, sort, searchBy, radioButtonValue);
+        
     });
+
+    useEffect(()=>{
+        handleSearchAndSort(textSearch, sortBy, searchBy, radioButtonValue);
+    },[sortBy]);
 
     const onChange = (e) => {
         setTextSearch(e.target.value) // store search value
@@ -187,7 +192,7 @@ const DoctorNewFeedTab = (props) => {
     const getNonQueryService = (sortBy, duplicated) => {
         let newPage = 1;
         let newQuery = { sortBy: sortBy, page: newPage, searchBy: searchBy, duplicated: duplicated };
-        console.log(newQuery)
+        // console.log(newQuery)
         setquery(newQuery);
         if (active === 'a') {
             setPageNotAssign(newPage);
@@ -206,7 +211,7 @@ const DoctorNewFeedTab = (props) => {
             setPageNotAssign(next);
             const trimValue = textSearch.trim();
             let newQuery = { page: next, searchBy: searchBy, sortBy: sortBy, query: trimValue, duplicated: radioButtonValue };
-            console.log(newQuery)
+            // console.log(newQuery)
             dispatch(nextNotAssignPackageQuery(currentDoctor?.id, newQuery));
         } else {
             let next = pageAssign + 1;
@@ -245,26 +250,6 @@ const DoctorNewFeedTab = (props) => {
     function cancel() {
 
     }
-
-    const displayResult = (active, radioButton) => {
-        console.log(active, radioButton);
-        if (active === 'a' || radioButton === false) {
-            return notAssignNotDuplicatedPackage[0]?.full_count ?? 0;
-        }
-        if (active === 'a' || radioButton === true) {
-            return notAssignDuplicatedPackage[0]?.full_count ?? 0;
-        }
-        if (active === 'b' || radioButton === false) {
-            return assignNotDuplicatedPackage[0]?.full_count ?? 0;
-        }
-        if (active === 'b' || radioButton === true) {
-            return assignDuplicatedPackage[0]?.full_count ?? 0;
-        }
-    }
-
-    useEffect(() => {
-        console.log(displayResult(active, radioButtonValue));
-    }, [itemsPage])
 
     const menu1 = (
         <Menu selectedKeys={sortBy} onClick={handleSortByChange}>
@@ -459,9 +444,6 @@ const DoctorNewFeedTab = (props) => {
         </div>)
     };
 
-    const onClickCommon = (e) =>{
-        console.log(e)
-    }
 
     return (
         <div className="default-div">
@@ -499,10 +481,10 @@ const DoctorNewFeedTab = (props) => {
                         <div className="tab-div">
                             <Tab
                                 active={active}
-                                onChange={active => { setActive(active); handleSearchAndSort(textSearch, sortBy, searchBy, radioButtonValue) }}
+                                onChange={active => { setActive(active);  }}
                             >
-                                <div onClick={onClickCommon} key="a">Yêu cầu chung </div>
-                                <div key="b">Yêu cầu được chỉ định </div>
+                                <div key="a">Yêu cầu chung</div>
+                                <div key="b">Yêu cầu được chỉ định</div>
                                 {/* <div key="d">Yêu cầu sắp hết hạn</div> */}
                             </Tab>
                         </div>
