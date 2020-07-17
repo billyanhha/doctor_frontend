@@ -37,19 +37,19 @@ const Patient = (props) => {
                 console.error(error);
             }
         );
-        Geocode.fromAddress(props.doctorAddress).then(
-            response => {
-                const { lat, lng } = response.results[0].geometry.location
-                setDoctorAddress({ lat, lng });
-            },
-            error => {
-                console.error(error);
-            }
-        );
+        // Geocode.fromAddress(props.doctorAddress).then(
+        //     response => {
+        //         const { lat, lng } = response.results[0].geometry.location
+        //         setDoctorAddress({ lat, lng });
+        //     },
+        //     error => {
+        //         console.error(error);
+        //     }
+        // );
     }, []);
 
     useEffect(() => {
-        if(size(patientAddress)>0 && size(doctorAddress)>0){
+        if(size(patientAddress)>0){
             setReady(true);
         }
     }, [patientAddress, doctorAddress]);
@@ -89,7 +89,7 @@ const Patient = (props) => {
                                     </div>
                                 </div>
                                 <div style={{ width: '400px', height: '400px' }}>
-                                    {ready && <DoctorGoogleMap patientAddress={patientAddress} doctorAddress={doctorAddress}/>}
+                                    {ready && <DoctorGoogleMap patientAddress={patientAddress}/>}
                                 </div>
                             </div>
                         </div>

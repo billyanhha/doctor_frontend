@@ -35,7 +35,6 @@ const Package = () => {
     
     const showModal = (id, packageAddress) => {
         setVisible(true);
-        console.log(packageAddress);
         setPackageAddress(packageAddress);
         dispatch(getPatientInfo(id));
     };

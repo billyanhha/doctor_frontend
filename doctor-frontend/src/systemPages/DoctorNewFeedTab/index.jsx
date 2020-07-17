@@ -21,21 +21,20 @@ import { Popconfirm, message,Popover } from 'antd';
 import { Tabs } from 'antd';
 import { Radio } from 'antd';
 import { Link } from 'react-router-dom';
+import {
+    getPatientInfo
+} from '../../redux/patient';
+import Patient from '../../components/Patient';
+
 
 const { Search } = Input;
-
-const { TabPane } = Tabs;
-function callback(key) {
-    console.log(key);
-}
-
 const DoctorNewFeedTab = (props) => {
 
     const [active, setActive] = useState('a');
     const dispatch = useDispatch();
     const { currentDoctor } = useSelector(state => state.doctor);
-    const { token } = useSelector(state => state.auth);
-    const { assignPackage } = useSelector(state => state.package);
+    // const { token } = useSelector(state => state.auth);
+    // const { assignPackage } = useSelector(state => state.package);
     const { notAssignNotDuplicatedPackage } = useSelector(state => state.package);
     const { notAssignDuplicatedPackage } = useSelector(state => state.package);
 
@@ -43,7 +42,7 @@ const DoctorNewFeedTab = (props) => {
     const { assignDuplicatedPackage } = useSelector(state => state.package);
     const { packageAcceptUpdated } = useSelector(state => state.package);
     const { packageRejectUpdated } = useSelector(state => state.package);
-    const { allAppointmentByPackage } = useSelector(state => state.package);
+    // const { allAppointmentByPackage } = useSelector(state => state.package);
 
     const { isOutOfDataAssign } = useSelector(state => state.package)
     const { isOutOfDataNotAssign } = useSelector(state => state.package)
@@ -55,12 +54,14 @@ const DoctorNewFeedTab = (props) => {
     const [textSearch, setTextSearch] = useState('');
     const [sortBy, setSortBy] = useState("created_at");
     const [searchBy, setSearchBy] = useState("name");
-    const [redirect, setRedirect] = useState(false);
+    // const [redirect, setRedirect] = useState(false);
     const [radioButtonValue, setRadioButtonValue] = useState(false);
     const [rejectText, setRejectText] = useState("");
 
+    const [packageAddress, setPackageAddress] = useState("");
+    const [visible, setVisible] = useState(false);
+
     useEffect(()=>{
-        console.log('vao day dau tien nhe');
         handleSearchAndSort(textSearch, sortBy, searchBy, radioButtonValue)
     },[active]);
 
@@ -240,6 +241,16 @@ const DoctorNewFeedTab = (props) => {
 
     }
 
+    const handleCancel = e => {
+        setVisible(false)
+    };
+
+    const showModal = (id, packageAddress) => {
+        setVisible(true);
+        setPackageAddress(packageAddress);
+        dispatch(getPatientInfo(id));
+    };
+
     const menu1 = (
         <Menu selectedKeys={sortBy} onClick={handleSortByChange}>
             <Menu.Item key="created_at" icon={<SortDescendingOutlined />}>
@@ -271,7 +282,7 @@ const DoctorNewFeedTab = (props) => {
                         <div className="grid-item first-div">
                             <img src={value?.avatarurl} className="img-div" />
                             <div className="info-div">
-                                <h1 className="nameText-div">{value?.patient_name}</h1>
+                                <h1 className="nameText-div"> <a onClick={()=>showModal(value?.patient_id, value?.address)}>{value?.patient_name}</a></h1>
                                 <div className="phone-div">
                                     {value?.phone}
                                 </div>
@@ -283,8 +294,6 @@ const DoctorNewFeedTab = (props) => {
                             <div className="address-div">
                                 Địa chỉ: <p>{value?.address}</p>
                             </div>
-                            
-
                         </div>
                         <div className="colorTag-div">a</div>
                         <div className=" second-div">
@@ -477,6 +486,7 @@ const DoctorNewFeedTab = (props) => {
                                 {/* <div key="d">Yêu cầu sắp hết hạn</div> */}
                             </Tab>
                         </div>
+                        {visible ? <Patient handleCancel = {handleCancel}  visible = {visible} patientAddress={packageAddress} doctorAddress={currentDoctor?.address}/> : ""}
                     </div>
                     <div>{content[active]}</div>
                 </Spin>

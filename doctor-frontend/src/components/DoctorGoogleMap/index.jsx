@@ -5,6 +5,7 @@ const {
   withGoogleMap,
   GoogleMap,
   DirectionsRenderer,
+  MarkerWithLabel
 } = require("react-google-maps");
 
 
@@ -25,6 +26,7 @@ const MapWithADirectionsRenderer = compose(
       const origin = this.props.patientAddress;
       const destination = this.props.doctorAddress;
 
+
       directionsService.route(
         {
           origin: origin,
@@ -35,7 +37,7 @@ const MapWithADirectionsRenderer = compose(
           if (status === google.maps.DirectionsStatus.OK) {
             this.props.getDirectionInfo(result?.routes?.[0]?.legs?.[0].distance.text, result?.routes?.[0]?.legs?.[0].duration.text)
             this.setState({
-              directions: result
+              directions: result,
             });
           } else {
             console.error(`error fetching directions ${result}`);
@@ -50,7 +52,7 @@ const MapWithADirectionsRenderer = compose(
     defaultZoom={10}
     defaultCenter={new window.google.maps.LatLng(21.0277644, 105.8341598)}
   >
-    {props.directions && <DirectionsRenderer directions={props.directions} />}
+    {props?.directions && <DirectionsRenderer directions={props?.directions} />}
   </GoogleMap>
 
 );
@@ -66,37 +68,46 @@ const MapWith = (props) => {
   const size = (obj) => {
     var size = 0, key;
     for (key in obj) {
-        if (obj.hasOwnProperty(key)) size++;
+      if (obj.hasOwnProperty(key)) size++;
     }
     return size;
-};
+  };
 
   useEffect(() => {
     console.log(props);
-    let { lat, lng } = props.doctorAddress;
+    // let { lat, lng } = props.doctorAddress;
     setPatientAddress(props.patientAddress);
-    setDoctorAddress({ lat, lng });
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function (position) {
+        var pos = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        };
+        setDoctorAddress(pos);
+      }
+      )
+    }
 
   }, []);
 
-  useEffect(()=>{
-    if(size(patientAddress)>0 && size(doctorAddress)>0)
+  useEffect(() => {
+    if (size(patientAddress) > 0 && size(doctorAddress) > 0)
       setReady(true);
-  },[patientAddress,doctorAddress]);
+  }, [patientAddress, doctorAddress]);
 
   const getDirectionInfo = (distance, time) => {
     setDirection({ distance, time });
   }
 
-  const formatTime = (value) =>{
-    return  value.match(/\d+/)[0];
+  const formatTime = (value) => {
+    return value.match(/\d+/)[0];
   }
 
   return (
     <div>
 
-      <div className="direction-distance-div">Khoảng cách đến vị trí khám bệnh: <p>{direction.distance}</p></div>
-      {/* <div className="direction-time-div">Thời gian đi bằng xe máy: {direction.time} </div> */}
+      <div className="direction-distance-div">Khoảng cách hiện tại đến vị trí khám bệnh: <p>{direction.distance}</p></div>
+      <div className="direction-time-div">Thời gian đi bằng xe máy: {direction.time} </div>
       {ready && <MapWithADirectionsRenderer patientAddress={patientAddress} doctorAddress={doctorAddress} getDirectionInfo={getDirectionInfo} />}
 
     </div>
