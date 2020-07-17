@@ -59,14 +59,8 @@ const DoctorNewFeedTab = (props) => {
     const [radioButtonValue, setRadioButtonValue] = useState(false);
     const [rejectText, setRejectText] = useState("");
 
-    useEffect(() => {
-        if (token) {
-            dispatch(getDoctorLogin(token));
-        }
-        setRedirect(true);
-    }, []);
-
     useEffect(()=>{
+        console.log('vao day dau tien nhe');
         handleSearchAndSort(textSearch, sortBy, searchBy, radioButtonValue)
     },[active]);
 
@@ -149,13 +143,9 @@ const DoctorNewFeedTab = (props) => {
     const handleSortByChange = ((key) => {
         let sort = key.key;
         setSortBy(sort);
+        handleSearchAndSort(textSearch, sort, searchBy, radioButtonValue);
         
     });
-
-    useEffect(()=>{
-        handleSearchAndSort(textSearch, sortBy, searchBy, radioButtonValue);
-    },[sortBy]);
-
     const onChange = (e) => {
         setTextSearch(e.target.value) // store search value
     }
@@ -236,7 +226,6 @@ const DoctorNewFeedTab = (props) => {
     const onChangeButton = e => {
         setRadioButtonValue(e.target.value);
         handleSearchAndSort(textSearch, sortBy, searchBy, e.target.value);
-
     };
 
     const formatDateTime = (dateValue, time1, time2) => {

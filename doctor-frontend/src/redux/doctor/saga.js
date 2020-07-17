@@ -31,7 +31,6 @@ import { notAssignPackageQuery,
 
 function* wachGetDoctorLoginbWorker(action) {
     let query = { sortBy: "created_at", page: 1, searchBy: "name",duplicated:false };
-    console.log('Khong vao day lan 2 dau nhe')
     try {
         yield put(openLoading())
 
@@ -40,7 +39,7 @@ function* wachGetDoctorLoginbWorker(action) {
             if (result && result.data) {
                 yield all([
                     put(getDoctorLoginSuccessful(result.data)),
-                    put(notAssignPackageQuery(result.data.id, query)),
+                    // put(notAssignPackageQuery(result.data.id, query)),
                 ]);
             }
         }
