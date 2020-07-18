@@ -29,8 +29,7 @@ export const doctorReducer = (state = initialState, action) => {
             state = { ...state, currentDoctor: action.currentDoctor }
             return state;
         case CLEAR_DOCTOR_LOGIN_INFO:
-            state = { ...state, currentDoctor: {}, appointmentTimeTable: [], appointmentDetail: {}, patientDetail: {} }
-            return state;
+            return initialState;
         case GET_APPOINTMENTS_FROM_TO_SUCCESSFUL:
             state = { ...state, appointmentTimeTable: action.appointmentFromTo }
             return state;

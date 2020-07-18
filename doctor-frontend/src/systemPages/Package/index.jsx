@@ -162,7 +162,7 @@ const Package = () => {
             params.status_id = statusData.status[currentStatusKey].id;
         }
 
-        dispatch(getDoctorPackage(currentDoctor?.id, params))
+        dispatchDoctor(params)
 
         setTimeout(() => {
             setdisableBtn(false);
@@ -179,11 +179,18 @@ const Package = () => {
             params.status_id = statusData.status[currentKey].id;
         }
 
-        dispatch(getDoctorPackage(currentDoctor?.id, params))
+        dispatchDoctor(params)
+
 
         setTimeout(() => {
             setdisableBtn(false);
         }, 1000);
+    }
+
+    const dispatchDoctor = (params) => {
+        if(currentDoctor?.id){
+            dispatch(getDoctorPackage(currentDoctor?.id, params))
+        }
     }
 
 

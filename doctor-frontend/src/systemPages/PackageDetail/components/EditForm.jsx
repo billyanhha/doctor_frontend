@@ -24,9 +24,6 @@ const EditForm = (props) => {
     const id = props.match.params.id
 
     useEffect(() => {
-        console.log(                    packageResultForm
-            );
-        
         if (props?.editfor === 'result_content' && !props?.content) {
             if (!_.isEmpty(packageResultForm?.content)) {
                 setContent(

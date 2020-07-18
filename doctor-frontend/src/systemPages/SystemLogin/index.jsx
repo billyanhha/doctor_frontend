@@ -14,9 +14,6 @@ const SytemLogin = (props) => {
     const dispatch = useDispatch();
     const [form] = Form.useForm();
 
-    console.log('auth:',auth);
-    console.log('doctor:',doctor);
-
     if (auth.isLoggedIn) {
         return <Redirect to="/" />
     }
