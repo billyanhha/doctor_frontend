@@ -9,7 +9,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getDoctorPackage } from '../../redux/package';
 import moment from "moment"
 import _ from "lodash"
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { Modal } from 'antd';
 import {
     getPatientInfo
@@ -29,9 +29,10 @@ const Package = () => {
     const { currentDoctor } = useSelector(state => state.doctor);
     const { patientInfo } = useSelector(state => state.patient);
     const dispatch = useDispatch();
+    const history = useHistory();
 
     const [visible, setVisible] = useState(false);
-    
+
     const showModal = (id) => {
         setVisible(true);
         dispatch(getPatientInfo(id));
@@ -64,12 +65,19 @@ const Package = () => {
                             size={100} icon={<UserOutlined />}
                             src={avatarurl}
                         />
-                        <br/>
-                        <a onClick={()=>showModal(data?.patient_id)}>{data.patient_name} </a>
-                        <Patient handleCancel = {handleCancel}  visible = {visible}/>
+                        <br />
+                        <br />
+                        <a onClick={() => showModal(data?.patient_id)}>{data.patient_name} </a>
+                        <Patient handleCancel={handleCancel} visible={visible} />
                     </div>
                 )
             }
+        },
+        {
+            title: 'Người đặt',
+            dataIndex: 'customer_name',
+            key: 'customer_name',
+            width: 200
         },
         {
             title: 'SĐT',
@@ -80,11 +88,13 @@ const Package = () => {
             title: 'Địa chỉ',
             dataIndex: 'address',
             key: 'address',
+            width: 300
         },
         {
             title: 'Lý do',
             dataIndex: 'reason',
             key: 'reason',
+            width: 200
         },
         {
             title: 'Trạng thái hiện tại',
@@ -188,7 +198,7 @@ const Package = () => {
     }
 
     const dispatchDoctor = (params) => {
-        if(currentDoctor?.id){
+        if (currentDoctor?.id) {
             dispatch(getDoctorPackage(currentDoctor?.id, params))
         }
     }
@@ -266,8 +276,8 @@ const Package = () => {
                         <div className="package-table">
                             <Table
                                 columns={columns}
-                                scroll={{ x: '90vw' }}
                                 onChange={onPageNumberChange}
+                                // onRow={(id) => ({ onClick: () => history.push("package/" + id.id) })}
                                 pagination={{
 
                                     current: currentPage,

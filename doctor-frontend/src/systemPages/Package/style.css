@@ -148,4 +148,7 @@
         -ms-flex-pack: center;
             justify-content: center;
   }
-  
+
+  /* .ant-table-tbody{
+    cursor: pointer;
+  } */

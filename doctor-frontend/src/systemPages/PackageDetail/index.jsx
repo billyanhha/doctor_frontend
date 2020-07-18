@@ -45,7 +45,7 @@ const PackageDetail = (props) => {
         setVisiblePatient(true);
         dispatch(getPatientInfo(id));
         // console.log('id package:',packageInfo);
-        
+
     };
 
     useEffect(() => {
@@ -53,7 +53,7 @@ const PackageDetail = (props) => {
         window.scroll(0, 0)
         dispatch(getPackageInfo(id))
         dispatch(getPackageStatus(id));
-        
+
 
     }, []);
 
@@ -186,13 +186,14 @@ const PackageDetail = (props) => {
                             </Tabs>
                         }
                     >
+                        {console.log(packageInfo)}
                         <Descriptions size="small" column={3}>
                             <Descriptions.Item label="Bệnh nhân">
-                                <a  onClick={() => showModal(packageInfo?.patient_id)}>
+                                <a onClick={() => showModal(packageInfo?.patient_id)}>
                                     <Avatar shape="square" size={50} icon={<UserOutlined />}
                                         src={packageInfo.avatarurl} />
                                     {packageInfo.patient_name}</a>
-                                    <Patient handleCancel={handleCancelvisiblePatient} visible={visiblePatient} />
+                                <Patient handleCancel={handleCancelvisiblePatient} visible={visiblePatient} />
                             </Descriptions.Item>
                             <Descriptions.Item label="Số điện thoại">
                                 {packageInfo?.phone}
@@ -204,6 +205,12 @@ const PackageDetail = (props) => {
                             <Descriptions.Item label="Lý do">
                                 {packageInfo?.reason}
                             </Descriptions.Item>
+                            {packageInfo?.star
+                                ? <Descriptions.Item label="Đánh giá">
+                                    {packageInfo?.star}
+                                </Descriptions.Item>
+                                : ""
+                            }
                         </Descriptions>
                     </PageHeader>
                 </Spin>
