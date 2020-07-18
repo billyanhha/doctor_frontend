@@ -186,14 +186,13 @@ const PackageDetail = (props) => {
                             </Tabs>
                         }
                     >
-                        {console.log(packageInfo)}
                         <Descriptions size="small" column={3}>
                             <Descriptions.Item label="Bệnh nhân">
                                 <a onClick={() => showModal(packageInfo?.patient_id)}>
                                     <Avatar shape="square" size={50} icon={<UserOutlined />}
                                         src={packageInfo.avatarurl} />
                                     {packageInfo.patient_name}</a>
-                                <Patient handleCancel={handleCancelvisiblePatient} visible={visiblePatient} />
+                                    {packageInfo?.address ? <Patient handleCancel={handleCancelvisiblePatient} visible={visiblePatient} patientAddress={packageInfo?.address} doctorAddress={currentDoctor?.address}/> :"" }
                             </Descriptions.Item>
                             <Descriptions.Item label="Số điện thoại">
                                 {packageInfo?.phone}

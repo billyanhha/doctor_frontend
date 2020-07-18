@@ -31,7 +31,6 @@ import { notAssignPackageQuery,
 
 function* wachGetDoctorLoginbWorker(action) {
     let query = { sortBy: "created_at", page: 1, searchBy: "name",duplicated:false };
-    let query2 = { sortBy: "created_at", page: 1, searchBy: "name",duplicated:true };
     try {
         yield put(openLoading())
 
@@ -40,11 +39,7 @@ function* wachGetDoctorLoginbWorker(action) {
             if (result && result.data) {
                 yield all([
                     put(getDoctorLoginSuccessful(result.data)),
-                    //Cac ham khoi tao gia tri ban dau cho Newfeed
-                    put(assignPackageQuery(result.data.id, query2)),
-                    put(notAssignPackageQuery(result.data.id, query2)),
-                    put(assignPackageQuery(result.data.id, query)),  
-                    put(notAssignPackageQuery(result.data.id, query)),
+                    // put(notAssignPackageQuery(result.data.id, query)),
                 ]);
             }
         }

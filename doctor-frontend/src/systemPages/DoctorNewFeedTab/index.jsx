@@ -21,21 +21,20 @@ import { Popconfirm, message,Popover } from 'antd';
 import { Tabs } from 'antd';
 import { Radio } from 'antd';
 import { Link } from 'react-router-dom';
+import {
+    getPatientInfo
+} from '../../redux/patient';
+import Patient from '../../components/Patient';
+
 
 const { Search } = Input;
-
-const { TabPane } = Tabs;
-function callback(key) {
-    console.log(key);
-}
-
 const DoctorNewFeedTab = (props) => {
 
     const [active, setActive] = useState('a');
     const dispatch = useDispatch();
     const { currentDoctor } = useSelector(state => state.doctor);
-    const { token } = useSelector(state => state.auth);
-    const { assignPackage } = useSelector(state => state.package);
+    // const { token } = useSelector(state => state.auth);
+    // const { assignPackage } = useSelector(state => state.package);
     const { notAssignNotDuplicatedPackage } = useSelector(state => state.package);
     const { notAssignDuplicatedPackage } = useSelector(state => state.package);
 
@@ -43,7 +42,7 @@ const DoctorNewFeedTab = (props) => {
     const { assignDuplicatedPackage } = useSelector(state => state.package);
     const { packageAcceptUpdated } = useSelector(state => state.package);
     const { packageRejectUpdated } = useSelector(state => state.package);
-    const { allAppointmentByPackage } = useSelector(state => state.package);
+    // const { allAppointmentByPackage } = useSelector(state => state.package);
 
     const { isOutOfDataAssign } = useSelector(state => state.package)
     const { isOutOfDataNotAssign } = useSelector(state => state.package)
@@ -55,23 +54,17 @@ const DoctorNewFeedTab = (props) => {
     const [textSearch, setTextSearch] = useState('');
     const [sortBy, setSortBy] = useState("created_at");
     const [searchBy, setSearchBy] = useState("name");
-    const [redirect, setRedirect] = useState(false);
+    // const [redirect, setRedirect] = useState(false);
     const [radioButtonValue, setRadioButtonValue] = useState(false);
-    const [itemsPage, setItemsPage] = useState(0);
     const [rejectText, setRejectText] = useState("");
 
-    useEffect(() => {
-        if (token) {
-            dispatch(getDoctorLogin(token));
-        }
-        setRedirect(true);
-    }, []);
+    const [packageAddress, setPackageAddress] = useState("");
+    const [visible, setVisible] = useState(false);
 
+    useEffect(()=>{
+        handleSearchAndSort(textSearch, sortBy, searchBy, radioButtonValue)
+    },[active]);
 
-    // console.log(notAssignDuplicatedPackage);
-    // console.log(notAssignNotDuplicatedPackage);
-    console.log(assignNotDuplicatedPackage);
-    // console.log(isOutOfData);
     const onClickOnNotAssign = (value) => {
         const info = notAssignNotDuplicatedPackage?.filter((info, key) => {
             if (key === value)
@@ -91,7 +84,6 @@ const DoctorNewFeedTab = (props) => {
 
     const acceptOnAssign = (value) => {
         const info = assignNotDuplicatedPackage?.filter((info, key) => {
-            console.log(key)
             if (key === value)
                 return info;
         });
@@ -109,11 +101,28 @@ const DoctorNewFeedTab = (props) => {
 
     const rejectOnAssign = (value) => {
         const info = assignNotDuplicatedPackage?.filter((info, key) => {
+            if (key === value)
+                return info;
+        });
+        dispatch(doctorRejectPackage(currentDoctor?.id, info[0]?.package_id, rejectText));
+        if (packageRejectUpdated) {
+            message.destroy();
+            message.success("Đã từ chối thành công với lý do: "+ rejectText)
+        } else {
+            message.destroy();
+            message.error("Đã từ chối thất bại")
+        }
+        const timer = setTimeout(() => window.location.reload(), 1000);
+        return () => clearTimeout(timer);
+    }
+
+    const rejectOnAssignDuplicated = (value) => {
+        const info = assignDuplicatedPackage?.filter((info, key) => {
             console.log(key);
             if (key === value)
                 return info;
         });
-        dispatch(doctorRejectPackage(currentDoctor?.id, info[0].package_id, rejectText));
+        dispatch(doctorRejectPackage(currentDoctor?.id, info[0]?.package_id, rejectText));
         if (packageRejectUpdated) {
             message.destroy();
             message.success("Đã từ chối thành công với lý do: "+ rejectText)
@@ -136,8 +145,8 @@ const DoctorNewFeedTab = (props) => {
         let sort = key.key;
         setSortBy(sort);
         handleSearchAndSort(textSearch, sort, searchBy, radioButtonValue);
+        
     });
-
     const onChange = (e) => {
         setTextSearch(e.target.value) // store search value
     }
@@ -174,7 +183,7 @@ const DoctorNewFeedTab = (props) => {
     const getNonQueryService = (sortBy, duplicated) => {
         let newPage = 1;
         let newQuery = { sortBy: sortBy, page: newPage, searchBy: searchBy, duplicated: duplicated };
-        console.log(newQuery)
+        // console.log(newQuery)
         setquery(newQuery);
         if (active === 'a') {
             setPageNotAssign(newPage);
@@ -193,7 +202,7 @@ const DoctorNewFeedTab = (props) => {
             setPageNotAssign(next);
             const trimValue = textSearch.trim();
             let newQuery = { page: next, searchBy: searchBy, sortBy: sortBy, query: trimValue, duplicated: radioButtonValue };
-            console.log(newQuery)
+            // console.log(newQuery)
             dispatch(nextNotAssignPackageQuery(currentDoctor?.id, newQuery));
         } else {
             let next = pageAssign + 1;
@@ -218,7 +227,6 @@ const DoctorNewFeedTab = (props) => {
     const onChangeButton = e => {
         setRadioButtonValue(e.target.value);
         handleSearchAndSort(textSearch, sortBy, searchBy, e.target.value);
-
     };
 
     const formatDateTime = (dateValue, time1, time2) => {
@@ -233,25 +241,15 @@ const DoctorNewFeedTab = (props) => {
 
     }
 
-    const displayResult = (active, radioButton) => {
-        console.log(active, radioButton);
-        if (active === 'a' || radioButton === false) {
-            return notAssignNotDuplicatedPackage[0]?.full_count ?? 0;
-        }
-        if (active === 'a' || radioButton === true) {
-            return notAssignDuplicatedPackage[0]?.full_count ?? 0;
-        }
-        if (active === 'b' || radioButton === false) {
-            return assignNotDuplicatedPackage[0]?.full_count ?? 0;
-        }
-        if (active === 'b' || radioButton === true) {
-            return assignDuplicatedPackage[0]?.full_count ?? 0;
-        }
-    }
+    const handleCancel = e => {
+        setVisible(false)
+    };
 
-    useEffect(() => {
-        console.log(displayResult(active, radioButtonValue));
-    }, [itemsPage])
+    const showModal = (id, packageAddress) => {
+        setVisible(true);
+        setPackageAddress(packageAddress);
+        dispatch(getPatientInfo(id));
+    };
 
     const menu1 = (
         <Menu selectedKeys={sortBy} onClick={handleSortByChange}>
@@ -284,7 +282,7 @@ const DoctorNewFeedTab = (props) => {
                         <div className="grid-item first-div">
                             <img src={value?.avatarurl} className="img-div" />
                             <div className="info-div">
-                                <h1 className="nameText-div">{value?.patient_name}</h1>
+                                <h1 className="nameText-div"> <a onClick={()=>showModal(value?.patient_id, value?.address)}>{value?.patient_name}</a></h1>
                                 <div className="phone-div">
                                     {value?.phone}
                                 </div>
@@ -296,8 +294,6 @@ const DoctorNewFeedTab = (props) => {
                             <div className="address-div">
                                 Địa chỉ: <p>{value?.address}</p>
                             </div>
-                            
-
                         </div>
                         <div className="colorTag-div">a</div>
                         <div className=" second-div">
@@ -326,8 +322,22 @@ const DoctorNewFeedTab = (props) => {
                                 >
                                     <button className="link-button-accept-div" id={value?.package_id}><span>Chấp nhận</span></button>
                                 </Popconfirm>)}
+
+                                {type === 4 && (<Popover
+                                    title="Bạn có chắc chắn không?"
+                                    
+                                    trigger="click"
+                                    content={(
+                                    <div>
+                                        <input required onChange={onChangeRejectText}/>
+                                        <button className="reject-button-input-div" onClick={e => { rejectOnAssignDuplicated(key); }}>Gửi</button>
+                                    </div>
+                                    )}
+                                >
+                                    <button className="link-button-reject-div" id={value?.package_id}><span>Từ chối</span></button>
+                                </Popover>)}
                                 
-                                {type === 3 && (<div>
+                                {(type === 3) && (<div>
                                     <Popover
                                     title="Xin hãy cho biết lý do chính đáng?"
                                     trigger="click"
@@ -432,6 +442,7 @@ const DoctorNewFeedTab = (props) => {
         </div>)
     };
 
+
     return (
         <div className="default-div">
             <div>
@@ -468,13 +479,14 @@ const DoctorNewFeedTab = (props) => {
                         <div className="tab-div">
                             <Tab
                                 active={active}
-                                onChange={active => { setActive(active); handleSearchAndSort(textSearch, sortBy, searchBy, radioButtonValue) }}
+                                onChange={active => { setActive(active);  }}
                             >
-                                <div key="a">Yêu cầu chung </div>
-                                <div key="b">Yêu cầu được chỉ định </div>
+                                <div key="a">Yêu cầu chung</div>
+                                <div key="b">Yêu cầu được chỉ định</div>
                                 {/* <div key="d">Yêu cầu sắp hết hạn</div> */}
                             </Tab>
                         </div>
+                        {visible ? <Patient handleCancel = {handleCancel}  visible = {visible} patientAddress={packageAddress} doctorAddress={currentDoctor?.address}/> : ""}
                     </div>
                     <div>{content[active]}</div>
                 </Spin>
