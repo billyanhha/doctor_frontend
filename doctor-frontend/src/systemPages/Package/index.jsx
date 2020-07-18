@@ -28,12 +28,14 @@ const Package = () => {
     const { doctorPackage } = useSelector(state => state.package)
     const { currentDoctor } = useSelector(state => state.doctor);
     const { patientInfo } = useSelector(state => state.patient);
+    const [packageAddress, setPackageAddress] = useState("");
     const dispatch = useDispatch();
 
     const [visible, setVisible] = useState(false);
     
-    const showModal = (id) => {
+    const showModal = (id, packageAddress) => {
         setVisible(true);
+        setPackageAddress(packageAddress);
         dispatch(getPatientInfo(id));
     };
 
@@ -65,8 +67,8 @@ const Package = () => {
                             src={avatarurl}
                         />
                         <br/>
-                        <a onClick={()=>showModal(data?.patient_id)}>{data.patient_name} </a>
-                        <Patient handleCancel = {handleCancel}  visible = {visible}/>
+                        <a onClick={()=>showModal(data?.patient_id, data?.address)}>{data.patient_name} </a>
+                        
                     </div>
                 )
             }
@@ -104,8 +106,6 @@ const Package = () => {
     useEffect(() => {
         handleFirstSearch('', currentKey, currentSearchBy)
     }, []);
-
-
 
     const renderMenuStatus = statusData.status.map((value, index) => {
         return (
@@ -263,6 +263,8 @@ const Package = () => {
                             <span className="hightlight"> " {statusData.status[currentKey].msg} " </span>
                             {renderSearchLabel()}
                         </span>
+                        {/* {console.log(visible,' ',packageAddress, ' ',currentDoctor?.address)} */}
+                        {visible ? <Patient handleCancel = {handleCancel}  visible = {visible} patientAddress={packageAddress} doctorAddress={currentDoctor?.address}/> : ""}
                         <div className="package-table">
                             <Table
                                 columns={columns}
