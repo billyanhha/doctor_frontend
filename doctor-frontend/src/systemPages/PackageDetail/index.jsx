@@ -19,13 +19,14 @@ import {
 } from '../../redux/package';
 import { Timeline } from 'antd';
 import { ClockCircleOutlined } from '@ant-design/icons';
-import { Modal } from 'antd';
+import { Modal, Rate } from 'antd';
 import packageStatus from "../../configs/packageStatus"
 import package_status from "../../configs/package_status";
 import Patient from '../../components/Patient';
 
 const { TabPane } = Tabs;
 
+const desc = ['Tệ', 'Không Hài Lòng', 'Cần Cải Thiện', 'Hài Lòng', 'Tuyệt Vời'];
 
 const PackageDetail = (props) => {
 
@@ -37,23 +38,31 @@ const PackageDetail = (props) => {
     const { isLoad } = useSelector(state => state.ui);
     const [visiblePatient, setVisiblePatient] = useState(false);
 
+    const [rateVisible, setRateVisible] = useState(false);
+    const [rateValue, setrateValue] = useState(0);
+    const [rateDefault, setRateDefault] = useState(0);
+    const [rateNote, setRateNote] = useState('');
+    const [currentPacakge, setcurrentPacakge] = useState({});
+
     const dispatch = useDispatch();
     const id = props.match.params.id
-
 
     const showModal = (id) => {
         setVisiblePatient(true);
         dispatch(getPatientInfo(id));
         // console.log('id package:',packageInfo);
-
     };
+
+    useEffect(() => {
+        if (packageInfo?.star)
+            setRateDefault(packageInfo?.star)
+    }, [packageInfo]);
 
     useEffect(() => {
 
         window.scroll(0, 0)
         dispatch(getPackageInfo(id))
         dispatch(getPackageStatus(id));
-
 
     }, []);
 
@@ -153,11 +162,39 @@ const PackageDetail = (props) => {
         setVisiblePatient(false)
     };
 
+    const openRateModal = (value) => {
+        setRateVisible(true)
+        setRateNote(value?.comment ?? 'Không có ghi chép')
+        setcurrentPacakge(value)
+    }
+
+    const handleRateModalCancel = () => {
+        setRateVisible(false)
+    };
+
+
 
     return (
         <div className="default-div">
             <div className="site-page-header-ghost-wrapper">
                 <Spin size="large" spinning={isLoad}>
+                    <Modal
+                        visible={rateVisible}
+                        title={"Đánh giá chất lượng gói dịch vụ BS." + currentPacakge?.doctor_name}
+                        onCancel={handleRateModalCancel}
+                        footer={[
+                            <Button key="back" onClick={handleRateModalCancel}>Đóng</Button>
+                        ]}
+                    >
+                        <span>
+                            <Rate tooltips={desc} disabled autoAdjustOverflow={true} value={rateDefault} />
+                            {rateDefault ? <span className="ant-rate-text">{desc[rateDefault - 1]}</span> : ''}
+                            <br /><br />
+                            <h3>Ghi chú</h3>
+                            <div>{rateNote}</div>
+                        </span>
+                    </Modal>
+
                     <PageHeader
                         ghost={false}
                         tags={<Tag color="blue">{!_.isEmpty(packageData?.status) ? packageData?.status[packageData.status.length - 1]?.status_name : ''}</Tag>}
@@ -192,7 +229,7 @@ const PackageDetail = (props) => {
                                     <Avatar shape="square" size={50} icon={<UserOutlined />}
                                         src={packageInfo.avatarurl} />
                                     {packageInfo.patient_name}</a>
-                                    {packageInfo?.address ? <Patient handleCancel={handleCancelvisiblePatient} visible={visiblePatient} patientAddress={packageInfo?.address} doctorAddress={currentDoctor?.address}/> :"" }
+                                {packageInfo?.address ? <Patient handleCancel={handleCancelvisiblePatient} visible={visiblePatient} patientAddress={packageInfo?.address} doctorAddress={currentDoctor?.address} /> : ""}
                             </Descriptions.Item>
                             <Descriptions.Item label="Số điện thoại">
                                 {packageInfo?.phone}
@@ -204,11 +241,20 @@ const PackageDetail = (props) => {
                             <Descriptions.Item label="Lý do">
                                 {packageInfo?.reason}
                             </Descriptions.Item>
-                            {packageInfo?.star
+                            {packageData?.status[packageData?.status.length - 1]?.package_status_detail_id === package_status.done
+                                || packageData?.status[packageData?.status.length - 1]?.package_status_detail_id === package_status.customerCancel
+                                || packageData?.status[packageData?.status.length - 1]?.package_status_detail_id === package_status.systemCancel
+                                || packageData?.status[packageData?.status.length - 1]?.package_status_detail_id === package_status.doctorCancel
                                 ? <Descriptions.Item label="Đánh giá">
-                                    {packageInfo?.star}
+                                    {packageInfo?.package_rating_id
+                                        ? <>
+                                            <Rate tooltips={desc} disabled autoAdjustOverflow={true} value={rateDefault} />
+                                            <Button onClick={() => openRateModal(packageInfo)} style={{ marginLeft: '10px' }} size="small">Xem đánh giá</Button>
+                                        </>
+                                        : <>Chưa có đánh giá </>
+                                    }
                                 </Descriptions.Item>
-                                : ""
+                                : ''
                             }
                         </Descriptions>
                     </PageHeader>

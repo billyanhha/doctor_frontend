@@ -16,6 +16,7 @@ import {
 } from '../../redux/patient';
 import Patient from '../../components/Patient';
 
+import DefaultAvatar from '../../assest/hhs-default_avatar.jpg'
 
 const Package = () => {
 
@@ -33,7 +34,7 @@ const Package = () => {
     const history = useHistory();
 
     const [visible, setVisible] = useState(false);
-    
+
     const showModal = (id, packageAddress) => {
         setVisible(true);
         setPackageAddress(packageAddress);
@@ -64,21 +65,33 @@ const Package = () => {
                 return (
                     <div>
                         <Avatar shape="square"
-                            size={100} icon={<UserOutlined />}
-                            src={avatarurl}
+                            size={100}
+                            src={avatarurl ?? DefaultAvatar}
                         />
-                        <br/>
-                        <a onClick={()=>showModal(data?.patient_id, data?.address)}>{data.patient_name} </a>
-                        
+                        <br />
+                        <a onClick={() => showModal(data?.patient_id, data?.address)}>{data.patient_name} </a>
+
                     </div>
                 )
             }
         },
         {
             title: 'Người đặt',
-            dataIndex: 'customer_name',
-            key: 'customer_name',
-            width: 200
+            dataIndex: 'customer_avatar',
+            key: 'customer_avatar',
+            width: 200,
+            render: (customer_avatar, data) => {
+                return (
+                    <div>
+                        <Avatar shape="square"
+                            size={100}
+                            src={customer_avatar ?? DefaultAvatar}
+                        />
+                        <br/>
+                        <span>{data.customer_name}</span>
+                    </div>
+                )
+            }
         },
         {
             title: 'SĐT',
@@ -273,7 +286,7 @@ const Package = () => {
                             {renderSearchLabel()}
                         </span>
                         {/* {console.log(visible,' ',packageAddress, ' ',currentDoctor?.address)} */}
-                        {visible ? <Patient handleCancel = {handleCancel}  visible = {visible} patientAddress={packageAddress} doctorAddress={currentDoctor?.address}/> : ""}
+                        {visible ? <Patient handleCancel={handleCancel} visible={visible} patientAddress={packageAddress} doctorAddress={currentDoctor?.address} /> : ""}
                         <div className="package-table">
                             <Table
                                 columns={columns}
