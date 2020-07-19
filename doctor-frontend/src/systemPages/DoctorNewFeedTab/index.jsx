@@ -17,7 +17,7 @@ import { Menu, Dropdown, Button } from 'antd';
 import _ from "lodash";
 import moment from 'moment';
 import Navbar from '../../components/Navbar';
-import { Popconfirm, message,Popover } from 'antd';
+import { Popconfirm, message, Popover } from 'antd';
 import { Tabs } from 'antd';
 import { Radio } from 'antd';
 import { Link } from 'react-router-dom';
@@ -60,10 +60,12 @@ const DoctorNewFeedTab = (props) => {
 
     const [packageAddress, setPackageAddress] = useState("");
     const [visible, setVisible] = useState(false);
+    const auth = useSelector(state => state.auth);
 
-    useEffect(()=>{
-        handleSearchAndSort(textSearch, sortBy, searchBy, radioButtonValue)
-    },[active]);
+    useEffect(() => {
+        if(currentDoctor?.id)
+            handleSearchAndSort(textSearch, sortBy, searchBy, radioButtonValue)
+    }, [active]);
 
     const onClickOnNotAssign = (value) => {
         const info = notAssignNotDuplicatedPackage?.filter((info, key) => {
@@ -107,7 +109,7 @@ const DoctorNewFeedTab = (props) => {
         dispatch(doctorRejectPackage(currentDoctor?.id, info[0]?.package_id, rejectText));
         if (packageRejectUpdated) {
             message.destroy();
-            message.success("Đã từ chối thành công với lý do: "+ rejectText)
+            message.success("Đã từ chối thành công với lý do: " + rejectText)
         } else {
             message.destroy();
             message.error("Đã từ chối thất bại")
@@ -125,7 +127,7 @@ const DoctorNewFeedTab = (props) => {
         dispatch(doctorRejectPackage(currentDoctor?.id, info[0]?.package_id, rejectText));
         if (packageRejectUpdated) {
             message.destroy();
-            message.success("Đã từ chối thành công với lý do: "+ rejectText)
+            message.success("Đã từ chối thành công với lý do: " + rejectText)
         } else {
             message.destroy();
             message.error("Đã từ chối thất bại")
@@ -145,13 +147,13 @@ const DoctorNewFeedTab = (props) => {
         let sort = key.key;
         setSortBy(sort);
         handleSearchAndSort(textSearch, sort, searchBy, radioButtonValue);
-        
+
     });
     const onChange = (e) => {
         setTextSearch(e.target.value) // store search value
     }
 
-    const onChangeRejectText = (e) =>{
+    const onChangeRejectText = (e) => {
         setRejectText(e.target.value);
     }
 
@@ -161,7 +163,6 @@ const DoctorNewFeedTab = (props) => {
 
     const handleSearchAndSort = ((value, sortBy, searchBy, duplicated) => {
         let newPage = 1;
-
         const trimValue = value?.trim();
         disableButtonFunc();
         if (!_.isEmpty(trimValue)) {
@@ -274,78 +275,77 @@ const DoctorNewFeedTab = (props) => {
     );
 
 
-    const packages = (value,type) => {
+    const packages = (value, type) => {
         return value?.map((value, key) =>
             (
-                <div>
-                    <div key={key} className="newfit-content-div">
-                        <div className="grid-item first-div">
-                            <img src={value?.avatarurl} className="img-div" />
-                            <div className="info-div">
-                                <h1 className="nameText-div"> <a onClick={()=>showModal(value?.patient_id, value?.address)}>{value?.patient_name}</a></h1>
-                                <div className="phone-div">
-                                    {value?.phone}
-                                </div>
-                            </div>
-                            <div className="time-div">
-                                Thời gian:
-                            <span><p>{formatDateTime(value?.date, value?.hour_from, value?.hour_to)}</p></span>
-                            </div>
-                            <div className="address-div">
-                                Địa chỉ: <p>{value?.address}</p>
+                <div key={key} className="newfit-content-div">
+                    <div className="grid-item first-div">
+                        <img src={value?.avatarurl} className="img-div" />
+                        <div className="info-div">
+                            <h1 className="nameText-div"> <a onClick={() => showModal(value?.patient_id, value?.address)}>{value?.patient_name}</a></h1>
+                            <div className="phone-div">
+                                {value?.phone}
                             </div>
                         </div>
-                        <div className="colorTag-div">a</div>
-                        <div className=" second-div">
-                            <div className="grid-left-div">
-                                <div className="reason-div">
-                                    Lý do: {value?.reason}
-                                </div>
-
-                                {(type === 3 || type ===4) &&  (<div className="more-div">
-                                    <Link target="_blank" to={"package/" + value?.package_id} >Chi tiết</Link>
-                                    <span className="chitiet-div"><ArrowRightOutlined /></span>
-                                </div>)}
+                        <div className="time-div">
+                            Thời gian:
+                            <span><p>{formatDateTime(value?.date, value?.hour_from, value?.hour_to)}</p></span>
+                        </div>
+                        <div className="address-div">
+                            Địa chỉ: <p>{value?.address}</p>
+                        </div>
+                    </div>
+                    <div className="colorTag-div">a</div>
+                    <div className=" second-div">
+                        <div className="grid-left-div">
+                            <div className="reason-div">
+                                Lý do: {value?.reason}
                             </div>
-                            <div className="grid-right-div">
 
-                                <div className="timeSend-div">
-                                    Gửi lúc: <p>{handleCreated_at(value?.created_at)}</p>
-                                </div>
+                            {(type === 3 || type === 4) && (<div className="more-div">
+                                <Link target="_blank" to={"package/" + value?.package_id} >Chi tiết</Link>
+                                <span className="chitiet-div"><ArrowRightOutlined /></span>
+                            </div>)}
+                        </div>
+                        <div className="grid-right-div">
 
-                                {type === 1 && (<Popconfirm
-                                    title="Bạn có chắc chắn không?"
-                                    onConfirm={e => { onClickOnNotAssign(key); }}
-                                    onCancel={cancel}
-                                    okText="Yes"
-                                    cancelText="No"
-                                >
-                                    <button className="link-button-accept-div" id={value?.package_id}><span>Chấp nhận</span></button>
-                                </Popconfirm>)}
+                            <div className="timeSend-div">
+                                Gửi lúc: <p>{handleCreated_at(value?.created_at)}</p>
+                            </div>
 
-                                {type === 4 && (<Popover
-                                    title="Bạn có chắc chắn không?"
-                                    
-                                    trigger="click"
-                                    content={(
+                            {type === 1 && (<Popconfirm
+                                title="Bạn có chắc chắn không?"
+                                onConfirm={e => { onClickOnNotAssign(key); }}
+                                onCancel={cancel}
+                                okText="Yes"
+                                cancelText="No"
+                            >
+                                <button className="link-button-accept-div" id={value?.package_id}><span>Chấp nhận</span></button>
+                            </Popconfirm>)}
+
+                            {type === 4 && (<Popover
+                                title="Bạn có chắc chắn không?"
+
+                                trigger="click"
+                                content={(
                                     <div>
-                                        <input required onChange={onChangeRejectText}/>
+                                        <input required onChange={onChangeRejectText} />
                                         <button className="reject-button-input-div" onClick={e => { rejectOnAssignDuplicated(key); }}>Gửi</button>
                                     </div>
-                                    )}
-                                >
-                                    <button className="link-button-reject-div" id={value?.package_id}><span>Từ chối</span></button>
-                                </Popover>)}
-                                
-                                {(type === 3) && (<div>
-                                    <Popover
+                                )}
+                            >
+                                <button className="link-button-reject-div" id={value?.package_id}><span>Từ chối</span></button>
+                            </Popover>)}
+
+                            {(type === 3) && (<div>
+                                <Popover
                                     title="Xin hãy cho biết lý do chính đáng?"
                                     trigger="click"
                                     content={(
-                                    <div>
-                                        <input required onChange={onChangeRejectText}/>
-                                        <button className="reject-button-input-div" onClick={e => { rejectOnAssign(key); }}>Gửi</button>
-                                    </div>
+                                        <div>
+                                            <input required onChange={onChangeRejectText} />
+                                            <button className="reject-button-input-div" onClick={e => { rejectOnAssign(key); }}>Gửi</button>
+                                        </div>
                                     )}
                                 >
                                     <button className="reject-div" id={value?.package_id}><span>Từ chối</span></button>
@@ -361,11 +361,9 @@ const DoctorNewFeedTab = (props) => {
                                     <button className="accept-div" id={value?.package_id}><span> Chấp nhận</span></button>
                                 </Popconfirm></div>)}
 
-                            </div>
                         </div>
-                        <hr className="hrNewFeed-div" />
                     </div>
-
+                    <hr className="hrNewFeed-div" />
                 </div>
             )
         );
@@ -393,27 +391,27 @@ const DoctorNewFeedTab = (props) => {
                     </Radio.Group>
                 </div>
                 <div className="newfit-left-div">
-                    {radioButtonValue === false ? packages(notAssignNotDuplicatedPackage,1) : packages(notAssignDuplicatedPackage,2)}
-                    
-                    {radioButtonValue === false ? 
-                    (<center>
-                        {packages(notAssignNotDuplicatedPackage,1) && !isOutOfDataNotAssign && (<button
-                            onClick={getMoreData}
-                            disabled={disableButton || isLoad}
-                            className={disableButton || isLoad ? "disable-button-service" : "link-button-div"}
-                            id="button">
-                            Hiển thị thêm {isLoad && <LoadingOutlined />}
-                        </button>)}
-                    </center>) 
-                    : (<center>
-                        {packages(notAssignDuplicatedPackage,2) && !isOutOfDataNotAssign && (<button
-                            onClick={getMoreData}
-                            disabled={disableButton || isLoad}
-                            className={disableButton || isLoad ? "disable-button-service" : "link-button-div"}
-                            id="button">
-                            Hiển thị thêm {isLoad && <LoadingOutlined />}
-                        </button>)}
-                    </center>)}
+                    {radioButtonValue === false ? packages(notAssignNotDuplicatedPackage, 1) : packages(notAssignDuplicatedPackage, 2)}
+
+                    {radioButtonValue === false ?
+                        (<center>
+                            {packages(notAssignNotDuplicatedPackage, 1) && !isOutOfDataNotAssign && (<button
+                                onClick={getMoreData}
+                                disabled={disableButton || isLoad}
+                                className={disableButton || isLoad ? "disable-button-service" : "link-button-div"}
+                                id="button">
+                                Hiển thị thêm {isLoad && <LoadingOutlined />}
+                            </button>)}
+                        </center>)
+                        : (<center>
+                            {packages(notAssignDuplicatedPackage, 2) && !isOutOfDataNotAssign && (<button
+                                onClick={getMoreData}
+                                disabled={disableButton || isLoad}
+                                className={disableButton || isLoad ? "disable-button-service" : "link-button-div"}
+                                id="button">
+                                Hiển thị thêm {isLoad && <LoadingOutlined />}
+                            </button>)}
+                        </center>)}
                 </div>
             </div>
         </div>),
@@ -427,7 +425,7 @@ const DoctorNewFeedTab = (props) => {
                     </Radio.Group>
                 </div>
                 <div className="newfit-left-div">
-                    {radioButtonValue === false ? packages(assignNotDuplicatedPackage,3) : packages(assignDuplicatedPackage,4)}
+                    {radioButtonValue === false ? packages(assignNotDuplicatedPackage, 3) : packages(assignDuplicatedPackage, 4)}
                     <center>
                         {!isOutOfDataAssign && (<button
                             onClick={getMoreData}
@@ -450,43 +448,43 @@ const DoctorNewFeedTab = (props) => {
                 <Spin size="large" spinning={isLoad}  >
                     <div className="firstTab-div">
                         <div className="test-div">
-                        <div className="searchText-div">
-                            <Search
-                                placeholder="Tìm kiếm yêu cầu"
-                                onSearch={handleSearchEnter}
-                                onChange={onChange}
-                                id="textSearch"
-                                loading={disableButton || isLoad}
-                                enterButton="Tìm"
-                            />
-                        </div>
-                        
-                        <div className="sortBy-div">
-                            <Dropdown overlay={menu1}>
-                                <Button onClick={e => e.preventDefault()}>
-                                    Sắp xếp theo <DownOutlined />
-                                </Button>
-                            </Dropdown>
-                        </div>
-                        <div className="searchBy-div">
-                            <Dropdown overlay={menu2}>
-                                <Button onClick={e => e.preventDefault()}>
-                                    Tìm kiếm theo <DownOutlined />
-                                </Button>
-                            </Dropdown>
-                        </div>
+                            <div className="searchText-div">
+                                <Search
+                                    placeholder="Tìm kiếm yêu cầu"
+                                    onSearch={handleSearchEnter}
+                                    onChange={onChange}
+                                    id="textSearch"
+                                    loading={disableButton || isLoad}
+                                    enterButton="Tìm"
+                                />
+                            </div>
+
+                            <div className="sortBy-div">
+                                <Dropdown overlay={menu1}>
+                                    <Button onClick={e => e.preventDefault()}>
+                                        Sắp xếp theo <DownOutlined />
+                                    </Button>
+                                </Dropdown>
+                            </div>
+                            <div className="searchBy-div">
+                                <Dropdown overlay={menu2}>
+                                    <Button onClick={e => e.preventDefault()}>
+                                        Tìm kiếm theo <DownOutlined />
+                                    </Button>
+                                </Dropdown>
+                            </div>
                         </div>
                         <div className="tab-div">
                             <Tab
                                 active={active}
-                                onChange={active => { setActive(active);  }}
+                                onChange={active => { setActive(active); }}
                             >
                                 <div key="a">Yêu cầu chung</div>
                                 <div key="b">Yêu cầu được chỉ định</div>
                                 {/* <div key="d">Yêu cầu sắp hết hạn</div> */}
                             </Tab>
                         </div>
-                        {visible ? <Patient handleCancel = {handleCancel}  visible = {visible} patientAddress={packageAddress} doctorAddress={currentDoctor?.address}/> : ""}
+                        {visible ? <Patient handleCancel={handleCancel} visible={visible} patientAddress={packageAddress} doctorAddress={currentDoctor?.address} /> : ""}
                     </div>
                     <div>{content[active]}</div>
                 </Spin>

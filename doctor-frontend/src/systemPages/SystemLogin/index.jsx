@@ -5,6 +5,8 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { doctorLogin } from '../../redux/auth';
 import { Redirect } from 'react-router-dom';
+import { useEffect } from 'react';
+import { getDoctorLogin } from '../../redux/doctor';
 
 const SytemLogin = (props) => {
 
@@ -17,6 +19,8 @@ const SytemLogin = (props) => {
     if (auth.isLoggedIn) {
         return <Redirect to="/" />
     }
+
+    
 
     const layout = {
         labelCol: { span: 24 },

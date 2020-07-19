@@ -39,7 +39,7 @@ function* wachGetDoctorLoginbWorker(action) {
             if (result && result.data) {
                 yield all([
                     put(getDoctorLoginSuccessful(result.data)),
-                    // put(notAssignPackageQuery(result.data.id, query)),
+                    put(notAssignPackageQuery(result.data.id, query)),
                 ]);
             }
         }
