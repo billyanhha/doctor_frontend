@@ -307,6 +307,7 @@ function* watchDeleteServicePackageWorker(action) {
         const result = yield packageService.deleteServicePackage(action?.data?.package_service_id, token);
         if (!_.isEmpty(result)) {
             yield put(deleteServicePackageSuccessul(result))
+            yield put(getPackageAppointments(action?.data?.package_id))
             yield put(getPackageServices(action?.data?.package_id))
         }
     } catch (error) {

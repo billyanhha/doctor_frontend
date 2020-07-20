@@ -163,7 +163,7 @@ const AddAppointmentForm = (props) => {
                     mode="multiple"
                     style={{ width: '100%' }}
                     placeholder="Chọn dịch vụ"
-                    defaultValue={services}
+                    value={services}
                     onChange={handleChange}
                 >
                     {renderServices}

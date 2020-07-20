@@ -103,7 +103,7 @@ const Package = () => {
 
     useEffect(() => {
         handleFirstSearch('', currentKey, currentSearchBy)
-    }, []);
+    }, [currentDoctor?.id]);
 
 
 
