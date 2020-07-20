@@ -5,6 +5,7 @@ import { ClockCircleOutlined } from '@ant-design/icons';
 import Button from 'antd/lib/button/button';
 import DoctorGoogleMap from '../DoctorGoogleMap';
 import Geocode from "react-geocode";
+import moment from 'moment';
 
 Geocode.setApiKey("AIzaSyCI6EYzveNjHPdKPtWuGFNhblfYECyGxvw");
 Geocode.enableDebug();
@@ -49,11 +50,16 @@ const Patient = (props) => {
     }, []);
 
     useEffect(() => {
-        if(size(patientAddress)>0){
+        if (size(patientAddress) > 0) {
             setReady(true);
         }
     }, [patientAddress, doctorAddress]);
 
+    const handleDate = (value) => {
+        return moment(value).format('DD-MM-YYYY');
+    }
+
+    console.log(handleDate('2002-01-11'));
     return (
         <div>
             <Modal
@@ -80,16 +86,16 @@ const Patient = (props) => {
                                     <div className="main-form">
                                         <Timeline>
                                             <Timeline.Item><p className="profile-form-label">Họ và tên</p>{patientInfo?.fullname}</Timeline.Item>
-                                            <Timeline.Item><p className="profile-form-label">Giới tính</p>{patientInfo?.gender}</Timeline.Item>
+                                            <Timeline.Item><p className="profile-form-label">Giới tính</p> {patientInfo?.gender === 'Female' ? 'Nữ' : 'Nam'}</Timeline.Item>
                                             <Timeline.Item dot={<ClockCircleOutlined className="timeline-clock-icon" />} color="red"><p className="profile-form-label">Sinh nhật</p>
-                                                {patientInfo?.dateofbirth}</Timeline.Item>
+                                                {handleDate(patientInfo?.dateofbirth)}</Timeline.Item>
                                             <Timeline.Item><p className="profile-form-label">Địa chỉ</p>
                                                 {patientInfo?.address}</Timeline.Item>
                                         </Timeline>
                                     </div>
                                 </div>
                                 <div style={{ width: '400px', height: '400px' }}>
-                                    {ready && <DoctorGoogleMap patientAddress={patientAddress}/>}
+                                    {ready && <DoctorGoogleMap patientAddress={patientAddress} />}
                                 </div>
                             </div>
                         </div>
