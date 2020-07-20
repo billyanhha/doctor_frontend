@@ -70,6 +70,8 @@ const ChartForPackage = (props) => {
                                 } else
                                     if (systolic >= 140 && diastolic <= 90) {
                                         result = "Tăng huyết áp tâm thu đơn độc: Huyết áp tâm thu ≥ 140 mmHg và huyết áp tâm trương < 90 mmHg.";
+                                    }else{
+                                        result = 'Các chỉ số chưa đưa ra được kết luận.'
                                     }
         return result;
     }
