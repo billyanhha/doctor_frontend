@@ -13,7 +13,8 @@ import {
     GET_DOCTOR_DETAIL,
     CHANGE_DOCTOR_PASSWORD,
     REQUEST_NEW_SERVICE,
-    DOCTOR_GET_ALL_SERVICE_REQUEST
+    DOCTOR_GET_ALL_SERVICE_REQUEST,
+    GET_DOCTOR_ALL_RATING
 } from './action';
 import {
     getDoctorLoginSuccessful,
@@ -22,7 +23,8 @@ import {
     getAppointmentsFromToSuccessful,
     getDoctorDetailSuccessful,
     changeDoctorPasswordSuccessfull,
-    getAllServiceRequestSuccessfully
+    getAllServiceRequestSuccessfully,
+    getAllRatingSuccessful
 } from '.';
 import { notAssignPackageQuery, 
     assignPackageQuery,
@@ -137,6 +139,20 @@ function* watchGetDoctorDetailWorker(action) {
     }
 }
 
+function* watchGetAllRating(action) {
+    try {
+        yield put(openLoading());
+        const result = yield doctorService.getAllRating(action);
+        if (!_.isEmpty(result)) {
+            yield put(getAllRatingSuccessful(result));
+        }
+    } catch (error) {
+        console.log(error);
+    } finally {
+        yield put(closeLoading());
+    }
+}
+
 function* watchChangeDoctorPassword(action) {
     try {
         yield put(openLoading());
@@ -213,6 +229,7 @@ export function* doctorSaga() {
     yield takeLatest(GET_APPOINTMENTS_DETAIL, watchGetAppointmentsDetail);
     yield takeLatest(GET_PATIENT_DETAIL, watchGetPatientDetail);
     yield takeLatest(GET_DOCTOR_DETAIL, watchGetDoctorDetailWorker);
+    yield takeLatest(GET_DOCTOR_ALL_RATING, watchGetAllRating);
     yield takeLatest(CHANGE_DOCTOR_PASSWORD, watchChangeDoctorPassword);
     yield takeLatest(REQUEST_NEW_SERVICE, watchRequestNewSerice);
     yield takeLatest(DOCTOR_GET_ALL_SERVICE_REQUEST, watchDoctorGetAllServiceRequest);

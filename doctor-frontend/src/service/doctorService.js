@@ -84,7 +84,7 @@ doctorService.getDoctorExperience = (id) => new Promise((reslove, reject) => {
 })
 
 doctorService.getDoctorNormalDetail = (id) => new Promise((reslove, reject) => {
-    const query = '/api/doctor/' + id
+    const query = '/api/doctor/' + id +'?rating=true'
     axios.get(query)
         .then(result => reslove(result.data))
         .catch(err => reject(err))
@@ -94,6 +94,18 @@ doctorService.getDoctorLanguage = (id) => new Promise((reslove, reject) => {
     const query = '/api/doctor/' + id + '/languages'
     axios.get(query)
         .then(result => reslove(result.data))
+        .catch(err => reject(err))
+})
+
+doctorService.getAllRating = (data) => new Promise((resolve, reject) => {
+    const query = `/api/doctor/${data?.data?.doctorId}/ratings`
+    axios.get(query, {
+        params: {
+            itemsPage: 3,
+            page: data?.data?.pageRatingNum
+        }
+    })
+        .then(result => resolve(result.data))
         .catch(err => reject(err))
 })
 

@@ -34,6 +34,11 @@ body {
     color: #40A9FF !important;
 }
 
+.rate-average {
+    font-size: 1rem !important;
+    color: #888888;
+}
+
 .logo {
     width: 100px;
     height: 100px;
