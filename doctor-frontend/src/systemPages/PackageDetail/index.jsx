@@ -227,7 +227,7 @@ const PackageDetail = (props) => {
                             <Descriptions.Item label="Bệnh nhân">
                                 <a onClick={() => showModal(packageInfo?.patient_id)}>
                                     <Avatar shape="square" size={50} icon={<UserOutlined />}
-                                        src={packageInfo.avatarurl} />
+                                        src={packageInfo.avatarurl} style={{ marginRight: '10px' }}/>
                                     {packageInfo.patient_name}</a>
                                 {packageInfo?.address ? <Patient handleCancel={handleCancelvisiblePatient} visible={visiblePatient} patientAddress={packageInfo?.address} doctorAddress={currentDoctor?.address} /> : ""}
                             </Descriptions.Item>
