@@ -41,7 +41,6 @@ const FormResult = (props) => {
     const submitForm = () => {
         setdisable(true);
         let data = {}
-        data.token = token;
         data.result_content = content
         let doctorId = currentDoctor?.id
         let appointmentId = currentAppointment.id

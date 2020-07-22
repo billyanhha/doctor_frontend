@@ -87,12 +87,11 @@ packageService.addAppointmentPackage = (data, token) => new Promise((reslove, re
         .catch(err => reject(err))
 })
 
-packageService.updateAppointmentPackage = (doctorId, appointmentId, data) => new Promise((reslove, reject) => {
+packageService.updateAppointmentPackage = (doctorId, appointmentId, data, token) => new Promise((reslove, reject) => {
     const api = `/api/doctor/${doctorId}/appointments/${appointmentId}`;
-
     axios.put(api, data, {
         headers: {
-            authorization: "Bearer " + data?.token,
+            authorization: "Bearer " + token,
             Accept: '*/*'
         },
     })

@@ -342,11 +342,13 @@ function* watchUpdateAppointmentPackageWorker(action) {
     try {
         yield put(openLoading());
         window.location.hash = '';
+        const { token } = yield select(state => state.auth)
 
         const result = yield packageService.updateAppointmentPackage(
             action?.doctorId,
             action?.appointmentId,
-            action?.data
+            action?.data,
+            token
         );
         if (!_.isEmpty(result)) {
             yield put(getAppointmentsFromTo(action?.doctorId, 
