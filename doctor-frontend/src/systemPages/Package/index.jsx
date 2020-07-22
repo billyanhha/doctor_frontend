@@ -127,7 +127,7 @@ const Package = () => {
 
     useEffect(() => {
         handleFirstSearch('', currentKey, currentSearchBy)
-    }, []);
+    }, [currentDoctor?.id]);
 
     const renderMenuStatus = statusData.status.map((value, index) => {
         return (
