@@ -46,8 +46,9 @@ function* wachGetDoctorLoginbWorker(action) {
             }
         }
     } catch (error) {
-        if (error.toString().includes('status code 401')) {
+        if (error?.response?.status  === 401) {
             yield put(doctorLogout());
+            message.destroy();
             message.error('Phiên đã hết hạn , vui lòng đăng nhập lại', 3)
         }
         console.log(error);
@@ -71,6 +72,7 @@ function* watchGetAppointmentsFromTo(action) {
             }
         }
     } catch (error) {
+        message.destroy();
         message.error('Hệ thống quá tải, xin hãy thử lại', 3);
         console.log(error);
     } finally {
@@ -160,6 +162,7 @@ function* watchChangeDoctorPassword(action) {
         console.log('result update pass',result);
         if (!_.isEmpty(result)) {
             yield put(changeDoctorPasswordSuccessfull(result));
+            message.destroy();
             message.success("Đổi mật khẩu thành công");
         }
     } catch (error) {
