@@ -1,0 +1,112 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap");
+
+.forgot-password-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+
+    font-family: "Open Sans", sans-serif;
+    font-weight: 600;
+}
+
+.forgot-password-wrapper {
+    width: 20vw;
+    margin-top: -10vh;
+}
+
+.forgot-password-wrapper div {
+    text-align: center;
+}
+
+.forgot-password-img img {
+    height: 100px;
+    width: 100px;
+}
+
+.forgot-password-title {
+    margin-bottom: 40px;
+    font-size: 2rem;
+}
+
+.forgot-form-label {
+    text-align: left;
+    margin-top: 20px;
+    margin-bottom: 0;
+}
+
+.forgot-form-submit {
+    margin-top: 20px;
+}
+
+.forgot-button {
+    margin-top: 10px;
+    width: 200px;
+    font-weight: bold;
+    background-color: #fff;
+    border: 1px solid #218db4;
+    color: #218db4;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.forgot-button:hover {
+    background-color: #dff7ff;
+}
+
+.link-to-login {
+    margin-top: 40px;
+    text-align: left !important;
+}
+
+.forgot-msg {
+    margin: 40px 0;
+}
+
+.forgot-msg span {
+    color: #40a9ff;
+}
+
+@media screen and (max-width: 1600px) {
+    .forgot-password-wrapper {
+        width: 40vw;
+    }
+}
+
+/* HD monitor & older TV, Wacom */
+@media screen and (max-width: 1366px) {
+}
+
+/* Ipad Pro, Tablet, Wacom, Monitor */
+@media screen and (max-width: 1280px) {
+}
+
+/* Ipad Pro, Tablet, Phone */
+@media screen and (max-width: 1024px) {
+}
+
+/* Ipad */
+@media screen and (max-width: 800px) {
+    .forgot-password-title {
+        font-size: 1.5rem;
+    }
+
+    .forgot-password-wrapper {
+        width: 60vw;
+    }
+
+    .forgot-msg {
+        font-size: 0.8rem;
+    }
+}
+
+/* Phone */
+@media screen and (max-width: 600px) {
+    .forgot-password-wrapper {
+        width: 90vw;
+    }
+}
+
+/* Smaller phone */
+@media screen and (max-width: 320px) {
+}

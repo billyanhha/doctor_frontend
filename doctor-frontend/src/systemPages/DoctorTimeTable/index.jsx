@@ -305,7 +305,7 @@ const DoctorDashboard = (props) => {
                         </Spin>
                     </Modal>
                     <div className="dashboard-timetable">
-                        <div className="dashboard-timetable-title">Lịch trình</div>
+                        <div className="dashboard-timetable-title">Lịch trình sắp tới</div>
                         <div className="dashboard-timetable-main">
                             <div className="timetable-button">
                                 <button onClick={nextWeek}>Tuần sau</button>
