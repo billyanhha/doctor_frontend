@@ -9,10 +9,7 @@ const initialState = {
 
 export const formReducer = (state = initialState, action) => {
     switch(action.type) {
-        case GET_PACKAGE_RESULT_FORM_SUCCESSFUL : {         
-            console.log('====================================');
-            console.log(action.data);
-            console.log('====================================');   
+        case GET_PACKAGE_RESULT_FORM_SUCCESSFUL : {           
             state = {...state , packageResultForm: action.data};
             return state
         }

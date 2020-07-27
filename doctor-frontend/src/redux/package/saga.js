@@ -307,6 +307,7 @@ function* watchDeleteServicePackageWorker(action) {
         const result = yield packageService.deleteServicePackage(action?.data?.package_service_id, token);
         if (!_.isEmpty(result)) {
             yield put(deleteServicePackageSuccessul(result))
+            yield put(getPackageAppointments(action?.data?.package_id))
             yield put(getPackageServices(action?.data?.package_id))
         }
     } catch (error) {
@@ -341,11 +342,13 @@ function* watchUpdateAppointmentPackageWorker(action) {
     try {
         yield put(openLoading());
         window.location.hash = '';
+        const { token } = yield select(state => state.auth)
 
         const result = yield packageService.updateAppointmentPackage(
             action?.doctorId,
             action?.appointmentId,
-            action?.data
+            action?.data,
+            token
         );
         if (!_.isEmpty(result)) {
             yield put(getAppointmentsFromTo(action?.doctorId, 

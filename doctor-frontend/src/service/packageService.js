@@ -60,9 +60,9 @@ packageService.editPackage = (data, token) => new Promise((reslove, reject) => {
         }
     })
         .then(result => {
-            if (!_.isEmpty(result?.data)) {
-                console.log(result?.data);
-            }
+            // if (!_.isEmpty(result?.data)) {
+            //     console.log(result?.data);
+            // }
             reslove(result.data)
         })
         .catch(err => reject(err))
@@ -87,20 +87,18 @@ packageService.addAppointmentPackage = (data, token) => new Promise((reslove, re
         .catch(err => reject(err))
 })
 
-packageService.updateAppointmentPackage = (doctorId, appointmentId, data) => new Promise((reslove, reject) => {
+packageService.updateAppointmentPackage = (doctorId, appointmentId, data, token) => new Promise((reslove, reject) => {
     const api = `/api/doctor/${doctorId}/appointments/${appointmentId}`;
-
-
     axios.put(api, data, {
         headers: {
-            authorization: "Bearer " + data?.token,
+            authorization: "Bearer " + token,
             Accept: '*/*'
         },
     })
         .then(result => {
 
-            if (!_.isEmpty(result?.data)) {
-                packageService.addServiceAppointment(appointmentId, data.services, data?.token)
+            if (!_.isEmpty(result?.data) &&  !_.isEmpty(data?.services) ) {
+                packageService.addServiceAppointment(appointmentId, data?.services, data?.token)
             }
             reslove(result.data)
         })
