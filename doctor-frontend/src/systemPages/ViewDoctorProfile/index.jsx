@@ -153,31 +153,31 @@ const ViewpatientProfile = (props) => {
                             <div className="detail-title">
                                 BS. {doctorDetail?.doctor?.fullname} <br />
                                 {doctorDetail?.doctor?.average_rating == 0 ||
-                                !doctorDetail?.doctor?.average_rating ? (
-                                    <span className="rate-average">
-                                        Chưa ghi nhận đánh giá
-                                    </span>
-                                ) : (
-                                    <>
-                                        <Rate
-                                            className="doctor-rate"
-                                            disabled
-                                            value={
-                                                doctorDetail?.doctor
-                                                    ?.average_rating
-                                            }
-                                        />
+                                    !doctorDetail?.doctor?.average_rating ? (
                                         <span className="rate-average">
-                                            {" "}
+                                            Chưa ghi nhận đánh giá
+                                        </span>
+                                    ) : (
+                                        <>
+                                            <Rate
+                                                className="doctor-rate"
+                                                disabled
+                                                value={
+                                                    doctorDetail?.doctor
+                                                        ?.average_rating
+                                                }
+                                            />
+                                            <span className="rate-average">
+                                                {" "}
                                             ­{" "}
-                                            {
-                                                doctorDetail?.doctor
-                                                    ?.average_rating
-                                            }{" "}
+                                                {
+                                                    doctorDetail?.doctor
+                                                        ?.average_rating
+                                                }{" "}
                                             / 5
                                         </span>
-                                    </>
-                                )}
+                                        </>
+                                    )}
                             </div>
                             Địa chỉ:
                             <div className="doctor-info-div doctor-address-div">
@@ -226,8 +226,8 @@ const ViewpatientProfile = (props) => {
                                                         visible ? (
                                                             <EyeTwoTone />
                                                         ) : (
-                                                            <EyeInvisibleOutlined />
-                                                        )
+                                                                <EyeInvisibleOutlined />
+                                                            )
                                                     }
                                                 />
                                                 Xác nhận lại mật khẩu mới:
@@ -238,8 +238,8 @@ const ViewpatientProfile = (props) => {
                                                         visible ? (
                                                             <EyeTwoTone />
                                                         ) : (
-                                                            <EyeInvisibleOutlined />
-                                                        )
+                                                                <EyeInvisibleOutlined />
+                                                            )
                                                     }
                                                 />
                                             </Space>
@@ -305,7 +305,12 @@ const ViewpatientProfile = (props) => {
                         <div className="detail-title">Đánh giá</div>
                         <div className="seperator" />
                         <br />
-                        <h3>Có <span className="highlight">{allRating?.ratings?.[0]?.full_count}</span> đánh giá</h3>
+                        {!allRating?.ratings?.[0]?.full_count ? (
+                            <h3>
+                                Chưa ghi nhận đánh giá
+                            </h3>
+                        ) :
+                            (<h3>Có <span className="highlight">{allRating?.ratings?.[0]?.full_count}</span> đánh giá</h3>)}
                         <div className="doctor-experiece">
                             {renderRating}
                             <br />
@@ -320,8 +325,8 @@ const ViewpatientProfile = (props) => {
                                     showSizeChanger={false}
                                 />
                             ) : (
-                                ""
-                            )}
+                                    ""
+                                )}
                         </div>
                     </div>
                 </div>

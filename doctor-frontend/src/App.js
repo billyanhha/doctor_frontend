@@ -14,6 +14,7 @@ import ViewDoctorProfile from './systemPages/ViewDoctorProfile';
 import DoctorRequestService from './systemPages/DoctorRequestService';
 import Notify from './components/Notify';
 require('dotenv').config()
+import ForgotPassword from './systemPages/ForgotPassword';
 
 const App = () => {
 
@@ -23,6 +24,7 @@ const App = () => {
       <Notify />
       <Switch >
         <Route exact path="/login" render={(props) => <SystemLogin {...props} />} />
+        <Route exact path="/forgot-password/:token" render={props => <ForgotPassword {...props} />} />
         {/* <Route exact path='/new' component={NewFeed} /> */}
         <PrivateRoute exact path='/'>
           <DoctorNewFeedTab />

@@ -7,6 +7,7 @@ import {packageSaga} from './package/saga';
 import {patientSaga} from './patient/saga';
 import { formSaga } from './form/saga';
 import { notifySaga } from './notification/saga';
+import { accountSaga } from './account/saga';
 
 export function* rootSaga() {
   yield all([
@@ -17,6 +18,7 @@ export function* rootSaga() {
     packageSaga(),
     patientSaga(),
     formSaga(),
-    notifySaga()
+    notifySaga(),
+    accountSaga()
   ]);
 }

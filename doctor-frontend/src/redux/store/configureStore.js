@@ -11,6 +11,7 @@ import {packageReducer} from '../package/reducer';
 import {patientReducer} from '../patient/reducer';
 import { formReducer } from '../form/reducer';
 import { notifyReducer } from '../notification/reducer';
+import { accountReducer } from '../account/reducer';
 
 const persistConfig = {
   key: 'root',
@@ -26,7 +27,8 @@ const rootReducers = combineReducers({
   package: packageReducer,
   patient: patientReducer,
   form: formReducer,
-  notify: notifyReducer
+  notify: notifyReducer,
+  account: accountReducer
 });
 
 const saga = createSagaMiddleware();
