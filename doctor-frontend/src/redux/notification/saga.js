@@ -9,7 +9,6 @@ import { message } from 'antd';
 
 function* watchGetDoctorNotifyWorker(action) {
     try {
-        yield put(openLoading());
         const { token } = yield select(state => state.auth)
         const result = yield notifycationService.getDoctorNotify(action?.data, token);
         if (!_.isEmpty(result?.notifications?.result)) {
@@ -22,13 +21,11 @@ function* watchGetDoctorNotifyWorker(action) {
         message.error(error?.response?.data?.err)
         console.log(error);
     } finally {
-        yield put(closeLoading());
     }
 }
 
 function* watchGetMoreDoctorNotifyWorker(action) {
     try {
-        yield put(openLoading());
         const { token } = yield select(state => state.auth)
         const result = yield notifycationService.getDoctorNotify(action?.data, token);
         if (!_.isEmpty(result?.notifications)) {
@@ -41,13 +38,11 @@ function* watchGetMoreDoctorNotifyWorker(action) {
         message.error(error?.response?.data?.err)
         console.log(error);
     } finally {
-        yield put(closeLoading());
     }
 }
 
 function* watchMarkReadNotify(action) {
     try {
-        yield put(openLoading());
         const { token } = yield select(state => state.auth)
         const result = yield notifycationService.markReadNotify(action?.data, token);
     } catch (error) {
@@ -55,14 +50,12 @@ function* watchMarkReadNotify(action) {
         message.error(error?.response?.data?.err)
         console.log(error);
     } finally {
-        yield put(closeLoading());
     }
 }
 
 
 function* watchmarkAllReadNotify(action) {
     try {
-        yield put(openLoading());
         const { token } = yield select(state => state.auth)
         const result = yield notifycationService.markAllRead(action?.data, token);
         if (!_.isEmpty(result?.notificationsUpdated)) {
@@ -74,13 +67,11 @@ function* watchmarkAllReadNotify(action) {
         message.error(error?.response?.data?.err)
         console.log(error);
     } finally {
-        yield put(closeLoading());
     }
 }
 
 function* watchcountUnreadNotifyWorker(action) {
     try {
-        yield put(openLoading());
         const { token } = yield select(state => state.auth)
         const result = yield notifycationService.countUnreadNotify(action?.data, token);
         if (result?.num) {
@@ -93,7 +84,6 @@ function* watchcountUnreadNotifyWorker(action) {
         message.error(error?.response?.data?.err.toString())
         console.log(error);
     } finally {
-        yield put(closeLoading());
     }
 }
 
