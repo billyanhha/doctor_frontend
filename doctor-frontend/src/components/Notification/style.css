@@ -1,0 +1,53 @@
+.drawer-header{
+    
+}
+
+.drawer-header > .ant-btn {
+    padding: 0 !important;
+}
+
+.notify-item, .notify-item-nonread  {
+    padding: 10px 24px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* number of lines to show */
+    -webkit-box-orient: vertical;
+    font-weight: normal;
+    border-bottom: 1px solid #dddfe2;
+    cursor: pointer;
+    transition: all .3s ease-in-out;
+    color :#1d2129
+}
+
+.notify-item:hover {
+    background-color: #fafafa;
+}
+
+.notify-date{
+    color: #90949c;
+    font-size:13px
+}
+
+.notify-item-nonread {
+    background-color: #edf2fa;
+
+}
+
+ .ant-drawer-content-wrapper{
+    width: 500px !important;
+}
+
+.notify-loadmore{
+    margin: 20px 0px;
+}
+
+.notify-loadmore-btn{
+    width: 50% !important
+}
+
+@media screen and (max-width: 500px) {
+    .ant-drawer-content-wrapper{
+        width: 200px !important;
+    }
+}

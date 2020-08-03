@@ -3,23 +3,35 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Redirect, Link, withRouter } from 'react-router-dom';
 import { getDoctorLogin } from '../../redux/doctor';
 import { doctorLogout } from '../../redux/auth';
-import { PageHeader, Tabs, Button, Menu } from 'antd'
-import Skeleton  from "react-loading-skeleton";
+import { PageHeader, Tabs, Button, Menu, Badge } from 'antd'
+import Skeleton from "react-loading-skeleton";
 import logo from '../../logo.svg';
 import './style.css';
+import Notification from '../Notification';
+import { countUnreadNotify } from '../../redux/notification';
 
 
 const Navbar = (props) => {
     const auth = useSelector(state => state.auth);
-    const {isLoad} = useSelector(state => state.ui);
-    const {currentDoctor} = useSelector(state => state.doctor);
+    const { isLoad } = useSelector(state => state.ui);
+    const { currentDoctor } = useSelector(state => state.doctor);
     const dispatch = useDispatch();
+    const [drawerVisible, setdrawerVisible] = useState(false);
+    const { unreadNotifyNumber } = useSelector(state => state.notify);
+
 
     const { location } = props;
-    
+
     useEffect(() => {
-            dispatch(getDoctorLogin(auth?.token));
+        dispatch(getDoctorLogin(auth?.token));
     }, []);
+
+    useEffect(() => {
+        if (currentDoctor?.id) {
+            const data = { receiver_id: currentDoctor?.id }
+            dispatch(countUnreadNotify(data))
+        }
+    }, [currentDoctor]);
 
     const logout = () => {
         dispatch(doctorLogout());
@@ -29,11 +41,35 @@ const Navbar = (props) => {
         return <Redirect to="/login" />
     }
 
+    const openNofityDrawer = () => {
+        setdrawerVisible(true)
+
+    }
+
+    const renderName = () => {
+        return (
+            <div>
+                {currentDoctor?.fullname}
+                <Button onClick = {openNofityDrawer} type="link" className="button-notify" >
+                    <Badge count={unreadNotifyNumber} dot>
+                        Thông báo
+                    </Badge>
+                </Button>
+            </div>
+        )
+    }
+
+    const closeDrawer = () => {
+        setdrawerVisible(false)
+    }
+
+
     return (
         <div>
+            <Notification visible={drawerVisible} closeDrawer={closeDrawer} />
             <PageHeader
                 className="site-page-header-responsive"
-                title={isLoad? <Skeleton/> : currentDoctor?.fullname }
+                title={isLoad ? <Skeleton /> : renderName()}
                 extra={[
                     <Button type="primary" onClick={logout}>Đăng xuất</Button>
                     ,
