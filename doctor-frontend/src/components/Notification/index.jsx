@@ -25,7 +25,7 @@ const Notification = (props) => {
 
     useEffect(() => {
 
-        if(currentDoctor?.id) {
+        if (currentDoctor?.id) {
             const data = { id: currentDoctor?.id, itemsPage: itemsPage, page: page }
             dispatch(getDoctorNotification(data))
         }
@@ -37,7 +37,7 @@ const Notification = (props) => {
     const getMoreDoctorNotificationData = () => {
         setdisable(true)
         let currentPage = page;
-        const data = { id: currentDoctor?.id, itemsPage: itemsPage , page: ++currentPage }
+        const data = { id: currentDoctor?.id, itemsPage: itemsPage, page: ++currentPage }
         setpage(currentPage)
         dispatch(getMoreDoctorNotification(data))
         setTimeout(() => {
@@ -46,7 +46,7 @@ const Notification = (props) => {
     }
 
     const markAllReadFunc = () => {
-        const data = {id: currentDoctor?.id, itemsPage: itemsPage, page: 1 , receiver_id : currentDoctor?.id};
+        const data = { id: currentDoctor?.id, itemsPage: itemsPage, page: 1, receiver_id: currentDoctor?.id };
         dispatch(markAllRead(data))
 
     }
@@ -59,7 +59,7 @@ const Notification = (props) => {
                         <h3>Thông báo <NotificationOutlined /></h3>
                     </Badge>
                 </div>
-                <Button onClick = {markAllReadFunc} type="link" primary>
+                <Button onClick={markAllReadFunc} type="link" primary>
                     Đánh dấu tất cả là đã xem
                 </Button>
             </div>
@@ -67,8 +67,8 @@ const Notification = (props) => {
     }
 
 
-    const markReadNotifyFunc =  (value) => {
-        if(!value?.is_read) {
+    const markReadNotifyFunc = (value) => {
+        if (!value?.is_read) {
             const data = { id: value?.id, is_read: true }
             dispatch(markReadNotify(data))
         }
@@ -77,16 +77,14 @@ const Notification = (props) => {
 
     const renderNotify = notifications.map((value, index) => {
         return (
-            <div onClick={() => markReadNotifyFunc(value)}>
-                <a href={value?.url} className={(!value?.is_read ? "notify-item-nonread " : "notify-item")}>
-                    <p key={value?.id}>
-                        <Badge status="processing" />
-                        {value?.content}
-                    </p>
-                    <div className="notify-date">
-                        <FieldTimeOutlined /> {moment(value?.created_at).startOf('hour').fromNow()}
-                    </div>
-                </a>
+            <div key={value?.id} onClick={() => markReadNotifyFunc(value)} className={(!value?.is_read ? "notify-item-nonread " : "notify-item")}>
+                <p >
+                    <Badge status="processing" />
+                    {value?.content}
+                </p>
+                <div className="notify-date">
+                    <FieldTimeOutlined /> {moment(value?.created_at).startOf('hour').fromNow()}
+                </div>
             </div>
         )
     })
