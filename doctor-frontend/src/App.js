@@ -13,8 +13,8 @@ import ChartJs from './systemPages/ChartForPackage';
 import ViewDoctorProfile from './systemPages/ViewDoctorProfile';
 import DoctorRequestService from './systemPages/DoctorRequestService';
 import Notify from './components/Notify';
-require('dotenv').config()
 import ForgotPassword from './systemPages/ForgotPassword';
+require('dotenv').config()
 
 const App = () => {
 
