@@ -34,6 +34,7 @@ function* watchDoctorLogoutWorker() {
     try {
         yield put(openLoading())
         yield put(clearDoctorLogin())
+        window.location.pathname = "/login"
     } catch (error) {
         console.log(error);
     } finally {

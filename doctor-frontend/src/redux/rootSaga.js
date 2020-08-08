@@ -6,6 +6,7 @@ import { doctorSaga } from './doctor/saga';
 import {packageSaga} from './package/saga';
 import {patientSaga} from './patient/saga';
 import { formSaga } from './form/saga';
+import { notifySaga } from './notification/saga';
 import { accountSaga } from './account/saga';
 
 export function* rootSaga() {
@@ -17,6 +18,7 @@ export function* rootSaga() {
     packageSaga(),
     patientSaga(),
     formSaga(),
+    notifySaga(),
     accountSaga()
   ]);
 }

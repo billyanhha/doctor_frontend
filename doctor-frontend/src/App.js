@@ -12,13 +12,16 @@ import PackageDetail from './systemPages/PackageDetail';
 import ChartJs from './systemPages/ChartForPackage';
 import ViewDoctorProfile from './systemPages/ViewDoctorProfile';
 import DoctorRequestService from './systemPages/DoctorRequestService';
+import Notify from './components/Notify';
 import ForgotPassword from './systemPages/ForgotPassword';
+require('dotenv').config()
 
 const App = () => {
 
   return (
     <BrowserRouter >
       <LoadingBar showFastActions className="loading-bar" />
+      <Notify />
       <Switch >
         <Route exact path="/login" render={(props) => <SystemLogin {...props} />} />
         <Route exact path="/forgot-password/:token" render={props => <ForgotPassword {...props} />} />

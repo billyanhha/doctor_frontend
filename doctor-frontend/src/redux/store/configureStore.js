@@ -10,6 +10,7 @@ import { doctorReducer } from '../doctor/reducer';
 import {packageReducer} from '../package/reducer';
 import {patientReducer} from '../patient/reducer';
 import { formReducer } from '../form/reducer';
+import { notifyReducer } from '../notification/reducer';
 import { accountReducer } from '../account/reducer';
 
 const persistConfig = {
@@ -26,6 +27,7 @@ const rootReducers = combineReducers({
   package: packageReducer,
   patient: patientReducer,
   form: formReducer,
+  notify: notifyReducer,
   account: accountReducer
 });
 
