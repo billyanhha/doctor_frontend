@@ -69,7 +69,7 @@ export const packageReducer = (state = initialState, action) => {
         state.isOutOfDataNotAssign = action?.packages?.isOutOfData
         return state;
     } else if (action.type === NEXT_ASSIGN_PACKAGE_QUERY_SUCCESSFUL) {
-       
+
             state.assignPackage.push(...action?.packages?.result);
 
 
