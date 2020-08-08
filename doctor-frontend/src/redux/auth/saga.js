@@ -22,7 +22,7 @@ function* watchDoctorLoginWorker(action) {
 
     } catch (error) {
         message.destroy();
-        message.error('Email hoặc mật khẩu sai', 2);
+        message.error(error?.response?.data?.err)
         console.log(error);
     } finally {
         // message.destroy()
@@ -34,10 +34,10 @@ function* watchDoctorLogoutWorker() {
     try {
         yield put(openLoading())
         yield put(clearDoctorLogin())
-        window.location.pathname = "/login"
     } catch (error) {
         console.log(error);
     } finally {
+        window.location.pathname = "/login"
         yield put(closeLoading())
     }
 }

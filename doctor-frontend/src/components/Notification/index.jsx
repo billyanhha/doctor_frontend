@@ -83,7 +83,7 @@ const Notification = (props) => {
                     {value?.content}
                 </p>
                 <div className="notify-date">
-                    <FieldTimeOutlined /> {moment(value?.created_at).startOf('hour').fromNow()}
+                    <FieldTimeOutlined /> {moment(value?.created_at).fromNow()}
                 </div>
             </div>
         )
