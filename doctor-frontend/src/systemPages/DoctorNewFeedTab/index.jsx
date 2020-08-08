@@ -35,11 +35,10 @@ const DoctorNewFeedTab = (props) => {
     const { currentDoctor } = useSelector(state => state.doctor);
     // const { token } = useSelector(state => state.auth);
     // const { assignPackage } = useSelector(state => state.package);
-    const { notAssignNotDuplicatedPackage } = useSelector(state => state.package);
-    const { notAssignDuplicatedPackage } = useSelector(state => state.package);
+    const { notAssignPackage } = useSelector(state => state.package);
 
-    const { assignNotDuplicatedPackage } = useSelector(state => state.package);
-    const { assignDuplicatedPackage } = useSelector(state => state.package);
+
+    const { assignPackage } = useSelector(state => state.package);
     const { packageAcceptUpdated } = useSelector(state => state.package);
     const { packageRejectUpdated } = useSelector(state => state.package);
     // const { allAppointmentByPackage } = useSelector(state => state.package);
@@ -55,7 +54,7 @@ const DoctorNewFeedTab = (props) => {
     const [sortBy, setSortBy] = useState("created_at");
     const [searchBy, setSearchBy] = useState("name");
     // const [redirect, setRedirect] = useState(false);
-    const [radioButtonValue, setRadioButtonValue] = useState(false);
+
     const [rejectText, setRejectText] = useState("");
 
     const [packageAddress, setPackageAddress] = useState("");
@@ -64,11 +63,12 @@ const DoctorNewFeedTab = (props) => {
 
     useEffect(() => {
         if(currentDoctor?.id)
-            handleSearchAndSort(textSearch, sortBy, searchBy, radioButtonValue)
+            handleSearchAndSort(textSearch, sortBy, searchBy)
     }, [active]);
 
     const onClickOnNotAssign = (value) => {
-        const info = notAssignNotDuplicatedPackage?.filter((info, key) => {
+        
+        const info = notAssignPackage?.filter((info, key) => {
             if (key === value)
                 return info;
         });
@@ -85,7 +85,8 @@ const DoctorNewFeedTab = (props) => {
     }
 
     const acceptOnAssign = (value) => {
-        const info = assignNotDuplicatedPackage?.filter((info, key) => {
+        
+        const info = assignPackage?.filter((info, key) => {
             if (key === value)
                 return info;
         });
@@ -102,7 +103,8 @@ const DoctorNewFeedTab = (props) => {
     }
 
     const rejectOnAssign = (value) => {
-        const info = assignNotDuplicatedPackage?.filter((info, key) => {
+
+        const info = assignPackage?.filter((info, key) => {
             if (key === value)
                 return info;
         });
@@ -119,7 +121,8 @@ const DoctorNewFeedTab = (props) => {
     }
 
     const rejectOnAssignDuplicated = (value) => {
-        const info = assignDuplicatedPackage?.filter((info, key) => {
+        
+        const info = assignPackage?.filter((info, key) => {
             console.log(key);
             if (key === value)
                 return info;
@@ -139,14 +142,14 @@ const DoctorNewFeedTab = (props) => {
     const handleSearchByChange = ((key) => {
         let search = key.key;
         setSearchBy(search);
-        handleSearchAndSort(textSearch, sortBy, search, radioButtonValue);
+        handleSearchAndSort(textSearch, sortBy, search);
 
     });
 
     const handleSortByChange = ((key) => {
         let sort = key.key;
         setSortBy(sort);
-        handleSearchAndSort(textSearch, sort, searchBy, radioButtonValue);
+        handleSearchAndSort(textSearch, sort, searchBy);
 
     });
     const onChange = (e) => {
@@ -158,15 +161,15 @@ const DoctorNewFeedTab = (props) => {
     }
 
     const handleSearchEnter = (value) => {
-        handleSearchAndSort(value, sortBy, searchBy, radioButtonValue);
+        handleSearchAndSort(value, sortBy, searchBy);
     }
 
-    const handleSearchAndSort = ((value, sortBy, searchBy, duplicated) => {
+    const handleSearchAndSort = ((value, sortBy, searchBy) => {
         let newPage = 1;
         const trimValue = value?.trim();
         disableButtonFunc();
         if (!_.isEmpty(trimValue)) {
-            let newQuery = { query: trimValue, sortBy: sortBy, page: newPage, searchBy: searchBy, duplicated: duplicated };
+            let newQuery = { query: trimValue, sortBy: sortBy, page: newPage, searchBy: searchBy};
             console.log(newQuery)
             setquery(newQuery);
             if (active === 'a') {
@@ -177,13 +180,13 @@ const DoctorNewFeedTab = (props) => {
                 dispatch(assignPackageQuery(currentDoctor?.id, newQuery));
             }
         } else {
-            getNonQueryService(sortBy, duplicated);
+            getNonQueryService(sortBy);
         }
     })
 
-    const getNonQueryService = (sortBy, duplicated) => {
+    const getNonQueryService = (sortBy) => {
         let newPage = 1;
-        let newQuery = { sortBy: sortBy, page: newPage, searchBy: searchBy, duplicated: duplicated };
+        let newQuery = { sortBy: sortBy, page: newPage, searchBy: searchBy};
         // console.log(newQuery)
         setquery(newQuery);
         if (active === 'a') {
@@ -202,14 +205,14 @@ const DoctorNewFeedTab = (props) => {
             let next = pageNotAssign + 1;
             setPageNotAssign(next);
             const trimValue = textSearch.trim();
-            let newQuery = { page: next, searchBy: searchBy, sortBy: sortBy, query: trimValue, duplicated: radioButtonValue };
+            let newQuery = { page: next, searchBy: searchBy, sortBy: sortBy, query: trimValue };
             // console.log(newQuery)
             dispatch(nextNotAssignPackageQuery(currentDoctor?.id, newQuery));
         } else {
             let next = pageAssign + 1;
             setPageAssign(next);
             const trimValue = textSearch.trim();
-            let newQuery = { page: next, searchBy: searchBy, sortBy: sortBy, query: trimValue, duplicated: radioButtonValue };
+            let newQuery = { page: next, searchBy: searchBy, sortBy: sortBy, query: trimValue };
             dispatch(nextAssignPackageQuery(currentDoctor?.id, newQuery));
         }
     }
@@ -226,7 +229,6 @@ const DoctorNewFeedTab = (props) => {
     }
 
     const onChangeButton = e => {
-        setRadioButtonValue(e.target.value);
         handleSearchAndSort(textSearch, sortBy, searchBy, e.target.value);
     };
 
@@ -302,7 +304,7 @@ const DoctorNewFeedTab = (props) => {
                                 Lý do: {value?.reason}
                             </div>
 
-                            {(type === 3 || type === 4) && (<div className="more-div">
+                            {(type === 2) && (<div className="more-div">
                                 <Link target="_blank" to={"package/" + value?.package_id} >Chi tiết</Link>
                                 <span className="chitiet-div"><ArrowRightOutlined /></span>
                             </div>)}
@@ -313,7 +315,7 @@ const DoctorNewFeedTab = (props) => {
                                 Gửi lúc: <p>{handleCreated_at(value?.created_at)}</p>
                             </div>
 
-                            {type === 1 && (<Popconfirm
+                            {type === 1 && value?.package_id_duplicate===null && (<Popconfirm
                                 title="Bạn có chắc chắn không?"
                                 onConfirm={e => { onClickOnNotAssign(key); }}
                                 onCancel={cancel}
@@ -323,7 +325,7 @@ const DoctorNewFeedTab = (props) => {
                                 <button className="link-button-accept-div" id={value?.package_id}><span>Chấp nhận</span></button>
                             </Popconfirm>)}
 
-                            {type === 4 && (<Popover
+                            {type === 2 && value?.package_id_duplicate!==null && (<Popover
                                 title="Bạn có chắc chắn không?"
 
                                 trigger="click"
@@ -337,7 +339,7 @@ const DoctorNewFeedTab = (props) => {
                                 <button className="link-button-reject-div" id={value?.package_id}><span>Từ chối</span></button>
                             </Popover>)}
 
-                            {(type === 3) && (<div>
+                            {(type === 2 && value?.package_id_duplicate===null) && (<div>
                                 <Popover
                                     title="Xin hãy cho biết lý do chính đáng?"
                                     trigger="click"
@@ -368,64 +370,34 @@ const DoctorNewFeedTab = (props) => {
             )
         );
     }
-    // const packagesExpired = notAssignPackage?.map((value, key) => {
-    //     let today = moment().format('YYYY-MM-DD hh:mm:ss');
-    //     // console.log(today);
-    //     let time = moment.duration("01:00:00");
-    //     let today2  = moment().subtract(today, time)
-    //     let almostToday = moment(today2._d).format('YYYY-MM-DD hh:mm:ss');
-    //     // console.log(almostToday );
-    //     let isIn = moment(moment(value.created_at).format('YYYY-MM-DD hh:mm:ss')).isBetween(almostToday,today);
-    //     let expired = moment(today).isAfter(moment(value.created_at).format('YYYY-MM-DD hh:mm:ss'));
-    //     // console.log(isIn);
-    //     }
-    // });
     const content = {
         a: (<div className="newfit-container">
 
             <div className="newfit-content">
-                <div className="radioButton-div">
-                    <Radio.Group onChange={onChangeButton} value={radioButtonValue}>
-                        <Radio value={false}>Không bị trùng</Radio>
-                        <Radio value={true}>Bị trùng với lịch làm việc</Radio>
-                    </Radio.Group>
-                </div>
+                
                 <div className="newfit-left-div">
-                    {radioButtonValue === false ? packages(notAssignNotDuplicatedPackage, 1) : packages(notAssignDuplicatedPackage, 2)}
+                    {packages(notAssignPackage, 1)}
 
-                    {radioButtonValue === false ?
-                        (<center>
-                            {packages(notAssignNotDuplicatedPackage, 1) && !isOutOfDataNotAssign && (<button
+                    
+                        <center>
+                            {packages(notAssignPackage, 1) && !isOutOfDataNotAssign && (<button
                                 onClick={getMoreData}
                                 disabled={disableButton || isLoad}
                                 className={disableButton || isLoad ? "disable-button-service" : "link-button-div"}
                                 id="button">
                                 Hiển thị thêm {isLoad && <LoadingOutlined />}
                             </button>)}
-                        </center>)
-                        : (<center>
-                            {packages(notAssignDuplicatedPackage, 2) && !isOutOfDataNotAssign && (<button
-                                onClick={getMoreData}
-                                disabled={disableButton || isLoad}
-                                className={disableButton || isLoad ? "disable-button-service" : "link-button-div"}
-                                id="button">
-                                Hiển thị thêm {isLoad && <LoadingOutlined />}
-                            </button>)}
-                        </center>)}
+                        </center>
+                        
                 </div>
             </div>
         </div>),
         b: (<div className="newfit-container">
 
             <div className="newfit-content">
-                <div className="radioButton-div">
-                    <Radio.Group onChange={onChangeButton} value={radioButtonValue}>
-                        <Radio value={false}>Không bị trùng</Radio>
-                        <Radio value={true}>Bị trùng với lịch làm việc</Radio>
-                    </Radio.Group>
-                </div>
+
                 <div className="newfit-left-div">
-                    {radioButtonValue === false ? packages(assignNotDuplicatedPackage, 3) : packages(assignDuplicatedPackage, 4)}
+                    {packages(assignPackage, 2)}
                     <center>
                         {!isOutOfDataAssign && (<button
                             onClick={getMoreData}

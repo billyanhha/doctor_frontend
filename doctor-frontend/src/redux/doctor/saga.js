@@ -32,7 +32,7 @@ import { notAssignPackageQuery,
 } from '../package/index';
 
 function* wachGetDoctorLoginbWorker(action) {
-    let query = { sortBy: "created_at", page: 1, searchBy: "name",duplicated:false };
+    let query = { sortBy: "created_at", page: 1, searchBy: "name"};
     try {
         yield put(openLoading())
 
