@@ -28,7 +28,7 @@ const ChartForPackage = (props) => {
     const { TabPane } = Tabs;
 
     useEffect(()=>{
-        dispatch(getAllAppointmentByPackage(id));
+        // dispatch(getAllAppointmentByPackage(id));
     },[]);
 
     function callback(key) {

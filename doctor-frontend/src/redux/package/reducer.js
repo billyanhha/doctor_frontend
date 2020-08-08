@@ -22,10 +22,8 @@ import _ from "lodash"
 
 const initialState = {
     homePackage: [],
-    assignDuplicatedPackage: [],
-    assignNotDuplicatedPackage: [],
-    notAssignNotDuplicatedPackage: [],
-    notAssignDuplicatedPackage: [],
+    assignPackage: [],
+    notAssignPackage: [],
     packageAcceptUpdated: {},
     packageRejectUpdated: {},
     isOutOfDataNotAssign: false,
@@ -50,47 +48,30 @@ export const packageReducer = (state = initialState, action) => {
         return newState;
     } else if (action.type === ASSIGN_PACKAGE_QUERY_SUCCESSFUL) {
         let newState = {};
-        if (action?.packages?.result[0]?.package_id_duplicate) {
-            newState = { ...state, assignDuplicatedPackage: action?.packages?.result }
-        } else {
-            newState = { ...state, assignNotDuplicatedPackage: action?.packages?.result}
-        }
-        if (action?.packages?.result?.length ===0){
-            newState = { ...state, assignDuplicatedPackage: [],assignNotDuplicatedPackage:[]}
-        }
+        
+            newState = { ...state, assignPackage: action?.packages?.result}
+        
 
         newState.isOutOfDataAssign = action?.packages?.isOutOfData
         return newState;
     } else if (action.type === NOT_ASSIGN_PACKAGE_QUERY_SUCCESSFUL) {
         let newState = {}
-        if (action?.packages?.result[0]?.package_id_duplicate) {
-            newState = { ...state, notAssignDuplicatedPackage: action?.packages?.result }
-        } else if (!action?.packages?.result[0]?.package_id_duplicate){
-            newState = { ...state, notAssignNotDuplicatedPackage: action?.packages?.result}
-        }
-        if (action?.packages?.result?.length ===0){
-            newState = { ...state, notAssignNotDuplicatedPackage: [],notAssignDuplicatedPackage:[]}
-        }
+
+            newState = { ...state, notAssignPackage: action?.packages?.result }
+        
         newState.isOutOfDataNotAssign = action?.packages?.isOutOfData
 
         return newState;
     } else if (action.type === NEXT_NOT_ASSIGN_PACKAGE_QUERY_SUCCESSFUL) {
-        if (action?.packages?.result[0]?.package_id_duplicate) {
+        
+            state.notAssignPackage.push(...action?.packages?.result);
 
-            state.notAssignDuplicatedPackage.push(...action?.packages?.result);
-        } else {
-            state.notAssignNotDuplicatedPackage.push(...action?.packages?.result);
-        }
-       
         state.isOutOfDataNotAssign = action?.packages?.isOutOfData
         return state;
     } else if (action.type === NEXT_ASSIGN_PACKAGE_QUERY_SUCCESSFUL) {
-        if (action?.packages?.result[0]?.package_id_duplicate) {
 
-            state.assignDuplicatedPackage.push(...action?.packages?.result);
-        } else {
-            state.assignNotDuplicatedPackage.push(...action?.packages?.result);
-        }
+            state.assignPackage.push(...action?.packages?.result);
+
 
         state.isOutOfDataAssign = action?.packages?.isOutOfData
         return state;

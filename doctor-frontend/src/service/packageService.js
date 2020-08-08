@@ -254,7 +254,7 @@ packageService.getNotAssignPackageQuery = (doctorId, query, token) => new Promis
                 sort: query?.sortBy,
                 order: order,
                 patient_name: query?.query,
-                duplicated: query?.duplicated
+                duplicated: false
             },
             headers: {
                 authorization: "Bearer " + token,
@@ -271,7 +271,7 @@ packageService.getNotAssignPackageQuery = (doctorId, query, token) => new Promis
                 sort: query?.sortBy,
                 order: order,
                 address: query?.query,
-                duplicated: query?.duplicated
+                duplicated: false
             },
             headers: {
                 authorization: "Bearer " + token,
@@ -299,7 +299,7 @@ packageService.getAssignPackageQuery = (doctorId, query, token) => new Promise((
                 sort: query?.sortBy,
                 order: order,
                 patient_name: query?.query,
-                duplicated: query?.duplicated
+                duplicated: 'both'
             },
             headers: {
                 authorization: "Bearer " + token,
@@ -316,7 +316,7 @@ packageService.getAssignPackageQuery = (doctorId, query, token) => new Promise((
                 sort: query?.sortBy,
                 order: order,
                 address: query?.query,
-                duplicated: query?.duplicated
+                duplicated: 'both'
             },
             headers: {
                 authorization: "Bearer " + token,
