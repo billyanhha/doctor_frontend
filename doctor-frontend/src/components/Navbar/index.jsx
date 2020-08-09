@@ -91,6 +91,9 @@ const Navbar = (props) => {
                         <Menu.Item key="/newService">
                             <Link className="navbar-item" to="/newService">Đề xuất dịch vụ</Link>
                         </Menu.Item>
+                        <Menu.Item key="/viewForm">
+                            <Link className="navbar-item" to="/viewForm">Mẫu văn bản</Link>
+                        </Menu.Item>
                     </Menu>
                 }
             >

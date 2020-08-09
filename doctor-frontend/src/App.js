@@ -14,6 +14,7 @@ import ViewDoctorProfile from './systemPages/ViewDoctorProfile';
 import DoctorRequestService from './systemPages/DoctorRequestService';
 import Notify from './components/Notify';
 import ForgotPassword from './systemPages/ForgotPassword';
+import ViewForm from './systemPages/ViewForm';
 require('dotenv').config()
 
 const App = () => {
@@ -46,6 +47,9 @@ const App = () => {
         </PrivateRoute>
         <PrivateRoute exact path='/newService'>
           <DoctorRequestService />
+        </PrivateRoute>
+        <PrivateRoute exact path='/viewForm'>
+          <ViewForm />
         </PrivateRoute>
         {/* <Route exact path="/" render={(props) => <DoctorDashboard {...props} />} /> */}
         <Route path="*"><NoMatch /> </Route>
