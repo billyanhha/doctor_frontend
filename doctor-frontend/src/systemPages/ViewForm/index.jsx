@@ -28,7 +28,7 @@ const Form = () => {
     useEffect(() => {
 
         dispatch(getForm(currentFormIndex));
-        
+
 
     }, []);
 
@@ -51,30 +51,30 @@ const Form = () => {
 
                     <div className="form-div-content">
                         <div className="filter-form-div">
-                    <Select
-                        native
-                        value={currentFormIndex}
-                        onChange={handleChange}
-                    >
-                        <option value={'package_result_form'}>Văn bản kết quả gói</option>
-                        <option value={'appointment_result_form'}>Văn bản kết quả dịch vụ</option>
-                    </Select>
-                    </div>
-                    <div className="edit-form">
-                        <JoditEditor
-                           required
-                           ref={editor}
-                           value={content}
-           
-                           config={config}
-                           zIndex={1}
-                           tabIndex={1} // tabIndex of textarea
-                           onBlur={newContent => setContent(newContent)} // preferred to use only this option to update the content for performance reasons
-                       // onChange={newContent => console.log(newContent)}
-                        />
-                        <br />
+                            <Select
+                                native
+                                value={currentFormIndex}
+                                onChange={handleChange}
+                            >
+                                <option value={'package_result_form'}>Văn bản kết quả gói</option>
+                                <option value={'appointment_result_form'}>Văn bản kết quả dịch vụ</option>
+                            </Select>
+                        </div>
+                        <div className="edit-form">
+                            <JoditEditor
+                                required
+                                ref={editor}
+                                value={content}
 
-                    </div>
+                                config={config}
+                                zIndex={1}
+                                tabIndex={1} // tabIndex of textarea
+                                onBlur={newContent => setContent(newContent)} // preferred to use only this option to update the content for performance reasons
+                            // onChange={newContent => console.log(newContent)}
+                            />
+                            <br />
+
+                        </div>
                     </div>
                 </Spin>
             </div>
