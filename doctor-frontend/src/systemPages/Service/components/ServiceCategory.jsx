@@ -90,6 +90,7 @@ const ServiceCategory = (props) => {
             <div>
                 
                 <div className="service-search">
+                    <div className='form-submit-div'>
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <Controller
                             as={TextField}
@@ -103,6 +104,7 @@ const ServiceCategory = (props) => {
                             defaultValue=''
                         />
                     </form>
+                    </div>
                     <Select
                         native
                         value={active}
@@ -129,6 +131,7 @@ const ServiceCategory = (props) => {
                                 <Pagination
                                     defaultPage={page}
                                     onChange={handleChangePage}
+                                    className="paging-div-content"
                                     count={count}
                                     rowsPerPage={itemsPage}
                                     color="primary" />

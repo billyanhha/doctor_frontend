@@ -57,12 +57,10 @@ const DoctorRequestService = (props) => {
         { title: 'Giá', 
         dataIndex: 'price', 
         key: 'price',
-        sorter: (a, b) => a.price - b.price,
     },
         { title: 'Ngày tạo', 
         dataIndex: 'createdAt', 
         key: 'createdAt' ,
-        sorter: (a, b) => a.createdAt.localeCompare(b.createdAt),
     },
 
     ];

@@ -53,3 +53,9 @@
     margin:10px;
     float:right;
 }
+
+.form-submit-div{
+    background-color: #fff;
+    margin-right: 100px;
+    padding-right: 100px;
+}
