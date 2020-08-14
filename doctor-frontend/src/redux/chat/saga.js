@@ -97,9 +97,9 @@ function* watchUserRelateDoctorWorker(action) {
         yield put(openLoading())
         const {token} = yield select(state => state.auth)
         const result = yield chatService.getUserRelateDoctor(action.payload , token);
-        if (!_.isEmpty(result?.doctors)) {
+        if (!_.isEmpty(result?.customers)) {
 
-            yield put(getUserRelateDoctorSuccessful(result?.doctors));
+            yield put(getUserRelateDoctorSuccessful(result?.customers));
         } else {
             yield put(getUserRelateDoctorSuccessful([]));
 

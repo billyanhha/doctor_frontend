@@ -80,7 +80,7 @@ chatService.getMoreThreadChat = (payload , token) => new Promise((reslove, rejec
 
 
 chatService.getUserRelateDoctor = (payload , token) => new Promise((reslove, reject) => {
-    const api = `/api/customer/${payload.cusId}/current-doctor`;    
+    const api = `/api/doctor/${payload.doctor_id}/current-customer`;    
     axios.get(api,  {
         headers: {
             Authorization: "Bearer " + token,
