@@ -1,0 +1,217 @@
+.messenger {
+    font-weight: normal;
+    display: flex;
+    flex-wrap: wrap;
+    border-right: 1px solid #dadada;
+    border-left: 1px solid #dadada;
+    color: #000;
+}
+
+.messenger-chatlist, .messenger-content {
+    height: calc(100vh - 122px);
+    overflow: auto;
+
+}
+
+.messenger-chatlist{
+    flex-basis: 25%;
+}
+
+
+
+.messenger-content-wrapper{
+    position: relative;
+    flex-basis: 75%;
+    border-left: 1px solid #dadada;
+}
+
+.messenger-chatlist-header{
+    padding: 10px 15px 10px 13px;
+    /* background-color: #00BC9A; */
+    /* color: #fff; */
+    font-size: 24px;
+    font-weight: bold;
+    position: sticky;
+    top: 0px;
+    z-index: 2;
+    background-color: #fff;
+    border-top: 1px solid #dadada;
+    border-bottom: 1px solid #dadada;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+}
+
+
+
+.messenger-chat-content { 
+    padding: 20px 0px;
+    padding-bottom: 0;
+}
+
+
+.messenger-chat-content-input{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    /* height: 50px; */
+    background-color: #fff;
+    padding: 10px;
+    /* padding-left: 10px; */
+}
+
+
+.messenger-chat-content-input-form{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+
+.messenger-chat-header{
+    position: sticky;
+    top: 0px;
+    z-index: 2;
+    background-color: #fff;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #dadada;
+    border-top: 1px solid #dadada;
+}
+
+.messenger-chat-header > b {
+    margin-left: 10px;
+    font-size: 15px;
+}
+
+.messenger-chat-item , .messenger-chat-item:first-of-type{
+    display: flex;
+    align-items: flex-end;
+    margin: 20px 10px;
+}
+
+.messenger-chat-item-user{
+    flex-direction: row-reverse;
+    
+}
+
+.messenger-chat-item:first-of-type {
+    margin-top: 10px;
+
+}
+
+.messenger-chat-item-content-nonuser , .messenger-chat-item-content-user{
+    max-width: 320px;
+    border-radius: 22px;
+    padding: 16px;
+    word-wrap: break-word;
+}
+
+.messenger-chat-item-content-image{
+    border-radius: 22px;
+    width: 100%;
+}
+
+.messenger-chat-item-content-user{
+    background-color: #EFEFEF;
+}
+
+.messenger-chat-item-content-nonuser{
+    border: 1px solid #efefef;
+    margin-left: 5px;
+}
+
+.chat-date{
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.messenger-chat-content-input-area{
+    height: 50px;
+    background-color: #dadada;
+    /* border-radius: 50px; */
+}
+
+.messenger-chat-content-input-upload-file{
+    width: 80px;
+    overflow: hidden;
+}
+
+/* Upload  */
+
+.messenger-chat-content-input-image{
+    width: 100%;
+}
+
+.mess-search{
+    padding: 10px 15px 10px 13px;
+}
+
+.mess-search-currentdoctor-list{
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.mess-search-currentdoctor{
+    padding: 10px 0px;
+    display: flex;
+    flex-wrap: nowrap;
+    transition: all .3s ease-in-out;
+    cursor: pointer;
+}
+
+.mess-search-currentdoctor:hover{
+    background-color: #ddd;
+}
+
+.mess-search-currentdoctor-info{
+    margin-left: 5px;
+}
+
+.mess-search-currentdoctor-info-big{
+    font-size: 15px
+}
+
+.mess-search-currentdoctor-info-small{
+    font-size: 10px
+}
+
+.chat-item-wrapper  .rce-citem {
+    background-color: transparent !important;
+} 
+
+.messenger-chat-content-list{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 70px;
+}
+
+.render-upload-file{
+    background-color: transparent;
+}
+
+@media screen and (max-width: 1024px) {
+    .messenger-chatlist{
+        flex-basis: 100%;
+        height: auto;
+    }
+    
+    .messenger-content-wrapper { 
+        flex-basis: 100%;
+
+    }
+
+    .messenger-chat-content-input{
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        /* height: 50px; */
+        background-color: #fff;
+        padding: 10px;
+        /* padding-left: 10px; */
+    }
+    
+}

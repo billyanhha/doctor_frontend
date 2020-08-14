@@ -60,6 +60,7 @@ function* watchDoctorAcceptPackage(action) {
         if (!_.isEmpty(result) && !_.isEmpty(result?.packageStatusCreated)) {
             yield put(getPackageStatus(action.packageId))
             yield put(doctorAcceptPackageSuccessful(result?.packages));
+            yield put(getPackageAppointments(action?.packageId))
         }
     } catch (error) {
         message.destroy();
@@ -80,6 +81,7 @@ function* watchDoctorRejectPackage(action) {
         if (!_.isEmpty(result) && !_.isEmpty(result.packageStatusCreated)) {
             yield put(getPackageStatus(action.packageId))
             yield put(doctorRejectPackageSuccessful(result.packages));
+            yield put(getPackageAppointments(action?.packageId))
         }
     } catch (error) {
         message.destroy();
