@@ -12,6 +12,7 @@ import {patientReducer} from '../patient/reducer';
 import { formReducer } from '../form/reducer';
 import { notifyReducer } from '../notification/reducer';
 import { accountReducer } from '../account/reducer';
+import { chatReducer } from '../chat/reducer';
 import { serviceReducer } from '../service/reducer';
 
 const persistConfig = {
@@ -30,6 +31,7 @@ const rootReducers = combineReducers({
   form: formReducer,
   notify: notifyReducer,
   account: accountReducer,
+  chat: chatReducer,
   service: serviceReducer
 });
 
