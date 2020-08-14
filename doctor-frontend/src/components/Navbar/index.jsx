@@ -85,11 +85,17 @@ const Navbar = (props) => {
                         <Menu.Item key="/package">
                             <Link className="navbar-item" to="/package">Các gói điều dưỡng</Link>
                         </Menu.Item>
-                        <Menu.Item key="/profile">
-                            <Link className="navbar-item" to="/profile">Thông tin của tôi</Link>
+                        <Menu.Item key="/viewServiceCategory">
+                            <Link className="navbar-item" to="/viewServiceCategory">Dịch vụ</Link>
                         </Menu.Item>
                         <Menu.Item key="/newService">
                             <Link className="navbar-item" to="/newService">Đề xuất dịch vụ</Link>
+                        </Menu.Item>
+                        <Menu.Item key="/viewForm">
+                            <Link className="navbar-item" to="/viewForm">Mẫu văn bản</Link>
+                        </Menu.Item>
+                        <Menu.Item key="/profile">
+                            <Link className="navbar-item" to="/profile">Thông tin của tôi</Link>
                         </Menu.Item>
                     </Menu>
                 }
