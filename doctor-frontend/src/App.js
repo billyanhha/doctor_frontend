@@ -14,12 +14,15 @@ import ViewDoctorProfile from './systemPages/ViewDoctorProfile';
 import DoctorRequestService from './systemPages/DoctorRequestService';
 import Notify from './components/Notify';
 import ForgotPassword from './systemPages/ForgotPassword';
+import Messenger from './systemPages/Messenger';
+import FloatingButton from './components/FloatingButton';
 require('dotenv').config()
 
 const App = () => {
 
   return (
     <BrowserRouter >
+      <FloatingButton />
       <LoadingBar showFastActions className="loading-bar" />
       <Notify />
       <Switch >
@@ -46,6 +49,9 @@ const App = () => {
         </PrivateRoute>
         <PrivateRoute exact path='/newService'>
           <DoctorRequestService />
+        </PrivateRoute>
+        <PrivateRoute exact path="/messenger/:id">
+          <Messenger />
         </PrivateRoute>
         {/* <Route exact path="/" render={(props) => <DoctorDashboard {...props} />} /> */}
         <Route path="*"><NoMatch /> </Route>

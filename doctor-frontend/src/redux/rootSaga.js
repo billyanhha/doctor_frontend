@@ -8,6 +8,7 @@ import {patientSaga} from './patient/saga';
 import { formSaga } from './form/saga';
 import { notifySaga } from './notification/saga';
 import { accountSaga } from './account/saga';
+import { chatSaga } from './chat/saga';
 
 export function* rootSaga() {
   yield all([
@@ -19,6 +20,7 @@ export function* rootSaga() {
     patientSaga(),
     formSaga(),
     notifySaga(),
-    accountSaga()
+    accountSaga(),
+    chatSaga()
   ]);
 }
