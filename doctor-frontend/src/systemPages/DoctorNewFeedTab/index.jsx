@@ -61,9 +61,16 @@ const DoctorNewFeedTab = (props) => {
     const [visible, setVisible] = useState(false);
     const auth = useSelector(state => state.auth);
 
-    useEffect(() => {
+    useEffect(()=>{
         if(currentDoctor?.id)
-            handleSearchAndSort(textSearch, sortBy, searchBy)
+            handleSearchAndSort(textSearch, sortBy, searchBy);
+    },[currentDoctor])
+
+    useEffect(() => {
+        
+        if(currentDoctor?.id)
+            handleSearchAndSort(textSearch, sortBy, searchBy);
+        
     }, [active]);
 
     const onClickOnNotAssign = (value) => {
@@ -271,7 +278,7 @@ const DoctorNewFeedTab = (props) => {
                     <div className=" second-div">
                         <div className="grid-left-div">
                             <div className="reason-div">
-                                Lý do: {value?.reason}
+                                Lý do/Ghi chú địa chỉ: {value?.reason}
                             </div>
 
                             {(type === 2) && (<div className="more-div">

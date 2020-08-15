@@ -89,7 +89,7 @@ const Patient = (props) => {
                                             <Timeline.Item><p className="profile-form-label">Giới tính</p> {patientInfo?.gender === 'Female' ? 'Nữ' : 'Nam'}</Timeline.Item>
                                             <Timeline.Item dot={<ClockCircleOutlined className="timeline-clock-icon" />} color="red"><p className="profile-form-label">Sinh nhật</p>
                                                 {handleDate(patientInfo?.dateofbirth)}</Timeline.Item>
-                                            <Timeline.Item><p className="profile-form-label">Địa chỉ</p>
+                                            <Timeline.Item><p className="profile-form-label">Nơi sinh sống</p>
                                                 {patientInfo?.address}</Timeline.Item>
                                         </Timeline>
                                     </div>

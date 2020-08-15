@@ -217,7 +217,7 @@ const PackageDetail = (props) => {
                                 <TabPane tab="Kết quả" key="4" >
                                     <EditForm editfor='result_content' content={packageInfo?.result_content} />
                                 </TabPane>
-                                <TabPane tab="Tư vấn thêm" key="5">
+                                <TabPane tab="Biểu đồ sức khoẻ" key="5">
                                     <ChartForPackage id={id} />
                                 </TabPane>
                             </Tabs>
@@ -234,11 +234,11 @@ const PackageDetail = (props) => {
                             <Descriptions.Item label="Số điện thoại">
                                 {packageInfo?.phone}
                             </Descriptions.Item>
-                            <Descriptions.Item label="Địa chỉ">{packageInfo?.address}</Descriptions.Item>
+                            <Descriptions.Item label="Địa chỉ khám ban đầu">{packageInfo?.address}</Descriptions.Item>
                             <Descriptions.Item label="Ngày tạo">
                                 {moment(packageInfo?.created_at).format('DD/MM/YYYY')}
                             </Descriptions.Item>
-                            <Descriptions.Item label="Lý do">
+                            <Descriptions.Item label="Lý do/Ghi chú địa chỉ">
                                 {packageInfo?.reason}
                             </Descriptions.Item>
                             {packageData?.status[packageData?.status.length - 1]?.package_status_detail_id === package_status.done

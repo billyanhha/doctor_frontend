@@ -105,7 +105,7 @@ const Package = () => {
             width: 300
         },
         {
-            title: 'Lý do',
+            title: 'Lý do /Ghi chú địa chỉ',
             dataIndex: 'reason',
             key: 'reason',
             width: 200
