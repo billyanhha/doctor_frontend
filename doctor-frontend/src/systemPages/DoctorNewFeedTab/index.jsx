@@ -73,15 +73,7 @@ const DoctorNewFeedTab = (props) => {
                 return info;
         });
         dispatch(doctorAcceptPackage(currentDoctor?.id, info[0].package_id));
-        if (packageAcceptUpdated) {
-            message.destroy();
-            message.success("Chấp nhận thành công")
-        } else {
-            message.destroy();
-            message.error("Chấp nhận thất bại")
-        }
-        const timer = setTimeout(() => window.location.reload(), 1000);
-        return () => clearTimeout(timer);
+        setActive(active);
     }
 
     const acceptOnAssign = (value) => {
@@ -91,15 +83,7 @@ const DoctorNewFeedTab = (props) => {
                 return info;
         });
         dispatch(doctorAcceptPackage(currentDoctor?.id, info[0].package_id));
-        if (packageAcceptUpdated) {
-            message.destroy();
-            message.success("Chấp nhận thành công")
-        } else {
-            message.destroy();
-            message.error("Chấp nhận thất bại")
-        }
-        const timer = setTimeout(() => window.location.reload(), 1000);
-        return () => clearTimeout(timer);
+        setActive(active);
     }
 
     const rejectOnAssign = (value) => {
@@ -109,15 +93,7 @@ const DoctorNewFeedTab = (props) => {
                 return info;
         });
         dispatch(doctorRejectPackage(currentDoctor?.id, info[0]?.package_id, rejectText));
-        if (packageRejectUpdated) {
-            message.destroy();
-            message.success("Đã từ chối thành công với lý do: " + rejectText)
-        } else {
-            message.destroy();
-            message.error("Đã từ chối thất bại")
-        }
-        const timer = setTimeout(() => window.location.reload(), 1000);
-        return () => clearTimeout(timer);
+        setActive(active);
     }
 
     const rejectOnAssignDuplicated = (value) => {
@@ -128,15 +104,9 @@ const DoctorNewFeedTab = (props) => {
                 return info;
         });
         dispatch(doctorRejectPackage(currentDoctor?.id, info[0]?.package_id, rejectText));
-        if (packageRejectUpdated) {
-            message.destroy();
-            message.success("Đã từ chối thành công với lý do: " + rejectText)
-        } else {
-            message.destroy();
-            message.error("Đã từ chối thất bại")
-        }
-        const timer = setTimeout(() => window.location.reload(), 1000);
-        return () => clearTimeout(timer);
+        setActive(active);
+        // const timer = setTimeout(() => window.location.reload(), 1000);
+        // return () => clearTimeout(timer);
     }
 
     const handleSearchByChange = ((key) => {
@@ -319,8 +289,8 @@ const DoctorNewFeedTab = (props) => {
                                 title="Bạn có chắc chắn không?"
                                 onConfirm={e => { onClickOnNotAssign(key); }}
                                 onCancel={cancel}
-                                okText="Yes"
-                                cancelText="No"
+                                okText="Chắc chắn"
+                                cancelText="Không"
                             >
                                 <button className="link-button-accept-div" id={value?.package_id}><span>Chấp nhận</span></button>
                             </Popconfirm>)}
@@ -357,7 +327,7 @@ const DoctorNewFeedTab = (props) => {
                                     title="Bạn có chắc chắn không?"
                                     onConfirm={e => { acceptOnAssign(key) }}
                                     onCancel={cancel}
-                                    okText="Có"
+                                    okText="Chắc chắn"
                                     cancelText="Không"
                                 >
                                     <button className="accept-div" id={value?.package_id}><span> Chấp nhận</span></button>
