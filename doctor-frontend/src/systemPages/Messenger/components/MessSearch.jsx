@@ -29,7 +29,7 @@ const MessSearch = (props) => {
 
 
     const openChatThread = (value) => {
-        props.history.push("/messenger/" + value?.id + "?name=" + value?.fullname + "&avatar=" + value?.avatarurl)
+        props.history.push("/messenger/" + value?.customer_id + "?name=" + value?.fullname + "&avatar=" + value?.avatarurl)
     }
 
     const renderCurrentCustomer =(userRelateDoctor?.map((value, index) => {

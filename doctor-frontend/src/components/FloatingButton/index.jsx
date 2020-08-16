@@ -11,6 +11,7 @@ const FloatingButton = (props) => {
     const dispatch = useDispatch();
     const { currentDoctor } = useSelector(state => state.doctor);
     const { nonReadGroupNumber } = useSelector(state => state.chat);
+    const { token } = useSelector(state => state.auth);
 
     useEffect(() => {
         
@@ -25,7 +26,7 @@ const FloatingButton = (props) => {
     }
 
 
-    return props.location.pathname.includes('/messenger') ? '' : (
+    return (props.location.pathname.includes('/messenger') || !token) ? '' : (
         <Fab
             // mainButtonStyles={mainButtonStyles}
             // actionButtonStyles={actionButtonStyles}

@@ -161,7 +161,6 @@ function* watchUpdateIsReadWorker(action) {
     try {
         const {token} = yield select(state => state.auth)
         const result = yield chatService.updateIsRead(action.payload , token);
-        console.log(result);
         if(!_.isEmpty(result?.result)){
             const payloadChat = { page: 1, id: action.payload.doctor_id }
             yield put(getChat(payloadChat))
@@ -183,6 +182,6 @@ export function* chatSaga() {
     yield takeLatest(GET_USER_RELATE_DOCTOR, watchUserRelateDoctorWorker);
     yield takeLatest(GET_UNREAD_GROUP, watchGetUnreadWorker);
     yield takeEvery(SEND_MESSAGE, watchSendMessageWorker);
-    yield takeEvery(UPDATE_IS_READ, watchUpdateIsReadWorker);
+    yield takeLatest(UPDATE_IS_READ, watchUpdateIsReadWorker);
 
 }

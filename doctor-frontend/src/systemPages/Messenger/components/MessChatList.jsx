@@ -17,6 +17,7 @@ const MessChatList = (props) => {
     const { chatList, isOutOfChatListData } = useSelector(state => state.chat);
     const { isLoad } = useSelector(state => state.ui);
     const { currentDoctor } = useSelector(state => state.doctor);
+    const { io } = useSelector(state => state.notify);
 
     const [disable, setdisable] = useState(false);
     const [page, setpage] = useState(1);
@@ -24,12 +25,19 @@ const MessChatList = (props) => {
     useEffect(() => {
 
         getChatData()
+        if (io && currentDoctor?.id) {
+            io.on('server-send-notification-chat', data => {
+                const payload = { page: 1, id: currentDoctor?.id }
+                dispatch(getChat(payload))
+            })
+        }
 
-    }, [currentDoctor]);
+
+    }, [currentDoctor, io]);
 
 
     const getChatData = () => {
-        if(currentDoctor?.id){
+        if (currentDoctor?.id) {
             const data = { page: page, id: currentDoctor?.id }
             dispatch(getChat(data))
         }

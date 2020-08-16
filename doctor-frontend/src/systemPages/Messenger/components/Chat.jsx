@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import "../style.css"
 import { Avatar, MessageBox } from 'react-chat-elements'
 import { Input, Spin } from 'antd';
@@ -6,7 +6,7 @@ import { Upload, Button } from 'antd';
 import { FolderAddFilled, CloseCircleFilled } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getThreadChat, getMoreThreadChat, sendMessage, updateIsRead } from '../../../redux/chat';
+import { getThreadChat, getMoreThreadChat, sendMessage, updateIsRead, getChat } from '../../../redux/chat';
 import moment from "moment";
 import { LoadingOutlined } from '@ant-design/icons';
 import _ from "lodash"
@@ -15,6 +15,8 @@ import { animateScroll } from 'react-scroll'
 const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
 const Chat = (props) => {
+
+    const ref = useRef(null)
 
     const [fileList, setFileList] = useState([]);
     const [file, setfile] = useState({});
@@ -41,13 +43,28 @@ const Chat = (props) => {
         if (io && currentDoctor?.id && customer_id) {
             io.emit("chat", `chat&&${customer_id}&&${currentDoctor?.id}`)
             io.on('chat-thread', data => {
+                updateThreadIsReadFunc()
                 getChatThreadData()
+                // getNewMsg(data?.customer_id, data?.doctor_id)
+                // updateIsReadNewMsg(data?.customer_id, data?.doctor_id)
+          
             })
         }
 
     }, [currentDoctor, customer_id, io]);
 
-
+    // const getNewMsg = (cusId, doctorId) => {
+    //     if (customer_id === cusId) { // if current chat is exactly the one just send the message
+    //         const payloadThread = { cusId: cusId, doctor_id: doctorId }
+    //         dispatch(getThreadChat(payloadThread))
+    //     }
+    // }
+    // const updateIsReadNewMsg = (cusId, doctorId) => {
+    //     if (customer_id === cusId) { // if current chat is exactly the one just send the message
+    //         const data = { cusId: cusId, doctor_id: doctorId, socketId: io?.id }
+    //         dispatch(updateIsRead(data))
+    //     }
+    // }
 
     const scrollToBottomDiv = () => {
         animateScroll.scrollToBottom({
@@ -57,7 +74,7 @@ const Chat = (props) => {
 
     useEffect(() => {
 
-        if(!isLoadMore) {
+        if (!isLoadMore) {
             scrollToBottomDiv()
 
         }
@@ -66,16 +83,16 @@ const Chat = (props) => {
 
 
     const getChatThreadData = () => {
-        if ((customer_id !== 't')  && customer_id && currentDoctor?.id) {
+        if ((customer_id !== 't') && customer_id && currentDoctor?.id) {
             setisLoadMore(false)
-            const data = { cusId: customer_id, doctor_id: currentDoctor?.id}
+            const data = { cusId: customer_id, doctor_id: currentDoctor?.id }
             dispatch(getThreadChat(data))
         }
 
     }
 
     const updateThreadIsReadFunc = () => {
-        if ((customer_id !== 't')  && customer_id && currentDoctor?.id && io?.id) {
+        if ((customer_id !== 't') && customer_id && currentDoctor?.id && io?.id) {
             const data = { cusId: customer_id, doctor_id: currentDoctor?.id, socketId: io?.id }
             dispatch(updateIsRead(data))
         }
@@ -126,7 +143,7 @@ const Chat = (props) => {
     }
 
     const clearChat = () => {
-        if(!sendChatLoad) {
+        if (!sendChatLoad) {
             setopenUploadFile(false)
             setchatText('')
             setFileList([]);
@@ -140,6 +157,7 @@ const Chat = (props) => {
         if (newFileList[0]) {
             setfile(newFileList[0].originFileObj)
         }
+        ref.current.focus()
     };
 
     const onPreviewImage = async file => {
@@ -203,7 +221,7 @@ const Chat = (props) => {
                                 alt={getCustomerName()}
                                 type="circle flexible" />
                         )}
-                    <div className={value?.sender_type === 'customer' ? 'messenger-chat-item-content-user' : "messenger-chat-item-content-nonuser"}>
+                    <div className={value?.sender_type === 'doctor' ? 'messenger-chat-item-content-user' : "messenger-chat-item-content-nonuser"}>
                         {value?.msg_type === 'text' ? value?.msg : (
                             <a target="_blank" href={value?.msg}>
                                 <img className="messenger-chat-item-content-image" src={value?.msg} alt={value?.id} />
@@ -268,6 +286,7 @@ const Chat = (props) => {
                             <Input.TextArea
                                 // autoSize={false}
                                 allowClear={true}
+                                ref={ref}
                                 autoFocus
                                 loading={threadLoad}
                                 onChange={onTextChange}
