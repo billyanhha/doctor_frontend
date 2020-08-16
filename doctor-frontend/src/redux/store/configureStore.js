@@ -14,6 +14,7 @@ import { notifyReducer } from '../notification/reducer';
 import { accountReducer } from '../account/reducer';
 import { chatReducer } from '../chat/reducer';
 import { serviceReducer } from '../service/reducer';
+import { emailReducer } from '../email/reducer';
 
 const persistConfig = {
   key: 'root',
@@ -32,7 +33,8 @@ const rootReducers = combineReducers({
   notify: notifyReducer,
   account: accountReducer,
   chat: chatReducer,
-  service: serviceReducer
+  service: serviceReducer,
+  email : emailReducer
 });
 
 const saga = createSagaMiddleware();

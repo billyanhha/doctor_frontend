@@ -3,13 +3,15 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Redirect, Link, withRouter } from 'react-router-dom';
 import { getDoctorLogin } from '../../redux/doctor';
 import { doctorLogout } from '../../redux/auth';
-import { PageHeader, Tabs, Button, Menu, Badge } from 'antd'
+import { PageHeader, Tabs, Button, Menu, Badge, Avatar, Popover } from 'antd'
 import Skeleton from "react-loading-skeleton";
-import logo from '../../logo.svg';
+// import logo from '../../logo.svg';
 import './style.css';
 import Notification from '../Notification';
 import { countUnreadNotify } from '../../redux/notification';
 
+import logo from "../../assest/Ikemen_doctor.png";
+import avatar from "../../assest/hhs-default_avatar.jpg";
 
 const Navbar = (props) => {
     const auth = useSelector(state => state.auth);
@@ -57,14 +59,17 @@ const Navbar = (props) => {
 
     const renderName = () => {
         return (
-            <div>
+            <>
+                <Popover content={<img alt="doctor_avatar" src={currentDoctor?.avatarurl ?? avatar} />}>
+                    <Avatar src={currentDoctor?.avatarurl ?? avatar} alt="doctor_avatar"></Avatar>
+                </Popover>
                 {currentDoctor?.fullname}
                 <Button onClick = {openNofityDrawer} type="link" className="button-notify" >
                     <Badge count={unreadNotifyNumber} dot>
                         Thông báo
                     </Badge>
                 </Button>
-            </div>
+            </>
         )
     }
 
@@ -78,10 +83,11 @@ const Navbar = (props) => {
             <Notification visible={drawerVisible} closeDrawer={closeDrawer} />
             <PageHeader
                 className="site-page-header-responsive"
-                title={isLoad ? <Skeleton /> : renderName()}
+                title={<div className="verify-email-logo"><img alt="Ikemen_Doc_Logo" src={logo} /></div>}
+                // avatar={{size:"large", shape: "square", src: logo, alt:"Ikemen_Doc_Logo" }}
                 extra={[
-                    <Button type="primary" onClick={logout}>Đăng xuất</Button>
-                    ,
+                    <b style={{fontSize: "1rem"}}>{isLoad ? <Skeleton /> : renderName()}</b>,
+                    <Button type="primary" onClick={logout}>Đăng xuất</Button>,
                 ]}
                 footer={
                     <Menu selectedKeys={[location.pathname]} mode="horizontal">

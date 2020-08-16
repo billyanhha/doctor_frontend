@@ -105,7 +105,7 @@ const Package = () => {
             width: 300
         },
         {
-            title: 'Lý do',
+            title: 'Lý do /Ghi chú địa chỉ',
             dataIndex: 'reason',
             key: 'reason',
             width: 200
@@ -265,7 +265,7 @@ const Package = () => {
                                     <span><b>Tìm kiếm với </b> </span>
                                     <Radio value={'patient_name'}>Tên bệnh nhân</Radio>
                                     <Radio value={'address'}>Địa chỉ</Radio>
-                                    <Radio value={'reason'}>Lý do</Radio>
+                                    <Radio value={'reason'}>Lý do/Ghi chú địa chỉ</Radio>
                                     <Radio value={'phone'}>Số điện thoại</Radio>
                                 </Radio.Group>
                             </div>
