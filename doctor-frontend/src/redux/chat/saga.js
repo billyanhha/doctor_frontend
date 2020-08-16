@@ -116,7 +116,6 @@ function* watchUserRelateDoctorWorker(action) {
 
 function* watchGetUnreadWorker(action) {
     try {
-        yield put(openLoading())
         const {token} = yield select(state => state.auth)
         const result = yield chatService.getUnreadGroup(action.payload , token);
         if (!_.isEmpty(result?.result?.num_group_unread)) {
@@ -130,7 +129,6 @@ function* watchGetUnreadWorker(action) {
         message.destroy();
         message.error(error?.response?.data?.err ?? 'Hệ thống quá tải, xin thử lại sau!', 3);
     } finally {
-        yield put(closeLoading())
     }
 
 }
