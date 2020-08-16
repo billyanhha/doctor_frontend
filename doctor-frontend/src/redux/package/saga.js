@@ -48,19 +48,29 @@ import _ from 'lodash'
 import { message } from 'antd';
 import moment from 'moment'
 import { getAppointmentsFromTo } from '../doctor';
+import { notAssignPackageQuery, 
+    assignPackageQuery
+
+} from '../package/index';
 
 
 function* watchDoctorAcceptPackage(action) {
     try {
         yield put(openLoading())
-        const { token } = yield select(state => state.auth)
-        const result = yield packageService.doctorAcceptPackage(action.doctorId, action.packageId, token);
+        const { token } = yield select(state => state.auth);
+        const query = { sortBy: 'created_at', page: 1, searchBy: "name"};
+        const result = yield packageService.doctorAcceptPackage(action?.doctorId, action?.packageId, token);
         // if (!_.isEmpty(result) && !_.isEmpty(result?.packages)) {
         console.log(result);
         if (!_.isEmpty(result) && !_.isEmpty(result?.packageStatusCreated)) {
-            yield put(getPackageStatus(action.packageId))
+            yield put(getPackageStatus(action?.packageId))
             yield put(doctorAcceptPackageSuccessful(result?.packages));
             yield put(getPackageAppointments(action?.packageId))
+            
+            yield put(notAssignPackageQuery(action?.doctorId, query));
+            yield put(assignPackageQuery(action?.doctorId, query));
+            message.destroy();
+            message.success("Chấp nhận thành công")
         }
     } catch (error) {
         message.destroy();
@@ -74,14 +84,19 @@ function* watchDoctorAcceptPackage(action) {
 function* watchDoctorRejectPackage(action) {
     try {
         yield put(openLoading())
-        const { token } = yield select(state => state.auth)
+        const { token } = yield select(state => state.auth);
+        const query = { sortBy: 'created_at', page: 1, searchBy: "name"};
         const result = yield packageService.doctorRejectPackage(action?.doctorId, action?.packageId, action?.note, token);
         // if (!_.isEmpty(result) && !_.isEmpty(result.packages)) {
         console.log(result);
         if (!_.isEmpty(result) && !_.isEmpty(result.packageStatusCreated)) {
             yield put(getPackageStatus(action.packageId))
             yield put(doctorRejectPackageSuccessful(result.packages));
-            yield put(getPackageAppointments(action?.packageId))
+            yield put(getPackageAppointments(action?.packageId));
+
+            yield put(assignPackageQuery(action?.doctorId, query));
+            message.destroy();
+            message.success("Đã từ chối thành công với lý do: " + action?.note);
         }
     } catch (error) {
         message.destroy();

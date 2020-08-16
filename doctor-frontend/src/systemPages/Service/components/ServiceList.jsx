@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import MaterialTable from 'material-table';
 import { useForm, Controller } from 'react-hook-form';
 import { TextField, Button, Avatar, Select } from '@material-ui/core';
-import {Pagination }from '@material-ui/lab';
+import { Pagination } from '@material-ui/lab';
 import { getService } from '../../../redux/service';
 
 
@@ -22,7 +22,7 @@ const columns = [
             </div>
         )
     },
-    
+
     {
         title: 'Chú thích', field: 'description'
     },
@@ -88,19 +88,21 @@ const ServiceList = (props) => {
 
     return (
         <div>
-            
+
             <div className="service-search">
-                <form onSubmit={handleSubmit(onSubmit)}>
-                    <Controller
-                        as={TextField}
-                        variant="outlined"
-                        className="packge-search-input"
-                        label="Tìm kiếm"
-                        name="query"
-                        control={control}
-                        defaultValue=''
-                    />
-                </form>
+                <div className='form-submit-div'>
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                        <Controller
+                            as={TextField}
+                            variant="outlined"
+                            className="packge-search-input"
+                            label="Tìm kiếm"
+                            name="query"
+                            control={control}
+                            defaultValue=''
+                        />
+                    </form>
+                </div>
                 <Select
                     native
                     value={active}
@@ -120,7 +122,7 @@ const ServiceList = (props) => {
                 }}
                 columns={columns}
                 data={services}
-                
+
                 components={{
                     Pagination: props => (
                         <div>
