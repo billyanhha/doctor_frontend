@@ -19,13 +19,14 @@ const Notification = (props) => {
     const { currentDoctor } = useSelector(state => state.doctor);
     const { isLoad } = useSelector(state => state.ui);
     const { unreadNotifyNumber } = useSelector(state => state.notify);
+    const { token } = useSelector(state => state.auth);
 
     const [page, setpage] = useState(1);
     const [disable, setdisable] = useState(false);
 
     useEffect(() => {
 
-        if (currentDoctor?.id) {
+        if (currentDoctor?.id && token) {
             const data = { id: currentDoctor?.id, itemsPage: itemsPage, page: page }
             dispatch(getDoctorNotification(data))
         }
@@ -46,8 +47,11 @@ const Notification = (props) => {
     }
 
     const markAllReadFunc = () => {
-        const data = { id: currentDoctor?.id, itemsPage: itemsPage, page: 1, receiver_id: currentDoctor?.id };
-        dispatch(markAllRead(data))
+        if(currentDoctor?.id) {
+            const data = { id: currentDoctor?.id, itemsPage: itemsPage, page: 1, receiver_id: currentDoctor?.id };
+            dispatch(markAllRead(data))
+        }
+
 
     }
 

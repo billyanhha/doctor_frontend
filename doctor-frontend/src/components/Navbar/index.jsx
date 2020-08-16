@@ -15,6 +15,7 @@ const Navbar = (props) => {
     const auth = useSelector(state => state.auth);
     const { isLoad } = useSelector(state => state.ui);
     const { currentDoctor } = useSelector(state => state.doctor);
+    const { io } = useSelector(state => state.notify);
     const dispatch = useDispatch();
     const [drawerVisible, setdrawerVisible] = useState(false);
     const { unreadNotifyNumber } = useSelector(state => state.notify);
@@ -23,18 +24,26 @@ const Navbar = (props) => {
     const { location } = props;
 
     useEffect(() => {
-        dispatch(getDoctorLogin(auth?.token));
+        if(auth?.token){
+            dispatch(getDoctorLogin(auth?.token));
+        }
     }, []);
 
     useEffect(() => {
-        if (currentDoctor?.id) {
+        if (currentDoctor?.id && auth?.token) {
             const data = { receiver_id: currentDoctor?.id }
             dispatch(countUnreadNotify(data))
         }
     }, [currentDoctor]);
 
+    useEffect(() => {
+
+    }, [io]);
+
     const logout = () => {
-        dispatch(doctorLogout());
+        if(io) {
+            dispatch(doctorLogout());
+        }
     }
 
     if (!auth.isLoggedIn) {

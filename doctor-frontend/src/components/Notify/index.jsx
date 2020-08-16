@@ -72,7 +72,7 @@ const Notify = () => {
     }
 
     const getNewNotify = () => {
-        if(currentDoctor?.id ) {
+        if(currentDoctor?.id && token) {
             const data = { id: currentDoctor?.id , itemsPage: 30, page: 1 }
             dispatch(getDoctorNotification(data))
         }
@@ -80,7 +80,7 @@ const Notify = () => {
     }
 
     const getNotifyNum = () => {
-        if(currentDoctor?.id ){
+        if(currentDoctor?.id && token){
             const data = { receiver_id: currentDoctor?.id  }
             dispatch(countUnreadNotify(data))
         }

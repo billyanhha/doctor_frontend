@@ -41,30 +41,23 @@ const Chat = (props) => {
         updateThreadIsReadFunc()
         setpage(1)
         if (io && currentDoctor?.id && customer_id) {
+            io.emit("disconnect-chat", "")
             io.emit("chat", `chat&&${customer_id}&&${currentDoctor?.id}`)
             io.on('chat-thread', data => {
-                updateThreadIsReadFunc()
-                getChatThreadData()
-                // getNewMsg(data?.customer_id, data?.doctor_id)
+                // updateThreadIsReadFunc()
+                // getChatThreadData()
+                if (customer_id === data?.customer_id) { // if current chat is exactly the one just send the message
+                    const payloadThread = { cusId: data?.customer_id, doctor_id: data?.doctor_id }
+                    dispatch(getThreadChat(payloadThread))
+                    const payloadUpdate = { cusId: data?.customer_id, doctor_id:  data?.doctor_id, socketId: io?.id }
+                    dispatch(updateIsRead(payloadUpdate))
+                }
                 // updateIsReadNewMsg(data?.customer_id, data?.doctor_id)
-          
+
             })
         }
 
     }, [currentDoctor, customer_id, io]);
-
-    // const getNewMsg = (cusId, doctorId) => {
-    //     if (customer_id === cusId) { // if current chat is exactly the one just send the message
-    //         const payloadThread = { cusId: cusId, doctor_id: doctorId }
-    //         dispatch(getThreadChat(payloadThread))
-    //     }
-    // }
-    // const updateIsReadNewMsg = (cusId, doctorId) => {
-    //     if (customer_id === cusId) { // if current chat is exactly the one just send the message
-    //         const data = { cusId: cusId, doctor_id: doctorId, socketId: io?.id }
-    //         dispatch(updateIsRead(data))
-    //     }
-    // }
 
     const scrollToBottomDiv = () => {
         animateScroll.scrollToBottom({

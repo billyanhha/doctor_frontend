@@ -1,6 +1,6 @@
 import { put, takeLatest, select } from 'redux-saga/effects';
 import { openLoading, closeLoading } from '../ui';
-import { GET_DOCTOR_NOTIFICATION, GET_MORE_DOCTOR_NOTIFICATION, MARK_READ_NOTIFY, MARK_ALL_READ, COUNT_UNREAD_NOTIFY } from './action';
+import { GET_DOCTOR_NOTIFICATION, GET_MORE_DOCTOR_NOTIFICATION, MARK_READ_NOTIFY, MARK_ALL_READ, COUNT_UNREAD_NOTIFY, CLEAR_IO_INSTANCE } from './action';
 import notifycationService from '../../service/notifycationService';
 import _ from "lodash"
 import { getDoctorNotificationSuccessful, getMoreDoctorNotificationSuccessful, getDoctorNotification, countUnreadNotifySuccessful, countUnreadNotify } from '.';
@@ -88,10 +88,13 @@ function* watchcountUnreadNotifyWorker(action) {
 }
 
 
+
+
 export function* notifySaga() {
     yield takeLatest(GET_DOCTOR_NOTIFICATION, watchGetDoctorNotifyWorker);
     yield takeLatest(GET_MORE_DOCTOR_NOTIFICATION, watchGetMoreDoctorNotifyWorker);
     yield takeLatest(MARK_READ_NOTIFY, watchMarkReadNotify);
     yield takeLatest(MARK_ALL_READ, watchmarkAllReadNotify);
     yield takeLatest(COUNT_UNREAD_NOTIFY, watchcountUnreadNotifyWorker);
+
 }
