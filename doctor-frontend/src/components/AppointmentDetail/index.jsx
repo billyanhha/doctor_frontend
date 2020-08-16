@@ -100,7 +100,7 @@ const AppointmentDetail = (props) => {
                     ]}
                 footer={
                     <Tabs defaultActiveKey="1" onChange={callback}>
-                        <TabPane tab="Thông tin gói" key="1">
+                        <TabPane tab="Thông tin cuộc hẹn" key="1">
                             <Info checkIfAppointmentNotExpire={checkIfAppointmentNotExpire}
                                 close={() => props.close()} currentAppointment={currentAppointment} />
                         </TabPane>
@@ -120,7 +120,7 @@ const AppointmentDetail = (props) => {
                             <Tag color={package_appointment_status?.[`${currentAppointment?.status_id}`]?.color} > {currentAppointment?.status_name} </Tag>
                         </div>
                     </Descriptions.Item>
-                    <Descriptions.Item label="Địa chỉ">
+                    <Descriptions.Item label="Địa chỉ cuộc hẹn">
                         <p className="hightlight">{currentAppointment?.address}</p>
                     </Descriptions.Item>
                     <Descriptions.Item label="Số điện thoại">

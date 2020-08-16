@@ -57,7 +57,7 @@ const Form = () => {
                                 onChange={handleChange}
                             >
                                 <option value={'package_result_form'}>Văn bản kết quả gói</option>
-                                <option value={'appointment_result_form'}>Văn bản kết quả cuộ hẹn</option>
+                                <option value={'appointment_result_form'}>Văn bản kết quả cuộc hẹn</option>
                             </Select>
                         </div>
                         <div className="edit-form">
