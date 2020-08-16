@@ -8,9 +8,9 @@
     font-weight: 600;
 
     /* background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab); */  /* thiss better */
-    background: linear-gradient(-45deg, #c1fdf2, #2ecce0, #5fe9b4, #00bc9a);
+    /* background: linear-gradient(-45deg, #c1fdf2, #2ecce0, #5fe9b4, #00bc9a);
     background-size: 400% 400%;
-    animation: gradient 20s ease infinite;
+    animation: gradient 20s ease infinite; */
 }
 
 .verify-email-error {
@@ -23,6 +23,7 @@
     border-radius: 10px;
     min-height: 40vh;
     width: 40vw;
+    box-shadow: 0 0 8px 1px #ececec;
 }
 
 .verify-email-wrapper div {

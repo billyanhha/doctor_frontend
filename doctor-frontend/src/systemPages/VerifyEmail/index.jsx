@@ -1,17 +1,19 @@
 import React, {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {useHistory, withRouter} from "react-router-dom";
+import {isEmpty} from 'lodash'
+import {Button} from "antd";
 
 import {LoadingOutlined} from "@ant-design/icons";
 
 import {verifyEmail} from "../../redux/email";
-
-import logo from "../../assest/Ikemen_staff.png";
+import logo from "../../assest/Ikemen_doctor.png";
 import "./style.css";
 
 const VerifyEmail = props => {
     const {isLoad} = useSelector(state => state.ui);
     const verifyStatus = useSelector(state => state.email.verifyEmail);
+    const { currentDoctor } = useSelector(state => state.doctor);
 
     const tokenMail = props.match.params?.token;
 
@@ -23,10 +25,14 @@ const VerifyEmail = props => {
     };
 
     useEffect(() => {
-        if (tokenMail) {
-            dispatch(verifyEmail(tokenMail));
+        if(isEmpty(currentDoctor)){
+            if (tokenMail) {
+                dispatch(verifyEmail(tokenMail));
+            }else{
+                history.replace("/dflkgjdflkgfg");    //to NoMatch page
+            }
         }else{
-            history.replace("/404");    //to NoMatch page
+            history.replace("/");
         }
     }, []);
 
@@ -72,9 +78,9 @@ const VerifyEmail = props => {
                     )}
                 </div>
                 <div className="verify-email-to-login">
-                    <button disabled={isLoad} className="recovery-button" onClick={() => redirectToHomepage()}>
-                        Đến trang đăng nhập
-                    </button>
+                    <Button disabled={isLoad} onClick={() => redirectToHomepage()}>
+                        Đến trang chủ
+                    </Button>
                 </div>
             </div>
         </div>
