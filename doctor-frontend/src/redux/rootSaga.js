@@ -10,6 +10,7 @@ import { notifySaga } from './notification/saga';
 import { accountSaga } from './account/saga';
 import { chatSaga } from './chat/saga';
 import { serviceSaga } from './service/saga';
+import { emailSaga } from './email/saga';
 
 export function* rootSaga() {
   yield all([
@@ -23,6 +24,7 @@ export function* rootSaga() {
     notifySaga(),
     accountSaga(),
     chatSaga(),
-    serviceSaga()
+    serviceSaga(),
+    emailSaga()
   ]);
 }

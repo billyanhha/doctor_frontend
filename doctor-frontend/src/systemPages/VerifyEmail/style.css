@@ -1,0 +1,141 @@
+.verify-email-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+
+    font-family: "Open Sans", sans-serif;
+    font-weight: 600;
+
+    /* background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab); */  /* thiss better */
+    background: linear-gradient(-45deg, #c1fdf2, #2ecce0, #5fe9b4, #00bc9a);
+    background-size: 400% 400%;
+    animation: gradient 20s ease infinite;
+}
+
+.verify-email-error {
+    color: #ff6347;
+}
+
+.verify-email-wrapper {
+    padding: 40px 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    min-height: 40vh;
+    width: 40vw;
+}
+
+.verify-email-wrapper div {
+    text-align: center;
+}
+
+.verify-email-img{
+    margin-bottom: 20px;
+}
+
+.verify-email-img img {
+    height: 100px;
+    width: 100px;
+}
+
+.verify-email-title {
+    font-size: 2rem;
+}
+
+.verify-email-to-login {
+    margin-top: 80px;
+    text-align: center;
+}
+
+.verify-email-msg {
+    color: #2bc5da;
+    font-size: 1.5rem;
+    margin-top: 20px;
+}
+
+.verify-email-logo {
+    position: absolute;
+    left: 0;
+    top: 0;
+    margin-top: 20px;
+    margin-left: 20px;
+    height: 40px;
+    overflow: hidden;
+}
+
+.verify-email-logo img {
+    cursor: pointer;
+    height: 100%;
+}
+
+@media screen and (max-width: 1600px) {
+    .verify-email-wrapper {
+        width: 50vw;
+    }
+}
+
+/* HD monitor & older TV, Wacom */
+@media screen and (max-width: 1366px) {
+}
+
+/* Ipad Pro, Tablet, Wacom, Monitor */
+@media screen and (max-width: 1280px) {
+}
+
+/* Ipad Pro, Tablet, Phone */
+@media screen and (max-width: 1024px) {
+}
+
+/* Ipad */
+@media screen and (max-width: 800px) {
+    .verify-email-title {
+        font-size: 1.5rem;
+    }
+
+    .verify-email-wrapper {
+        width: 60vw;
+    }
+
+    .forgot-msg {
+        font-size: 0.8rem;
+    }
+
+    .verify-email-logo {
+        height: 50px;
+    }
+}
+
+/* Phone */
+@media screen and (max-width: 600px) {
+    .verify-email-wrapper {
+        width: 90vw;
+        padding: 40px 10px;
+    }
+
+    .verify-email-title {
+        font-size: 1.2rem;
+    }
+
+    .verify-email-logo {
+        height: 40px;
+    }
+}
+
+/* Smaller phone */
+@media screen and (max-width: 320px) {
+    .verify-email-title {
+        font-size: 1rem;
+    }
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}

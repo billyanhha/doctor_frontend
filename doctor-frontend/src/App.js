@@ -18,6 +18,8 @@ import Messenger from './systemPages/Messenger';
 import FloatingButton from './components/FloatingButton';
 import ViewForm from './systemPages/ViewForm';
 import Service from './systemPages/Service';
+import VerifyEmail from './systemPages/VerifyEmail';
+
 require('dotenv').config()
 
 const App = () => {
@@ -30,6 +32,8 @@ const App = () => {
       <Switch >
         <Route exact path="/login" render={(props) => <SystemLogin {...props} />} />
         <Route exact path="/forgot-password/:token" render={props => <ForgotPassword {...props} />} />
+        <Route exact path="/verify-email/:token" render={(props) => <VerifyEmail {...props} />} />
+        
         {/* <Route exact path='/new' component={NewFeed} /> */}
         <PrivateRoute exact path='/'>
           <DoctorNewFeedTab />

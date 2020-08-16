@@ -163,4 +163,15 @@ doctorService.getAllServiceRequest = (doctorId,token) => new Promise((reslove, r
         .catch(err => reject(err))
 })
 
+doctorService.verifyEmail = token =>
+    new Promise((resolve, reject) => {
+        const api = `/api/auth/verify-email/${token} `;
+        axios
+            .put(api, {role: "doctor"})
+            .then(result => {
+                resolve(result.data);
+            })
+            .catch(err => reject(err));
+    });
+
 export default doctorService;
