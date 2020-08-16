@@ -20,10 +20,10 @@ const layout = {
 const validateMessages = {
     required: '${label} bị trống!',
     types: {
-        number: '${label} is not a validate number!',
+        number: '${label} không phải là số!',
     },
     number: {
-        range: '${label} must be between ${min} and ${max}',
+        range: '${label} phải nằm trong khoảng từ ${min} đến ${max}',
     },
 
 };
@@ -33,7 +33,7 @@ const DoctorRequestService = (props) => {
 
     const dispatch = useDispatch();
     const { isLoad } = useSelector(state => state.ui);
-    const [service, setservice] = useState(props?.service ?? {});
+    const [service, setService] = useState(props?.service ?? {});
     const { currentDoctor } = useSelector(state => state.doctor);
     const { serviceRequest } = useSelector(state => state.doctor);
 
@@ -46,11 +46,12 @@ const DoctorRequestService = (props) => {
     const onFinish = values => {
         console.log(values);
         dispatch(requestNewService(currentDoctor?.id, values));
-        const timer = setTimeout(() => window.location.reload(), 1000);
-        return () => clearTimeout(timer);
+        setService({});
+        // const timer = setTimeout(() => window.location.reload(), 1000);
+        // return () => clearTimeout(timer);
     };
 
-    console.log('servicerequest: ', serviceRequest);
+    // console.log('servicerequest: ', serviceRequest);
 
     const columns = [
         { title: 'Tên', dataIndex: 'name', key: 'name' },
@@ -81,7 +82,7 @@ const DoctorRequestService = (props) => {
                         <div className="adding-form-div">
                             <Form {...layout} name="nest-messages" onFinish={onFinish} validateMessages={validateMessages}>
                                 <Form.Item name={['data', 'name']} label="Tên dịch vụ" rules={[{ required: true }]}>
-                                    <Input value={service?.name} />
+                                    <Input />
                                 </Form.Item>
                                 <Form.Item name={['data', 'description']} label="Mô tả" rules={[{ required: true }]}>
                                     <Input.TextArea />
