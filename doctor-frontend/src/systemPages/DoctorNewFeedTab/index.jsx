@@ -271,7 +271,7 @@ const DoctorNewFeedTab = (props) => {
                             <span><p>{formatDateTime(value?.date, value?.hour_from, value?.hour_to)}</p></span>
                         </div>
                         <div className="address-div">
-                            Địa chỉ: <p>{value?.address}</p>
+                            Địa chỉ khám: <p>{value?.address}</p>
                         </div>
                     </div>
                     <div className="colorTag-div">a</div>
