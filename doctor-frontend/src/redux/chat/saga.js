@@ -4,12 +4,12 @@ import _ from 'lodash';
 import { openLoading, closeLoading } from '../ui';
 import { message } from 'antd';
 import chatService from '../../service/chatService';
-import { getChatSuccessful, getMoreChatSuccessful, getChat,getThreadChatSuccessful, getMoreThreadChatSuccessful, getUserRelateDoctorSuccessful, getUnreadGroupSuccessful, getThreadChat, closeThreadLoad, openThreadLoad, sendChatLoad } from '.';
+import { getChatSuccessful, getMoreChatSuccessful, getChat,getThreadChatSuccessful, getMoreThreadChatSuccessful, getUserRelateDoctorSuccessful, getUnreadGroupSuccessful, getThreadChat, closeThreadLoad, openThreadLoad, sendChatLoad, getChatLoad } from '.';
 
 
 function* watchGetChatWorker(action) {
     try {
-        yield put(openLoading())
+        yield put(getChatLoad(true))
         const {token} = yield select(state => state.auth)
         const result = yield chatService.getChat(action.payload, token);
         if (!_.isEmpty(result?.result)) {
@@ -23,14 +23,14 @@ function* watchGetChatWorker(action) {
         message.destroy();
         message.error(error?.response?.data?.err ?? 'Hệ thống quá tải, xin thử lại sau!', 3);
     } finally {
-        yield put(closeLoading())
+        yield put(getChatLoad(false))
     }
 
 }
 
 function* watchGetMoreChatWorker(action) {
     try {
-        yield put(openLoading())
+        yield put(getChatLoad(true))
         const {token} = yield select(state => state.auth)
         const result = yield chatService.getMoreChat(action.payload , token);
         if (!_.isEmpty(result?.result)) {
@@ -44,7 +44,7 @@ function* watchGetMoreChatWorker(action) {
         message.destroy();
         message.error(error?.response?.data?.err ?? 'Hệ thống quá tải, xin thử lại sau!', 3);
     } finally {
-        yield put(closeLoading())
+        yield put(getChatLoad(false))
     }
 
 }

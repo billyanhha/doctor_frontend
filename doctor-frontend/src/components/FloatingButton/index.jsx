@@ -4,7 +4,7 @@ import 'react-tiny-fab/dist/styles.css'; import { Badge } from 'antd';
 import { AppstoreAddOutlined, ProfileOutlined, FolderAddOutlined, MessageOutlined } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getUnreadGroup } from '../../redux/chat';
+import { getUnreadGroup, getUnreadGroupSuccessful } from '../../redux/chat';
 
 const FloatingButton = (props) => {
 
@@ -20,7 +20,7 @@ const FloatingButton = (props) => {
             dispatch(getUnreadGroup({ id: currentDoctor?.id }))
             if(io) {
                 io.on('server-send-notification-chat', data => {
-                    dispatch(getUnreadGroup({ id: currentDoctor?.id }))
+                    dispatch(getUnreadGroupSuccessful(data?.unread?.num_group_unread ?? 0))
                 })
             }
 

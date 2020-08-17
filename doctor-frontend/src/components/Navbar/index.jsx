@@ -83,8 +83,7 @@ const Navbar = (props) => {
             <Notification visible={drawerVisible} closeDrawer={closeDrawer} />
             <PageHeader
                 className="site-page-header-responsive"
-                title={<div className="verify-email-logo"><img alt="Ikemen_Doc_Logo" src={logo} /></div>}
-                // avatar={{size:"large", shape: "square", src: logo, alt:"Ikemen_Doc_Logo" }}
+                title={<Link to = "/" className="verify-email-logo"><img alt="Ikemen_Doc_Logo" src={logo} /></Link>}
                 extra={[
                     <b style={{fontSize: "1rem"}}>{isLoad ? <Skeleton /> : renderName()}</b>,
                     <Button type="primary" onClick={logout}>Đăng xuất</Button>,
