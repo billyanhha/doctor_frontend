@@ -24,7 +24,8 @@ import {
     getDoctorDetailSuccessful,
     changeDoctorPasswordSuccessfull,
     getAllServiceRequestSuccessfully,
-    getAllRatingSuccessful
+    getAllRatingSuccessful,
+    getAllServiceRequest
 } from '.';
 import { notAssignPackageQuery, 
     assignPackageQuery,
@@ -178,10 +179,12 @@ function* watchRequestNewSerice(action) {
         yield put(openLoading());
         const { token } = yield select(state => state.auth)
         const result = yield doctorService.requestNewService(action?.doctorId, action?.data, token);
-        message.success("Gửi yêu cầu thành công");
-        // if (!_.isEmpty(result)) {
-        //     yield put(requestNewService(action?.data?.packageId))
-        // }
+        
+        if (!_.isEmpty(result)) {
+            message.success("Gửi yêu cầu thành công");
+            yield put(getAllServiceRequest(action?.doctorId));
+        }
+        
     } catch (error) {
         message.destroy();
         message.error(error?.response?.data?.err)
