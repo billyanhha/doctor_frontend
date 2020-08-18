@@ -23,6 +23,7 @@ const EditForm = (props) => {
 
     const id = props.match.params.id
 
+
     useEffect(() => {
         if (props?.editfor === 'result_content' && !props?.content) {
             if (!_.isEmpty(packageResultForm?.content)) {
@@ -38,6 +39,7 @@ const EditForm = (props) => {
         let data = {}
         data.doctor_id = currentDoctor?.id
         data.package_id = id;
+        console.log(content);
         data.content = content;
         if (props?.editfor === 'result_content') {
             data.editfor = 'result_content'
@@ -57,12 +59,11 @@ const EditForm = (props) => {
                 required
                 ref={editor}
                 value={content}
-
                 config={config}
                 zIndex={1}
                 tabIndex={1} // tabIndex of textarea
-                onBlur={newContent => setContent(newContent)} // preferred to use only this option to update the content for performance reasons
-            // onChange={newContent => console.log(newContent)}
+                // onBlur={newContent => setContent(newContent)} // preferred to use only this option to update the content for performance reasons
+                onChange={newContent => setContent(newContent)}
             />
             <br />
             <Button

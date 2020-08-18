@@ -62,8 +62,7 @@ const FormResult = (props) => {
                 zIndex={1}
                 height='800px'
                 tabIndex={1} // tabIndex of textarea
-                onBlur={newContent => setContent(newContent)} // preferred to use only this option to update the content for performance reasons
-            // onChange={newContent => console.log(newContent)}
+                onChange={newContent => setContent(newContent)}
             />
             <br />
             <Button

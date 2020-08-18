@@ -180,7 +180,6 @@ const Mycalendar = (props) => {
                     data.token = token;
                     data.date = moment(info.event.start).format('YYYY-MM-DD');
                     data.slot_id = getSlot(info.event.start)
-                    console.log(data)
                     dispatch(updateAppointmentPackage(data, appointmentId, doctorId, packageId))
                 },
                 onCancel() {

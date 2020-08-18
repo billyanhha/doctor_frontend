@@ -53,7 +53,7 @@ const AddAppointmentForm = (props) => {
             })
             if (moment(props?.dateInfo?.date).isSame(moment(), 'day')) {
                 Object.keys(slotData).forEach(element => {
-                    if (moment(new Date(),'HH:mm:ss').isAfter(moment(slotData[element].from, 'HH:mm:ss'))) {
+                    if (moment(new Date(), 'HH:mm:ss').isAfter(moment(slotData[element].from, 'HH:mm:ss'))) {
                         delete slotData[element]
                     }
                 });
@@ -61,7 +61,7 @@ const AddAppointmentForm = (props) => {
             arr = Object.keys(slotData).map((value, index) => {
                 return value
             })
-            slotID  = "" + (arr[0] || "");
+            slotID = "" + (arr[0] || "");
         } else { // week ,
             Object.keys(slot).forEach(ele => {
                 if (slot[ele].from === dateTime && moment().isBefore(moment(props?.dateInfo.date))) {
@@ -126,8 +126,12 @@ const AddAppointmentForm = (props) => {
             data.packageId = id;
             data.date = moment(props?.dateInfo.date).format('YYYY-MM-DD');
             data.slot_id = slotid;
-
-            dispatch(addAppointmentPackage(data))
+            if (!_.isEmpty(data.slot_id ) && !_.isEmpty(data.date ) && !_.isEmpty(data.packageId )) {
+                dispatch(addAppointmentPackage(data))
+            } else {
+                message.destroy();
+                message.error("Ngày hoặc slot không phù hợp", 2);
+            }
             clearData();
             props.cancel();
         }
@@ -148,9 +152,9 @@ const AddAppointmentForm = (props) => {
                 <Dropdown overlay={menu}>
                     <Button>
                         {slotid ?
-                         ("Slot " + slotid + " : " + slot[slotid].from + " ~ " + slot[slotid].to) 
-                        : "Không có slot"
-                        
+                            ("Slot " + slotid + " : " + slot[slotid].from + " ~ " + slot[slotid].to)
+                            : "Không có slot"
+
                         }
                         <DownOutlined />
                     </Button>

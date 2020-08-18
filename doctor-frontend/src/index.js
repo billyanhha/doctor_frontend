@@ -7,16 +7,19 @@ import configureStore from './redux/store/configureStore';
 import { PersistGate } from 'redux-persist/integration/react';
 import 'antd/dist/antd.css'; // Import Ant Design styles by less entry
 import 'react-chat-elements/dist/main.css';
-
+import { ConfigProvider } from 'antd';
+import vi_VN from 'antd/es/locale/vi_VN';
 const { store, persistor } = configureStore();
 
 
 ReactDOM.render(
-  <Provider store={store}>
-    <PersistGate loading={null} persistor={persistor} >
-      <App />
-    </PersistGate>
-  </Provider>
+  <ConfigProvider locale={vi_VN}>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor} >
+        <App />
+      </PersistGate>
+    </Provider>
+  </ConfigProvider>
   ,
   document.getElementById('root')
 );

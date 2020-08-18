@@ -17,6 +17,7 @@ const Notify = () => {
     useEffect(() => {
 
         if (_.isEmpty(token)) {
+
             dispatch(clearIoInstance())
         }
 
