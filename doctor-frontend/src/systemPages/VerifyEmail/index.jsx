@@ -25,15 +25,15 @@ const VerifyEmail = props => {
     };
 
     useEffect(() => {
-        if(isEmpty(currentDoctor)){
+        // if(isEmpty(currentDoctor)){
             if (tokenMail) {
                 dispatch(verifyEmail(tokenMail));
             }else{
                 history.replace("/dflkgjdflkgfg");    //to NoMatch page
             }
-        }else{
-            history.replace("/");
-        }
+        // }else{
+        //     history.replace("/");
+        // }
     }, []);
 
     return (
