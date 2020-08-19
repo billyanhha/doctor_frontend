@@ -97,7 +97,7 @@ packageService.updateAppointmentPackage = (doctorId, appointmentId, data, token)
     })
         .then(result => {
 
-            if (!_.isEmpty(result?.data) &&  !_.isEmpty(data?.services) ) {
+            if (!_.isEmpty(result?.data) ) {
                 packageService.addServiceAppointment(appointmentId, data?.services, data?.token)
             }
             reslove(result.data)

@@ -65,7 +65,7 @@ const ServiceForm = (props) => {
             <div className="service-select" ref={props.innerRef} {...props.innerProps}>
                 <p className="service-select-name">{option?.name}</p>
                 <p className="service-select-description">{option?.description}</p>
-                <p>{option?.price + " ₫"}</p>
+                <p>{option?.price ? (option?.price + " ₫") : ''}</p>
                 {
                     isServiceDuplicate(option.id)
                     &&
