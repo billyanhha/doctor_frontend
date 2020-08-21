@@ -60,8 +60,8 @@ const Navbar = (props) => {
     const renderName = () => {
         return (
             <>
-                <Popover content={<img alt="doctor_avatar" src={currentDoctor?.avatarurl ?? avatar} />}>
-                    <Avatar src={currentDoctor?.avatarurl ?? avatar} alt="doctor_avatar"></Avatar>
+                <Popover content={<img className="nav-view-avatar" alt="doctor_avatar" src={currentDoctor?.avatarurl ?? avatar} />}>
+                    <Avatar src={currentDoctor?.avatarurl ?? avatar} alt="doctor_avatar" />
                 </Popover>
                 {currentDoctor?.fullname}
                 <Button onClick = {openNofityDrawer} type="link" className="button-notify" >
