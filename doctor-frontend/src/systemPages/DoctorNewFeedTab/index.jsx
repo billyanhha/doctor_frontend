@@ -26,6 +26,31 @@ import {
 } from '../../redux/patient';
 import Patient from '../../components/Patient';
 
+const sortStatus = {
+    status :[
+        {
+            id : "created_at",
+            msg: "Ngày taọ yêu cầu"
+        },
+        {
+            id : "date",
+            msg: "Ngày thực hiện yêu cầu"
+        }
+    ]
+}
+
+const searchStatus = {
+    status :[
+        {
+            id : "name",
+            msg: "Tên"
+        },
+        {
+            id : "address",
+            msg: "Địa chỉ"
+        }
+    ]
+}
 
 const { Search } = Input;
 const DoctorNewFeedTab = (props) => {
@@ -231,25 +256,31 @@ const DoctorNewFeedTab = (props) => {
         dispatch(getPatientInfo(id));
     };
 
+    const renderSortStatus = sortStatus.status.map((value,index)=>{
+        return (
+            <Menu.Item key={value.id}>
+                {value.msg}
+            </Menu.Item>
+        )
+    })
+
+    const renderSearchStatus = searchStatus.status.map((value,index)=>{
+        return (
+            <Menu.Item key={value.id}>
+                {value.msg}
+            </Menu.Item>
+        )
+    })
+
     const menu1 = (
         <Menu selectedKeys={sortBy} onClick={handleSortByChange}>
-            <Menu.Item key="created_at" icon={<SortDescendingOutlined />}>
-                Ngày tạo yêu cầu
-          </Menu.Item>
-            <Menu.Item key="date" icon={<SortDescendingOutlined />}>
-                Ngày thực hiện yêu cầu
-          </Menu.Item>
+            {renderSortStatus}
         </Menu>
     );
 
     const menu2 = (
         <Menu selectedKeys={searchBy} onClick={handleSearchByChange}>
-            <Menu.Item key="name" icon={<SortDescendingOutlined />}>
-                Tên
-          </Menu.Item>
-            <Menu.Item key="address" icon={<SortDescendingOutlined />}>
-                Địa chỉ
-          </Menu.Item>
+            {renderSearchStatus}
         </Menu>
     );
 
@@ -299,7 +330,7 @@ const DoctorNewFeedTab = (props) => {
                                 okText="Chắc chắn"
                                 cancelText="Không"
                             >
-                                <button className="link-button-accept-div" id={value?.package_id}><span>Chấp nhận</span></button>
+                                <button className="link-button-accept-div" id={value?.package_id} onClick={e => e.preventDefault()}><span>Chấp nhận</span></button>
                             </Popconfirm>)}
 
                             {type === 2 && value?.package_id_duplicate!==null && (<Popover
@@ -309,11 +340,11 @@ const DoctorNewFeedTab = (props) => {
                                 content={(
                                     <div>
                                         <input required onChange={onChangeRejectText} />
-                                        <button className="reject-button-input-div" onClick={e => { rejectOnAssignDuplicated(key); }}>Gửi</button>
+                                        <button className="reject-button-input-div" onClick={e => { e.preventDefault();rejectOnAssignDuplicated(key); }}>Gửi</button>
                                     </div>
                                 )}
                             >
-                                <button className="link-button-reject-div" id={value?.package_id}><span>Từ chối</span></button>
+                                <button className="link-button-reject-div" id={value?.package_id} onClick={e => e.preventDefault()}><span>Từ chối</span></button>
                             </Popover>)}
 
                             {(type === 2 && value?.package_id_duplicate===null) && (<div>
@@ -323,16 +354,16 @@ const DoctorNewFeedTab = (props) => {
                                     content={(
                                         <div>
                                             <input required onChange={onChangeRejectText} />
-                                            <button className="reject-button-input-div" onClick={e => { rejectOnAssign(key); }}>Gửi</button>
+                                            <button className="reject-button-input-div" onClick={e => { e.preventDefault();rejectOnAssign(key); }}>Gửi</button>
                                         </div>
                                     )}
                                 >
-                                    <button className="reject-div" id={value?.package_id}><span>Từ chối</span></button>
+                                    <button className="reject-div" id={value?.package_id} onClick={e => e.preventDefault()}><span>Từ chối</span></button>
                                 </Popover>
 
                                 <Popconfirm
                                     title="Bạn có chắc chắn không?"
-                                    onConfirm={e => { acceptOnAssign(key) }}
+                                    onConfirm={e => { e.preventDefault();acceptOnAssign(key) }}
                                     onCancel={cancel}
                                     okText="Chắc chắn"
                                     cancelText="Không"
@@ -353,7 +384,11 @@ const DoctorNewFeedTab = (props) => {
             <div className="newfit-content">
                 
                 <div className="newfit-left-div">
-                    {packages(notAssignPackage, 1)}
+                    {notAssignPackage?.length !== 0 ? packages(notAssignPackage, 1) : 
+                        <center>
+                            <h3>Hiện tại không có yêu cầu nào</h3>
+                        </center>
+                        }
 
                     
                         <center>
@@ -374,7 +409,12 @@ const DoctorNewFeedTab = (props) => {
             <div className="newfit-content">
 
                 <div className="newfit-left-div">
-                    {packages(assignPackage, 2)}
+                    
+                    {assignPackage?.length !== 0 ? packages(assignPackage, 2) : 
+                        <center>
+                            <h3>Hiện tại không có yêu cầu nào</h3>
+                        </center>
+                        }
                     <center>
                         {!isOutOfDataAssign && (<button
                             onClick={getMoreData}
@@ -411,14 +451,14 @@ const DoctorNewFeedTab = (props) => {
                             <div className="sortBy-div">
                                 <Dropdown overlay={menu1}>
                                     <Button onClick={e => e.preventDefault()}>
-                                        Sắp xếp theo <DownOutlined />
+                                       {sortBy === "created_at" ? "Ngày taọ yêu cầu" : "Ngày thực hiện yêu cầu"} <DownOutlined />
                                     </Button>
                                 </Dropdown>
                             </div>
                             <div className="searchBy-div">
                                 <Dropdown overlay={menu2}>
                                     <Button onClick={e => e.preventDefault()}>
-                                        Tìm kiếm theo <DownOutlined />
+                                    {searchBy === "name" ? "Tên" : "Địa chỉ"} <DownOutlined />
                                     </Button>
                                 </Dropdown>
                             </div>
