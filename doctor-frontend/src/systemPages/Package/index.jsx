@@ -291,6 +291,7 @@ const Package = () => {
                             <Table
                                 columns={columns}
                                 onChange={onPageNumberChange}
+                                scroll={{ x: '100%' }}
                                 // onRow={(id) => ({ onClick: () => history.push("package/" + id.id) })}
                                 pagination={{
 

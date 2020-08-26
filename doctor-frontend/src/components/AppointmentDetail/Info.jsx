@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import moment from "moment"
 import priorityData from "../../configs/prioritiy"
 import { Select, Tag, Input, InputNumber, Button, Form } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import _ from "lodash"
-import slot from "../../configs/slot"
 import { updateAppointmentPackage } from '../../redux/package';
 import { withRouter } from 'react-router-dom';
 
@@ -126,7 +124,7 @@ const Info = (props) => {
                 <Form.Item
                     label='Huyết áp tâm trương / mmHg'
                     name='diastolic'
-                    rules={[{ type: 'number', message: 'Điền số' }]}
+                    rules={[{ type: 'number', min: 0, message: 'Điền số' }]}
                 >
                     <InputNumber
                     // onChange={onChange}
@@ -135,7 +133,7 @@ const Info = (props) => {
                 <Form.Item
                     label='Huyết át tâm thu / mmHg'
                     name='systolic'
-                    rules={[{ type: 'number', message: 'Điền số' }]}
+                    rules={[{ type: 'number', min: 0, message: 'Điền số' }]}
                 >
                     <InputNumber
                     // onChange={onChange}
@@ -144,7 +142,7 @@ const Info = (props) => {
                 <Form.Item
                     label='Mạch / nhịp/phút'
                     name='pulse'
-                    rules={[{ type: 'number', message: 'Điền số' }]}
+                    rules={[{ type: 'number', min: 0, message: 'Điền số' }]}
                 >
                     <InputNumber
                     />
@@ -152,7 +150,7 @@ const Info = (props) => {
                 <Form.Item
                     label='Nhiệt độ °C'
                     name='temperature'
-                    rules={[{ type: 'number', message: 'Điền số' }]}
+                    rules={[{ type: 'number', min: 0, message: 'Điền số' }]}
                 >
                     <InputNumber
                     />
