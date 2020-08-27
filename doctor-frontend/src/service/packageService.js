@@ -97,10 +97,15 @@ packageService.updateAppointmentPackage = (doctorId, appointmentId, data, token)
     })
         .then(async result => {
 
-            if (!_.isEmpty(result?.data) ) {
+             if (!_.isEmpty(result?.data) && data.editResult) {
+                reslove(result?.data)
+            } else if (!_.isEmpty(result?.data) && !data.editResult) {
+                console.log(123);
                 const resultAdd = await packageService.addServiceAppointment(appointmentId, data?.services, data?.token)
                 reslove(resultAdd || result?.data)
-            }
+            } 
+
+
         })
         .catch(err => reject(err))
 })

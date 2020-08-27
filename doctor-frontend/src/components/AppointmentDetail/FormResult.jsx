@@ -45,6 +45,7 @@ const FormResult = (props) => {
         let doctorId = currentDoctor?.id
         let appointmentId = currentAppointment.id
         let packageId = props.match.params.id
+        data.editResult = true
         dispatch(updateAppointmentPackage(data, appointmentId, doctorId, packageId))
         props.close()
         setTimeout(() => {

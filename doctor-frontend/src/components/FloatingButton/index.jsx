@@ -16,7 +16,7 @@ const FloatingButton = (props) => {
 
     useEffect(() => {
         
-        if(currentDoctor?.id){
+        if(currentDoctor?.id && io){
             dispatch(getUnreadGroup({ id: currentDoctor?.id }))
             if(io) {
                 io.on('server-send-notification-chat', data => {

@@ -124,7 +124,7 @@ const Info = (props) => {
                 <Form.Item
                     label='Huyết áp tâm trương / mmHg'
                     name='diastolic'
-                    rules={[{ type: 'number', min: 0, message: 'Điền số' }]}
+                    rules={[{ type: 'number', min: 0, max: 300, message: 'Điền số liệu thích hợp' }]}
                 >
                     <InputNumber
                     // onChange={onChange}
@@ -133,7 +133,7 @@ const Info = (props) => {
                 <Form.Item
                     label='Huyết át tâm thu / mmHg'
                     name='systolic'
-                    rules={[{ type: 'number', min: 0, message: 'Điền số' }]}
+                    rules={[{ type: 'number', min: 0, max: 300, message: 'Điền số liệu thích hợp' }]}
                 >
                     <InputNumber
                     // onChange={onChange}
@@ -142,7 +142,7 @@ const Info = (props) => {
                 <Form.Item
                     label='Mạch / nhịp/phút'
                     name='pulse'
-                    rules={[{ type: 'number', min: 0, message: 'Điền số' }]}
+                    rules={[{ type: 'number', min: 0,  max: 220, message: 'Điền số liệu thích hợp' }]}
                 >
                     <InputNumber
                     />
@@ -150,7 +150,7 @@ const Info = (props) => {
                 <Form.Item
                     label='Nhiệt độ °C'
                     name='temperature'
-                    rules={[{ type: 'number', min: 0, message: 'Điền số' }]}
+                    rules={[{ type: 'number', min: 0, max: 50, message: 'Điền số liệu thích hợp' }]}
                 >
                     <InputNumber
                     />

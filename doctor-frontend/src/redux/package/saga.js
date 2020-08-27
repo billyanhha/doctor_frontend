@@ -407,8 +407,8 @@ function* watchChangePackageStatusWorker(action) {
         yield put(openLoading());
         const { token } = yield select(state => state.auth)
         const result = yield packageService.changePackageStatus(action?.data, token);
-        message.success("Thay đổi trạng thái thành công");
         if (!_.isEmpty(result)) {
+            message.success("Thay đổi trạng thái thành công");
             yield put(getPackageStatus(action?.data?.packageId))
             yield put(getPackageAppointments(action?.data?.packageId))
         }
