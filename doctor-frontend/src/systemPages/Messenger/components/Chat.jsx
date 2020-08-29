@@ -1,16 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
 import "../style.css"
 import { Avatar, MessageBox } from 'react-chat-elements'
-import { Input, Spin } from 'antd';
-import { Upload, Button } from 'antd';
+import { Input, Spin, message } from 'antd';
+import { Upload, Button, Tooltip, Modal } from 'antd';
 import { FolderAddFilled, CloseCircleFilled } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getThreadChat, getMoreThreadChat, sendMessage, updateIsRead, getChat } from '../../../redux/chat';
 import moment from "moment";
-import { LoadingOutlined } from '@ant-design/icons';
+import { LoadingOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import _ from "lodash"
 import { animateScroll } from 'react-scroll'
+import Portal from "./VideoCall/Portal";
 
 const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
@@ -25,6 +26,11 @@ const Chat = (props) => {
     const [page, setpage] = useState(1);
     const [chatText, setchatText] = useState('');
     const [isLoadMore, setisLoadMore] = useState(false);
+    
+    const [openVideoCall, setOpenVideoCall] = useState(false);
+    const [incomingCall, setIncomingCall] = useState(false);
+    const [senderData, setSenderData] = useState(null);
+    const [senderPeerID, setSenderPeerID] = useState(null);
 
     const dispatch = useDispatch();
     const { currentDoctor } = useSelector(state => state.doctor);
@@ -55,6 +61,18 @@ const Chat = (props) => {
                 // updateIsReadNewMsg(data?.customer_id, data?.doctor_id)
 
             })
+
+            //chuyển hàm này và copy cả cái Modal + Portal sang đó, để dù ở trang nào đều nhận được cuộc gọi và mở lên call
+            // hiện tại thấy component Floating Button là ok nhất, những msg ko có nó thì đã có hàm trong này r.
+            //listen when someone call, this func should move to component that exist on everywhere to listen.
+            io.on("connect-video-room", (getSenderPeerID, getSenderData) => {
+                if(getSenderPeerID && !_.isEmpty(getSenderData)){
+                    setSenderData(getSenderData);
+                    setSenderPeerID(getSenderPeerID);
+                    setIncomingCall(true);
+                }
+            });
+            //thêm lắng nghe customer huỷ kèo trước khi doctor kịp chấp nhận
         }
 
     }, [currentDoctor, customer_id, io]);
@@ -235,6 +253,35 @@ const Chat = (props) => {
 
     }
 
+    const toggleVideoCall = () => {
+        if(openVideoCall) {
+            message.info("Xác nhận kết thúc cuộc gọi video?",3);
+            setOpenVideoCall(false)}
+        else {
+            setOpenVideoCall(true);
+        }
+    }
+
+    const closeWindowPortal = () => {
+        if(openVideoCall) setOpenVideoCall(false);
+    }
+
+    const handleAcceptCall = () => {
+        if(senderPeerID){
+            setOpenVideoCall(true);
+        }else{
+            message.destroy();
+            message.error("Không thể kết nối với đối phương!",4);
+        }
+        setIncomingCall(false);
+    }
+
+    const handleCancelCall = () => {
+        setIncomingCall(false);
+        setSenderData(null);
+        setSenderPeerID(null);
+    }
+
     return (customer_id === 't') ?
 
         (
@@ -248,13 +295,39 @@ const Chat = (props) => {
             <div className="messenger-content-wrapper" >
                 <div className="messenger-content" id="messenger-chat-content-list-13" >
                     <div className="messenger-chat" >
+                        {openVideoCall && <Portal url={`${process.env.PUBLIC_URL}/call/video/${customer_id?customer_id:"cancel"}?name=${senderData?.name??null}&avatar=${senderData?.avatar??null}&distract=${senderPeerID}`} closeWindowPortal={closeWindowPortal} />}
+                        <Modal
+                            title="Cuộc gọi đến"
+                            visible={incomingCall}
+                            style={{ top: 20 }}
+                            closable={false}
+                            footer={[
+                                <Button key="accept" type="primary" loading={isLoad} onClick={()=>handleAcceptCall()}>
+                                    Trả lời
+                                </Button>,
+                                <Button key="decline" onClick={()=>handleCancelCall()} danger>
+                                    Từ chối
+                                </Button>,
+                            ]}
+                            >
+                            <Avatar src={senderData?.avatar} alt={senderData?.name??"customerName"}
+                                    size="large"
+                                    type="circle flexible" /> {senderData?.name} gọi video cho bạn.
+                        </Modal>
                         <div className="messenger-chat-header">
-                            <Avatar
-                                src={getCustomerAva()}
-                                alt={getCustomerName()}
-                                size="large"
-                                type="circle flexible" />
-                            <b>{getCustomerName()}</b>
+                            <div>
+                                <Avatar
+                                    src={getCustomerAva()}
+                                    alt={getCustomerName()}
+                                    size="large"
+                                    type="circle flexible" />
+                                <b>{getCustomerName()}</b>
+                            </div>
+                            <Tooltip title="Bắt đầu gọi video" placement="bottom">
+                                <div className="messenger-chat-video" onClick={toggleVideoCall}>
+                                    <VideoCameraOutlined style={{fontSize:"1.2rem", color:"#40a9ff"}} />
+                                </div>
+                            </Tooltip>
                         </div>
                         <div className="messenger-chat-content" >
                             <div className="messenger-chat-content-list">

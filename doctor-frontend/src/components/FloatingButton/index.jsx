@@ -33,7 +33,7 @@ const FloatingButton = (props) => {
     }
 
 
-    return (props.location.pathname.includes('/messenger') || !token) ? '' : (
+    return (props.location.pathname.includes('/messenger') || props.location.pathname.includes('/call/') || !token) ? '' : (
         <Fab
             // mainButtonStyles={mainButtonStyles}
             // actionButtonStyles={actionButtonStyles}

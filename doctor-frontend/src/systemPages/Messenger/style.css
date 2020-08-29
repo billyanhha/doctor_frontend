@@ -76,14 +76,25 @@
     background-color: #fff;
     padding: 10px;
     display: flex;
+    justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid #dadada;
     border-top: 1px solid #dadada;
 }
 
-.messenger-chat-header > b {
+.messenger-chat-header div {
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+}
+
+.messenger-chat-header b {
     margin-left: 10px;
-    font-size: 15px;
+}
+
+.messenger-chat-video{
+    margin-right: 10px;
+    cursor: pointer;
 }
 
 .messenger-chat-item , .messenger-chat-item:first-of-type{
