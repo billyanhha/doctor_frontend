@@ -295,7 +295,7 @@ const Chat = (props) => {
             <div className="messenger-content-wrapper" >
                 <div className="messenger-content" id="messenger-chat-content-list-13" >
                     <div className="messenger-chat" >
-                        {openVideoCall && <Portal url={`${process.env.PUBLIC_URL}/call/video/${customer_id?customer_id:"cancel"}?name=${senderData?.name??null}&avatar=${senderData?.avatar??null}&distract=${senderPeerID}`} closeWindowPortal={closeWindowPortal} />}
+                        {openVideoCall && <Portal url={`${process.env.PUBLIC_URL}/call/video/${customer_id?customer_id:"cancel"}?name=${senderData?.name??getCustomerName()}&avatar=${senderData?.avatar??getCustomerAva()}${senderPeerID?"&distract="+senderPeerID:""}`} closeWindowPortal={closeWindowPortal} />}
                         <Modal
                             title="Cuộc gọi đến"
                             visible={incomingCall}

@@ -59,7 +59,8 @@ const VideoCall = props => {
         streaming,
         setStreaming,
         errorStream
-    ] = useCamera(myFaceRef, null);
+    ] = useCamera(myFaceRef);
+
     const [
         customerStreamData,
         setCustomerStreamData,
@@ -73,22 +74,22 @@ const VideoCall = props => {
         streamingCustomer,
         setStreamingCustomer,
         errorStreamCustomer
-    ] = useCamera(oppFaceRef, 1);
+    ] = useCamera(oppFaceRef);
 
-    const peer = new Peer(undefined, {
-        host: "ikemen-api.herokuapp.com",
-        secure: true,
-        port: 443,
-        path: "/peerjs"
-    });
+    // const peer = new Peer(undefined, {
+    //     host: "ikemen-api.herokuapp.com",
+    //     secure: true,
+    //     port: 443,
+    //     path: "/peerjs"
+    // });
 
-    // const peer = new Peer({host: "peerjs-server.herokuapp.com", secure: true, port: 443});
+    const peer = new Peer({host: "peerjs-server.herokuapp.com", secure: true, port: 443});
 
     const [peerID, setPeerID] = useState(null);
-    const [peerControl, setPeerControl] = useState({});
     const [toggleAction, setToggleAction] = useState(true); //false: calling action, true: ended call action
     const [viewMyFace, setViewMyFace] = useState(false);
     const [isCallLoad, setIsCallLoad] = useState(true);
+    const [isDisconnected, setIsDisconnected] = useState(false);
 
     const getOppositeName = () => {
         return params.get("name");
@@ -98,38 +99,35 @@ const VideoCall = props => {
         return params.get("avatar");
     };
 
-    // const handlePeerEvent = () => {
-    //listen other peer call back, auto answer and create his video stream
-    peer.on("call", call => {
-        console.log("nhận call");
-        call.answer(myStreamData); //check myStreamData null
-        call.on("stream", senderVideoStream => {
-            console.log("----------get customer stream");
-            console.log(senderVideoStream);
-            setCustomerStreamData(senderVideoStream);
+    const requestSocketNewCall = () => {
+        if (!senderPeerID) {
+            /**
+             *  @param event
+             *  @param receiverID = customerID
+             *  @param peerID of doctor
+             */
+            console.log(senderPeerID);
+            let senderData = {name: currentDoctor?.fullname, avatar: currentDoctor?.avatarurl};
+            io.emit("video-connect", senderData, receiverID + "customer", peerID);
+        }
+    };
+
+    const handleSocket = () => {
+        requestSocketNewCall();
+
+        io.on("connect-video-room-offline", data => {
+            console.log("-video-room-offline", data);
+            if (data === true) {
+                setIsCallLoad(false);
+                setIsDisconnected(true);
+                message.info("Bệnh nhận không trực tuyến, xin hãy gọi lại sau!", 4);
+            }
         });
-    });
 
-    peer.on("error", err => {
-        message.info(err.message);
-    });
-    // };
-
-    //when answer call, make a call back to doctor by using mypeer.call
-    const connectToNewUser = senderPeerId => {
-        // Nhận other peerID → call peerID đó
-        console.log(senderPeerId);
-        const call = peer.call(senderPeerId, myStreamData);
-        console.log("---------- peer call back");
-        console.log(myStreamData);
-        console.log(call);
-
-        // Check other trả lời → nhận stream → show video
-        //listen when doctor answer back, and get his stream
-        call.on("stream", senderVideoStream => {
-            console.log("----------get customer stream");
-            console.log(senderVideoStream);
-            setCustomerStreamData(senderVideoStream);
+        // Listen event other disconnected
+        io.on("user-disconnected", userId => {
+            setIsDisconnected(true);
+            message.info("Đối phương đã ngắt kết nối!" + userId, 4);
         });
     };
 
@@ -154,26 +152,6 @@ const VideoCall = props => {
         }
     };
 
-    const handleCall = () => {
-        /**
-         *  @param event
-         *  @param receiverID
-         *  @param peerID of sender
-         */
-        let senderData = {name: currentDoctor?.fullname, avatar: currentDoctor?.avatarurl};
-        io.emit("video-connect", senderData, receiverID + "customer", peerID);
-    };
-
-    const handleSocket = () => {
-        // handleCall();
-
-        io.on("connect-video-room-offline", data => {
-            if (data === true) {
-                message.info("Bệnh nhận không trực tuyến, xin hãy gọi lại sau!", 4);
-            }
-        });
-    };
-
     const actionCall = action => {
         switch (action) {
             case 0: //call again
@@ -194,38 +172,48 @@ const VideoCall = props => {
         }
     };
 
-    //demo flow
-    useEffect(() => {
-        if (toggleAction) {
-            setIsCallLoad(true);
-            setTimeout(() => {
-                setIsCallLoad(false);
-            }, 2000);
-        } else {
-            if (isCallLoad) setIsCallLoad(false);
-        }
-    }, [toggleAction]);
+    /**
+     * this func trigger if customer requests a call to doctor.
+     * @description Make a peer call to customer.
+     *
+     */
+    const handlePeerCallToCustomer = customerPeerId => {
+        const call = peer.call(customerPeerId, myStreamData);
+
+        //listen when customer answer back (peer answer), and get his/her stream
+        call.on("stream", customerVideoStream => {
+            setCustomerStreamData(customerVideoStream);
+        });
+    };
 
     useEffect(() => {
         //only (senderPeerID != null/false) mean: → only incomming call will trigger this func
         if (!senderPeerID) return;
+
         /**
-         * @require myStreamData had to ready first (an MediaStream Object)
+         * @require myStreamData had to ready first (defind as a MediaStream Object)
          */
-
-        // console.log("test status my cam" + isCameraInitialised);
-        // console.log("test status opp cam" + isCameraInitialisedCustomer);
-        if (isCameraInitialised && !isCameraInitialisedCustomer) {
-            // console.log("senderPeerID: === " + senderPeerID);
+        if (peerID && isCameraInitialised && !isCameraInitialisedCustomer) {
             //wait until streaming data on doctor side is ready!
-            connectToNewUser(senderPeerID);
+            console.log("countdown 15s");
+            setIsCallLoad(false);
+            setTimeout(() => {
+                console.log("trigger handlePeerCallToCustomer");
+                handlePeerCallToCustomer(senderPeerID);
+            }, 9000);
         }
-    }, [isCameraInitialised, isCameraInitialisedCustomer, senderPeerID]);
+    }, [peerID, isCameraInitialised, isCameraInitialisedCustomer]);
 
-    // useEffect(() => {
-    //     console.log(myStreamData);
-    //     console.log(customerStreamData);
-    // }, [myStreamData, customerStreamData]);
+    //demo flow
+    useEffect(() => {
+        if (toggleAction) {
+            //end call
+            if (isCallLoad) setIsCallLoad(false);
+        } else {
+            //call again
+            setIsCallLoad(true);
+        }
+    }, [toggleAction]);
 
     useEffect(() => {
         message.destroy();
@@ -235,27 +223,61 @@ const VideoCall = props => {
 
     useEffect(() => {
         if (io && peerID && currentDoctor?.id) {
-            console.log("doctorPeerID", peerID);
             handleSocket();
         }
     }, [io, peerID, currentDoctor]);
 
     useEffect(() => {
+        let streamInit;
+
         peer.on("open", id => {
             setPeerID(id);
+        });
+
+        navigator.mediaDevices.getUserMedia({audio: true, video: true}).then(stream => {
+            setMyStreamData(stream);
+            setMic(false);
+            streamInit = stream;
+        });
+
+        if (!senderPeerID) {
+            //senderPeerID = null if Doctor requests a call to Doctor (to socket)
+            peer.on("call", call => {
+                call.answer(streamInit);
+                call.on("stream", customerVideoStream => {
+                    setCustomerStreamData(customerVideoStream);
+                });
+                if (isCallLoad) setIsCallLoad(false);
+            });
+        }
+
+        peer.on("error", err => {
+            console.log("peer error: " + err.message);
+            message.info(err.message);
         });
     }, []);
 
     return (
         <div className="video-call-wrapper">
             <div className="video-call-container">
-                {toggleAction && !isCallLoad ? (
+                {toggleAction ? (
                     <>
                         <div className="call-opposite-camera">
-                            {!isCameraInitialisedCustomer && (
+                            <div className="call-opposite-info">
+                                <Avatar src={getOppositeAvatar()} alt={getOppositeName()} size="large" type="circle flexible" />
+                                <b>{getOppositeName()}</b>
+                            </div>
+                            {isCallLoad ? (
                                 <div>
-                                    <LoadingOutlined /> Đang kết nối...
+                                    <LoadingOutlined /> Đang gọi
                                 </div>
+                            ) : (
+                                !isCameraInitialisedCustomer &&
+                                !isDisconnected && (
+                                    <div>
+                                        <LoadingOutlined /> Đang kết nối...
+                                    </div>
+                                )
                             )}
                             <video ref={oppFaceRef} id="oppVideo" autoPlay />
                         </div>
@@ -277,15 +299,7 @@ const VideoCall = props => {
                         </div>
                     </>
                 ) : (
-                    <div className="call-waiting">
-                        <Avatar src={getOppositeAvatar()} alt={getOppositeName()} size="large" type="circle flexible" />
-                        {getOppositeName()}
-                        {isCallLoad && (
-                            <div>
-                                <LoadingOutlined /> Đang gọi
-                            </div>
-                        )}
-                    </div>
+                    <div className="call-waiting">Cuộc gọi đã kết thúc!</div>
                 )}
                 <div className="call-action-bar">
                     {toggleAction ? (

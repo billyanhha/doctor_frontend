@@ -31,7 +31,7 @@ const useCleanup = val => {
  * @param videoRef video element
  * @param sourceFrom null: source from your device, 1: source from other peer
  */
-export const useCamera = (videoRef, sourceFrom) => {
+export const useCamera = videoRef => {
     const [isCameraInitialised, setIsCameraInitialised] = useState(false);
     const [streamData, setStreamData] = useState({});
     const [video, setVideo] = useState(null);
@@ -61,31 +61,32 @@ export const useCamera = (videoRef, sourceFrom) => {
             return;
         }
 
-        if (sourceFrom) {
-            // console.log("vasfo");
-            // console.log(streamData);
-            if (!isEmpty(streamData)) {
-                try {
-                    video.srcObject = streamData;
-                    setIsCameraInitialised(true);
-                } catch (error) {
-                    setError(error);
-                }
-            } else {
-                setError("Không nhận được video của đối phương!");
+        // if (sourceFrom) {
+        // console.log("vasfo");
+        // console.log(streamData);
+        if (streamData?.id) {
+            try {
+                video.srcObject = streamData;
+                setIsCameraInitialised(true);
+            } catch (error) {
+                setError(error);
             }
         } else {
-            initialiseCamera()
-                .then(stream => {
-                    video.srcObject = stream;
-                    setStreamData(stream);
-                    setIsCameraInitialised(true);
-                })
-                .catch(e => {
-                    setError(e.message);
-                    setStreaming(false);
-                });
+            // video.srcObject = null;
+            // setError("Không tải được video!");
         }
+        // } else {
+        //     initialiseCamera()
+        //         .then(stream => {
+        //             video.srcObject = stream;
+        //             setStreamData(stream);
+        //             setIsCameraInitialised(true);
+        //         })
+        //         .catch(e => {
+        //             setError(e.message);
+        //             setStreaming(false);
+        //         });
+        // }
     }, [video, streamData, isCameraInitialised, streaming]);
 
     useEffect(() => {
