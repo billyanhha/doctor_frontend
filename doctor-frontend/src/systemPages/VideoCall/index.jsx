@@ -115,6 +115,15 @@ const VideoCall = props => {
     const handleSocket = () => {
         requestSocketNewCall();
 
+        io.on("cancel-video", () => {
+            message.destroy();
+            message.info("Bệnh nhân đã huỷ cuộc gọi, cửa sổ này sẽ tự đóng sau 5 giây!", 5);
+            setToggleAction(false);
+            setTimeout(() => {
+                closeWindow();
+            }, 5000);
+        });
+
         io.on("connect-video-room-offline", data => {
             console.log("-video-room-offline", data);
             if (data === true) {

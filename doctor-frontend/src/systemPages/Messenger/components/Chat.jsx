@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import "../style.css"
 import { Avatar, MessageBox } from 'react-chat-elements'
 import { Input, Spin, message } from 'antd';
-import { Upload, Button, Tooltip, Modal } from 'antd';
+import { Upload, Button, Tooltip, Modal, Popconfirm } from 'antd';
 import { FolderAddFilled, CloseCircleFilled } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -31,6 +31,7 @@ const Chat = (props) => {
     const [incomingCall, setIncomingCall] = useState(false);
     const [senderData, setSenderData] = useState(null);
     const [senderPeerID, setSenderPeerID] = useState(null);
+    const [confirmVisiable, setConfirmVisiable] = useState(false);
 
     const dispatch = useDispatch();
     const { currentDoctor } = useSelector(state => state.doctor);
@@ -40,6 +41,27 @@ const Chat = (props) => {
 
     const customer_id = props.match.params.id;
     const params = new URLSearchParams(props.location.search);
+
+    const handleAcceptCall = () => {
+        if(senderPeerID){
+            setOpenVideoCall(true);
+        }else{
+            message.destroy();
+            message.error("Không thể kết nối với đối phương!",4);
+        }
+        setIncomingCall(false);
+    }
+
+    const handleCancelCall = () => {
+        if(io && customer_id){
+            io.emit("cancel-video", customer_id+"customer")
+            message.destroy();
+            message.info("Đã huỷ cuộc gọi");
+            setIncomingCall(false);
+            setSenderData(null);
+            setSenderPeerID(null);
+        }  
+    }
 
     useEffect(() => {
 
@@ -63,7 +85,8 @@ const Chat = (props) => {
             })
 
             //chuyển hàm này và copy cả cái Modal + Portal sang đó, để dù ở trang nào đều nhận được cuộc gọi và mở lên call
-            // hiện tại thấy component Floating Button là ok nhất, những msg ko có nó thì đã có hàm trong này r.
+            // hiện tại thấy component notify là ok nhất
+            // option 2: Floating Button, msg ko có nó thì đã có hàm trong này lo r.
             //listen when someone call, this func should move to component that exist on everywhere to listen.
             io.on("connect-video-room", (getSenderPeerID, getSenderData) => {
                 if(getSenderPeerID && !_.isEmpty(getSenderData)){
@@ -253,33 +276,20 @@ const Chat = (props) => {
 
     }
 
-    const toggleVideoCall = () => {
+    const actionVideoCall = () => {
         if(openVideoCall) {
-            message.info("Xác nhận kết thúc cuộc gọi video?",3);
-            setOpenVideoCall(false)}
-        else {
+            setConfirmVisiable(true);
+        }else {
             setOpenVideoCall(true);
         }
     }
 
     const closeWindowPortal = () => {
-        if(openVideoCall) setOpenVideoCall(false);
-    }
-
-    const handleAcceptCall = () => {
-        if(senderPeerID){
-            setOpenVideoCall(true);
-        }else{
-            message.destroy();
-            message.error("Không thể kết nối với đối phương!",4);
+        if(openVideoCall) {
+            setOpenVideoCall(false);
+            setConfirmVisiable(false);
+            handleCancelCall();
         }
-        setIncomingCall(false);
-    }
-
-    const handleCancelCall = () => {
-        setIncomingCall(false);
-        setSenderData(null);
-        setSenderPeerID(null);
     }
 
     return (customer_id === 't') ?
@@ -324,9 +334,11 @@ const Chat = (props) => {
                                 <b>{getCustomerName()}</b>
                             </div>
                             <Tooltip title="Bắt đầu gọi video" placement="bottom">
-                                <div className="messenger-chat-video" onClick={toggleVideoCall}>
-                                    <VideoCameraOutlined style={{fontSize:"1.2rem", color:"#40a9ff"}} />
-                                </div>
+                                <Popconfirm visible={confirmVisiable} placement="left" title={"Xác nhận kết thúc cuộc gọi video?"} onConfirm={closeWindowPortal} onCancel={()=>setConfirmVisiable(false)} okText="Xác nhận" cancelText="Huỷ">
+                                    <div className="messenger-chat-video" onClick={actionVideoCall}>
+                                        <VideoCameraOutlined style={{fontSize:"1.2rem", color:"#40a9ff"}} />
+                                    </div>
+                                </Popconfirm>
                             </Tooltip>
                         </div>
                         <div className="messenger-chat-content" >
