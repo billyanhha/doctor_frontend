@@ -106,15 +106,14 @@ const VideoCall = props => {
              *  @param receiverID = customerID
              *  @param peerID of doctor
              */
-            console.log(senderPeerID);
-            let senderData = {name: currentDoctor?.fullname, avatar: currentDoctor?.avatarurl};
+            let senderData = {id: currentDoctor?.id, name: currentDoctor?.fullname, avatar: currentDoctor?.avatarurl};
             io.emit("video-connect", senderData, receiverID + "customer", peerID);
         }
     };
 
     const handleSocket = () => {
         requestSocketNewCall();
-
+        
         io.on("cancel-video", () => {
             message.destroy();
             message.info("Bệnh nhân đã huỷ cuộc gọi, cửa sổ này sẽ tự đóng sau 5 giây!", 5);
@@ -339,11 +338,11 @@ const VideoCall = props => {
                         </>
                     ) : (
                         <>
-                            <Tooltip title="Gọi lại">
+                            {/* <Tooltip title="Gọi lại">
                                 <div className="call-action-image" onClick={() => actionCall(0)}>
                                     <img src={calling} alt="calling" />
                                 </div>
-                            </Tooltip>
+                            </Tooltip> */}
                             <Tooltip title="Đóng">
                                 <div className="call-action-image call-action-close" onClick={() => closeWindow()}>
                                     <img src={close} alt="closeWindow" />

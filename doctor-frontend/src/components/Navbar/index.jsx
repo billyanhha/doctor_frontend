@@ -3,12 +3,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Redirect, Link, withRouter } from 'react-router-dom';
 import { getDoctorLogin } from '../../redux/doctor';
 import { doctorLogout } from '../../redux/auth';
-import { PageHeader, Tabs, Button, Menu, Badge, Avatar, Popover } from 'antd'
+import { PageHeader, Tabs, Button, Menu, Badge, Avatar, Popover, Modal, message } from 'antd'
 import Skeleton from "react-loading-skeleton";
 // import logo from '../../logo.svg';
 import './style.css';
 import Notification from '../Notification';
 import { countUnreadNotify } from '../../redux/notification';
+import {isEmpty} from "lodash";
+import Portal from "../Portal/Portal";
 
 import logo from "../../assest/Ikemen_doctor.png";
 import avatar from "../../assest/hhs-default_avatar.jpg";
@@ -22,8 +24,12 @@ const Navbar = (props) => {
     const [drawerVisible, setdrawerVisible] = useState(false);
     const { unreadNotifyNumber } = useSelector(state => state.notify);
 
-
     const { location } = props;
+
+    const [openVideoCall, setOpenVideoCall] = useState(false);
+    const [incomingCall, setIncomingCall] = useState(false);
+    const [senderData, setSenderData] = useState(null);
+    const [senderPeerID, setSenderPeerID] = useState(null);
 
     useEffect(() => {
         if(auth?.token){
@@ -39,8 +45,17 @@ const Navbar = (props) => {
     }, [currentDoctor]);
 
     useEffect(() => {
-
-    }, [io]);
+        if (io) {
+            //listen when someone call.
+            io.on("connect-video-room", (getDoctorID, getSenderData) => {
+                if (getDoctorID && !isEmpty(getSenderData)) {
+                    setSenderData(getSenderData);
+                    setSenderPeerID(getDoctorID);
+                    setIncomingCall(true);
+                }
+            });
+        }
+    }, [currentDoctor, io]);
 
     const logout = () => {
         if(io) {
@@ -77,10 +92,71 @@ const Navbar = (props) => {
         setdrawerVisible(false)
     }
 
+    const handleAcceptCall = () => {
+        if (senderPeerID) {
+            setOpenVideoCall(true);
+        } else {
+            message.destroy();
+            message.error("Không thể kết nối với đối phương!", 4);
+        }
+        setIncomingCall(false);
+    };
+
+    const handleCancelCall = () => {
+        if (io && senderData) {
+            io.emit("cancel-video", senderData?.id + "customer");
+            message.destroy();
+            message.info("Đã từ chối cuộc gọi");
+            setIncomingCall(false);
+            setSenderData(null);
+            setSenderPeerID(null);
+        }
+    };
+
+    const closeWindowPortal = () => {
+        if (openVideoCall) {
+            setOpenVideoCall(false);
+            setIncomingCall(false);
+            setSenderData(null);
+            setSenderPeerID(null);
+        }
+    };
+
+    window.onbeforeunload = (e) => {
+        //cancel call if user reload page when a call is coming.
+        if (incomingCall && io && senderData) {
+            handleCancelCall();
+        }
+    };
 
     return (
         <div>
             <Notification visible={drawerVisible} closeDrawer={closeDrawer} />
+            {openVideoCall && (
+                <Portal
+                    url={`${process.env.PUBLIC_URL}/call/video/${senderData?.id}?name=${senderData?.name}&avatar=${senderData?.avatar}&distract=${senderPeerID}`}
+                    closeWindowPortal={closeWindowPortal}
+                />
+            )}
+            <Modal
+                title="Cuộc gọi đến"
+                visible={incomingCall}
+                style={{top: 20}}
+                closable={false}
+                footer={[
+                    <Button key="accept" type="primary" loading={isLoad} onClick={() => handleAcceptCall()}>
+                        Trả lời
+                    </Button>,
+                    <Button key="decline" onClick={() => handleCancelCall()} danger>
+                        Từ chối
+                    </Button>
+                ]}
+            >
+                <div className="video-call-incoming">
+                    <Avatar src={senderData?.avatar} alt={senderData?.name ?? "customer_name"} size="large" type="circle flexible" />
+                    <b>{senderData?.name} gọi video cho bạn.</b>
+                </div>
+            </Modal>
             <PageHeader
                 className="site-page-header-responsive"
                 title={<Link to = "/" className="verify-email-logo"><img alt="Ikemen_Doc_Logo" src={logo} /></Link>}

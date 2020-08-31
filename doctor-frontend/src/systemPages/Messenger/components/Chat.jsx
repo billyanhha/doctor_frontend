@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import "../style.css"
 import { Avatar, MessageBox } from 'react-chat-elements'
-import { Input, Spin, message } from 'antd';
-import { Upload, Button, Tooltip, Modal, Popconfirm } from 'antd';
+import { Input, Spin } from 'antd';
+import { Upload, Button, Tooltip, Popconfirm } from 'antd';
 import { FolderAddFilled, CloseCircleFilled } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,7 +11,7 @@ import moment from "moment";
 import { LoadingOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import _ from "lodash"
 import { animateScroll } from 'react-scroll'
-import Portal from "./VideoCall/Portal";
+import Portal from "../../../components/Portal/Portal";
 
 const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
@@ -28,9 +28,6 @@ const Chat = (props) => {
     const [isLoadMore, setisLoadMore] = useState(false);
     
     const [openVideoCall, setOpenVideoCall] = useState(false);
-    const [incomingCall, setIncomingCall] = useState(false);
-    const [senderData, setSenderData] = useState(null);
-    const [senderPeerID, setSenderPeerID] = useState(null);
     const [confirmVisiable, setConfirmVisiable] = useState(false);
 
     const dispatch = useDispatch();
@@ -41,27 +38,6 @@ const Chat = (props) => {
 
     const customer_id = props.match.params.id;
     const params = new URLSearchParams(props.location.search);
-
-    const handleAcceptCall = () => {
-        if(senderPeerID){
-            setOpenVideoCall(true);
-        }else{
-            message.destroy();
-            message.error("Không thể kết nối với đối phương!",4);
-        }
-        setIncomingCall(false);
-    }
-
-    const handleCancelCall = () => {
-        if(io && customer_id){
-            io.emit("cancel-video", customer_id+"customer")
-            message.destroy();
-            message.info("Đã huỷ cuộc gọi");
-            setIncomingCall(false);
-            setSenderData(null);
-            setSenderPeerID(null);
-        }  
-    }
 
     useEffect(() => {
 
@@ -83,19 +59,6 @@ const Chat = (props) => {
                 // updateIsReadNewMsg(data?.customer_id, data?.doctor_id)
 
             })
-
-            //chuyển hàm này và copy cả cái Modal + Portal sang đó, để dù ở trang nào đều nhận được cuộc gọi và mở lên call
-            // hiện tại thấy component notify là ok nhất
-            // option 2: Floating Button, msg ko có nó thì đã có hàm trong này lo r.
-            //listen when someone call, this func should move to component that exist on everywhere to listen.
-            io.on("connect-video-room", (getSenderPeerID, getSenderData) => {
-                if(getSenderPeerID && !_.isEmpty(getSenderData)){
-                    setSenderData(getSenderData);
-                    setSenderPeerID(getSenderPeerID);
-                    setIncomingCall(true);
-                }
-            });
-            //thêm lắng nghe customer huỷ kèo trước khi doctor kịp chấp nhận
         }
 
     }, [currentDoctor, customer_id, io]);
@@ -288,7 +251,6 @@ const Chat = (props) => {
         if(openVideoCall) {
             setOpenVideoCall(false);
             setConfirmVisiable(false);
-            handleCancelCall();
         }
     }
 
@@ -305,25 +267,7 @@ const Chat = (props) => {
             <div className="messenger-content-wrapper" >
                 <div className="messenger-content" id="messenger-chat-content-list-13" >
                     <div className="messenger-chat" >
-                        {openVideoCall && <Portal url={`${process.env.PUBLIC_URL}/call/video/${customer_id?customer_id:"cancel"}?name=${senderData?.name??getCustomerName()}&avatar=${senderData?.avatar??getCustomerAva()}${senderPeerID?"&distract="+senderPeerID:""}`} closeWindowPortal={closeWindowPortal} />}
-                        <Modal
-                            title="Cuộc gọi đến"
-                            visible={incomingCall}
-                            style={{ top: 20 }}
-                            closable={false}
-                            footer={[
-                                <Button key="accept" type="primary" loading={isLoad} onClick={()=>handleAcceptCall()}>
-                                    Trả lời
-                                </Button>,
-                                <Button key="decline" onClick={()=>handleCancelCall()} danger>
-                                    Từ chối
-                                </Button>,
-                            ]}
-                            >
-                            <Avatar src={senderData?.avatar} alt={senderData?.name??"customerName"}
-                                    size="large"
-                                    type="circle flexible" /> {senderData?.name} gọi video cho bạn.
-                        </Modal>
+                        {openVideoCall && <Portal url={`${process.env.PUBLIC_URL}/call/video/${customer_id}?name=${getCustomerName()}&avatar=${getCustomerAva()}`} closeWindowPortal={closeWindowPortal} />}
                         <div className="messenger-chat-header">
                             <div>
                                 <Avatar
@@ -334,7 +278,7 @@ const Chat = (props) => {
                                 <b>{getCustomerName()}</b>
                             </div>
                             <Tooltip title="Bắt đầu gọi video" placement="bottom">
-                                <Popconfirm visible={confirmVisiable} placement="left" title={"Xác nhận kết thúc cuộc gọi video?"} onConfirm={closeWindowPortal} onCancel={()=>setConfirmVisiable(false)} okText="Xác nhận" cancelText="Huỷ">
+                                <Popconfirm visible={confirmVisiable} placement="left" title={"Xác nhận kết thúc cuộc gọi video hiện tại?"} onConfirm={closeWindowPortal} onCancel={()=>setConfirmVisiable(false)} okText="Xác nhận" cancelText="Huỷ">
                                     <div className="messenger-chat-video" onClick={actionVideoCall}>
                                         <VideoCameraOutlined style={{fontSize:"1.2rem", color:"#40a9ff"}} />
                                     </div>
