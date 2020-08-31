@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Redirect, Link, withRouter } from 'react-router-dom';
 import { getDoctorLogin } from '../../redux/doctor';
@@ -14,8 +14,11 @@ import Portal from "../Portal/Portal";
 
 import logo from "../../assest/Ikemen_doctor.png";
 import avatar from "../../assest/hhs-default_avatar.jpg";
+import defaultRingtone from "../../assest/ringtone/HHS.wav";
 
 const Navbar = (props) => {
+    const audioRef = useRef();
+
     const auth = useSelector(state => state.auth);
     const { isLoad } = useSelector(state => state.ui);
     const { currentDoctor } = useSelector(state => state.doctor);
@@ -23,6 +26,7 @@ const Navbar = (props) => {
     const dispatch = useDispatch();
     const [drawerVisible, setdrawerVisible] = useState(false);
     const { unreadNotifyNumber } = useSelector(state => state.notify);
+    const {ringtone} = useSelector(state => state.call);
 
     const { location } = props;
 
@@ -30,6 +34,7 @@ const Navbar = (props) => {
     const [incomingCall, setIncomingCall] = useState(false);
     const [senderData, setSenderData] = useState(null);
     const [senderPeerID, setSenderPeerID] = useState(null);
+    const [playRingtone, setPlayRingtone] = useState(false);
 
     useEffect(() => {
         if(auth?.token){
@@ -51,11 +56,21 @@ const Navbar = (props) => {
                 if (getDoctorID && !isEmpty(getSenderData)) {
                     setSenderData(getSenderData);
                     setSenderPeerID(getDoctorID);
+                    setPlayRingtone(true);
                     setIncomingCall(true);
                 }
             });
         }
     }, [currentDoctor, io]);
+
+    useEffect(() => {
+        if (playRingtone) {
+            audioRef.current.play();
+        } else {
+            audioRef.current.pause();
+            audioRef.current.load();
+        }
+    }, [playRingtone]);
 
     const logout = () => {
         if(io) {
@@ -92,6 +107,12 @@ const Navbar = (props) => {
         setdrawerVisible(false)
     }
 
+    const delayLoopRingtone = () => {
+        setTimeout(() => {
+            audioRef.current.play();
+        }, 2000);
+    };
+
     const handleAcceptCall = () => {
         if (senderPeerID) {
             setOpenVideoCall(true);
@@ -99,6 +120,7 @@ const Navbar = (props) => {
             message.destroy();
             message.error("Không thể kết nối với đối phương!", 4);
         }
+        setPlayRingtone(false);
         setIncomingCall(false);
     };
 
@@ -107,6 +129,7 @@ const Navbar = (props) => {
             io.emit("cancel-video", senderData?.id + "customer");
             message.destroy();
             message.info("Đã từ chối cuộc gọi");
+            setPlayRingtone(false);
             setIncomingCall(false);
             setSenderData(null);
             setSenderPeerID(null);
@@ -123,7 +146,7 @@ const Navbar = (props) => {
     };
 
     window.onbeforeunload = (e) => {
-        //cancel call if user reload page when a call is coming.
+        //cancel call if doctor reload page when a call is coming.
         if (incomingCall && io && senderData) {
             handleCancelCall();
         }
@@ -138,10 +161,18 @@ const Navbar = (props) => {
                     closeWindowPortal={closeWindowPortal}
                 />
             )}
+            <audio
+                ref={audioRef}
+                src={ringtone ? "../../assest/ringtone/HHS.wav" + ringtone : defaultRingtone}
+                // loop
+                onEnded={delayLoopRingtone}
+                style={{display: "none"}}
+            />
             <Modal
                 title="Cuộc gọi đến"
                 visible={incomingCall}
                 style={{top: 20}}
+                width={400}
                 closable={false}
                 footer={[
                     <Button key="accept" type="primary" loading={isLoad} onClick={() => handleAcceptCall()}>

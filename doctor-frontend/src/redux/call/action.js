@@ -1,0 +1,3 @@
+export const SET_RINGTONE = 'SET_RINGTONE'
+
+export const SET_CALL_STATUS = 'SET_CALL_STATUS'

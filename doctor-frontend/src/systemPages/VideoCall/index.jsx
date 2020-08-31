@@ -113,7 +113,7 @@ const VideoCall = props => {
 
     const handleSocket = () => {
         requestSocketNewCall();
-        
+
         io.on("cancel-video", () => {
             message.destroy();
             message.info("Bệnh nhân đã huỷ cuộc gọi, cửa sổ này sẽ tự đóng sau 5 giây!", 5);
@@ -135,7 +135,7 @@ const VideoCall = props => {
         // Listen event other disconnected
         io.on("user-disconnected", userId => {
             setIsDisconnected(true);
-            message.info("Đối phương đã ngắt kết nối!" + userId, 4);
+            message.info("Đối phương đã ngắt kết nối!", 4);
         });
     };
 
@@ -164,15 +164,19 @@ const VideoCall = props => {
         switch (action) {
             case 0: //call again
                 // history.replace("/");
+
                 setToggleAction(true);
                 // myFaceRef = createRef();
-                setStreaming(true);
+                // setStreaming(true);
                 break;
             case 1: //end call
+                if (io) {
+                    io.emit("cancel-video", receiverID + "customer");
+                }
                 closeWindow();
                 setToggleAction(false);
                 // myFaceRef.current = null;
-                setStreaming(false);
+                // setStreaming(false);
                 break;
 
             default:
@@ -244,7 +248,6 @@ const VideoCall = props => {
 
         navigator.mediaDevices.getUserMedia({audio: true, video: true}).then(stream => {
             setMyStreamData(stream);
-            setMic(false);
             streamInit = stream;
         });
 
