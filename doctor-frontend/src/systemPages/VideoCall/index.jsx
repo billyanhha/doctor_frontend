@@ -6,6 +6,8 @@ import Peer from "peerjs";
 import {message, Tooltip, Avatar} from "antd";
 import {LoadingOutlined} from "@ant-design/icons";
 
+import {setCallStatus} from "../../redux/call";
+
 import {useCamera} from "./CustomHooks/useCamera";
 
 import calling from "../../assest/images/call.png";
@@ -29,7 +31,8 @@ const VideoCall = props => {
     const params = new URLSearchParams(props.location.search);
     const senderPeerID = params.get("distract"); //null: this call is a call away (NOT an incomming call).
 
-    // const isCallLoad = useSelector(state => state.call.isCallLoad)
+    const dispatch = useDispatch();
+    const videoCallStatus = useSelector(state => state.call.callStatus);
     const {io} = useSelector(state => state.notify);
     const {currentDoctor} = useSelector(state => state.doctor);
 
@@ -117,6 +120,7 @@ const VideoCall = props => {
         io.on("cancel-video", () => {
             message.destroy();
             message.info("Bệnh nhân đã huỷ cuộc gọi, cửa sổ này sẽ tự đóng sau 5 giây!", 5);
+            dispatch(setCallStatus(false));
             setToggleAction(false);
             setTimeout(() => {
                 closeWindow();
@@ -266,7 +270,16 @@ const VideoCall = props => {
             console.log("peer error: " + err.message);
             message.info(err.message);
         });
+
+        return () => {
+            //on unmount this component
+            dispatch(setCallStatus(false));
+        };
     }, []);
+
+    window.addEventListener("beforeunload", event => {
+        dispatch(setCallStatus(false));
+    });
 
     return (
         <div className="video-call-wrapper">

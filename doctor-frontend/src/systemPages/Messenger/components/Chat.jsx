@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import "../style.css"
 import { Avatar, MessageBox } from 'react-chat-elements'
 import { Input, Spin } from 'antd';
-import { Upload, Button, Tooltip, Popconfirm } from 'antd';
+import { Upload, Button, Tooltip, Popconfirm, message } from 'antd';
 import { FolderAddFilled, CloseCircleFilled } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -35,6 +35,7 @@ const Chat = (props) => {
     const { currenThreadChat, threadLoad, sendChatLoad } = useSelector(state => state.chat);
     const { isLoad } = useSelector(state => state.ui);
     const { io } = useSelector(state => state.notify);
+    const videoCallStatus = useSelector(state => state.call.callStatus);
 
     const customer_id = props.match.params.id;
     const params = new URLSearchParams(props.location.search);
@@ -243,7 +244,12 @@ const Chat = (props) => {
         if(openVideoCall) {
             setConfirmVisiable(true);
         }else {
-            setOpenVideoCall(true);
+            if(videoCallStatus){
+                message.destroy();
+                message.info("Bạn đang trong một cuộc gọi video, xin hãy kết thúc cuộc gọi hiện tại trước!", 4);
+            }else{
+                setOpenVideoCall(true);
+            }
         }
     }
 

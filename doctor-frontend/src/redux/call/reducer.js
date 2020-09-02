@@ -2,7 +2,7 @@ import { SET_RINGTONE, SET_CALL_STATUS } from "./action";
 
 const initialState = {
     ringtone: null,
-    status: false
+    callStatus: false
 };
 
 export const callReducer = (state = initialState, action) => {
@@ -12,7 +12,7 @@ export const callReducer = (state = initialState, action) => {
             return state;
         }
         case SET_CALL_STATUS: {
-            state = {...state, status: action.status};
+            state = {...state, callStatus: action.status};
             return state;
         }
         default: {
