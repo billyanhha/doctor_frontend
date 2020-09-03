@@ -3,6 +3,8 @@ import {createPortal} from "react-dom";
 import usePortal from "./usePortal";
 import {message} from 'antd';
 
+import { setCallStatus } from "../../redux/call";
+
 // import './_videoCall.css';
 
 const Portal = props => {

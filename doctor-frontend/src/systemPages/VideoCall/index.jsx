@@ -1,16 +1,14 @@
-import React, {useState, useEffect, useLayoutEffect, useRef, createRef, forwardRef, useImperativeHandle} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {useHistory, withRouter} from "react-router-dom";
+import React, {useState, useEffect, createRef} from "react";
+import {useSelector} from "react-redux";
+import {withRouter} from "react-router-dom";
 import Peer from "peerjs";
 
 import {message, Tooltip, Avatar} from "antd";
 import {LoadingOutlined} from "@ant-design/icons";
 
-import {setCallStatus} from "../../redux/call";
-
 import {useCamera} from "./CustomHooks/useCamera";
 
-import calling from "../../assest/images/call.png";
+// import calling from "../../assest/images/call.png";
 import endCall from "../../assest/images/call-disconnected.png";
 import micOn from "../../assest/images/microphone.png";
 import micOff from "../../assest/images/block-microphone.png";
@@ -31,12 +29,10 @@ const VideoCall = props => {
     const params = new URLSearchParams(props.location.search);
     const senderPeerID = params.get("distract"); //null: this call is a call away (NOT an incomming call).
 
-    const dispatch = useDispatch();
-    const videoCallStatus = useSelector(state => state.call.callStatus);
     const {io} = useSelector(state => state.notify);
     const {currentDoctor} = useSelector(state => state.doctor);
+    const videoCallStatus = useSelector(state => state.notify.callStatus);
 
-    // const history = useHistory();
     const myFaceRef = createRef();
     const oppFaceRef = createRef();
     // const oppFaceRef = useRef(null);
@@ -89,10 +85,11 @@ const VideoCall = props => {
     const peer = new Peer({host: "peerjs-server.herokuapp.com", secure: true, port: 443});
 
     const [peerID, setPeerID] = useState(null);
-    const [toggleAction, setToggleAction] = useState(true); //false: calling action, true: ended call action
+    const [toggleAction, setToggleAction] = useState(true); //true: calling || call again, false: end call
     const [viewMyFace, setViewMyFace] = useState(false);
     const [isCallLoad, setIsCallLoad] = useState(true);
     const [isDisconnected, setIsDisconnected] = useState(false);
+    const [cancelCallRequest, setCancelCallRequest] = useState(true); //true: still detect nothing from customer (respond for socket call request), false: customer responded
 
     const getOppositeName = () => {
         return params.get("name");
@@ -120,7 +117,6 @@ const VideoCall = props => {
         io.on("cancel-video", () => {
             message.destroy();
             message.info("Bệnh nhân đã huỷ cuộc gọi, cửa sổ này sẽ tự đóng sau 5 giây!", 5);
-            dispatch(setCallStatus(false));
             setToggleAction(false);
             setTimeout(() => {
                 closeWindow();
@@ -128,7 +124,6 @@ const VideoCall = props => {
         });
 
         io.on("connect-video-room-offline", data => {
-            console.log("-video-room-offline", data);
             if (data === true) {
                 setIsCallLoad(false);
                 setIsDisconnected(true);
@@ -167,20 +162,18 @@ const VideoCall = props => {
     const actionCall = action => {
         switch (action) {
             case 0: //call again
-                // history.replace("/");
-
                 setToggleAction(true);
-                // myFaceRef = createRef();
-                // setStreaming(true);
                 break;
             case 1: //end call
                 if (io) {
-                    io.emit("cancel-video", receiverID + "customer");
+                    if (cancelCallRequest) {
+                        io.emit("caller-cancel-call", receiverID + "customer");
+                    } else {
+                        io.emit("cancel-video", receiverID + "customer");
+                    }
                 }
                 closeWindow();
                 setToggleAction(false);
-                // myFaceRef.current = null;
-                // setStreaming(false);
                 break;
 
             default:
@@ -211,23 +204,20 @@ const VideoCall = props => {
          */
         if (peerID && isCameraInitialised && !isCameraInitialisedCustomer) {
             //wait until streaming data on doctor side is ready!
-            console.log("countdown 15s");
             setIsCallLoad(false);
             setTimeout(() => {
-                console.log("trigger handlePeerCallToCustomer");
                 handlePeerCallToCustomer(senderPeerID);
             }, 9000);
         }
     }, [peerID, isCameraInitialised, isCameraInitialisedCustomer]);
 
-    //demo flow
     useEffect(() => {
         if (toggleAction) {
-            //end call
-            if (isCallLoad) setIsCallLoad(false);
-        } else {
             //call again
             setIsCallLoad(true);
+        } else {
+            //end call
+            if (isCallLoad) setIsCallLoad(false);
         }
     }, [toggleAction]);
 
@@ -244,6 +234,12 @@ const VideoCall = props => {
     }, [io, peerID, currentDoctor]);
 
     useEffect(() => {
+        if (!videoCallStatus && peerID) {
+            closeWindow();
+        }
+    }, [videoCallStatus]);
+
+    useEffect(() => {
         let streamInit;
 
         peer.on("open", id => {
@@ -255,9 +251,10 @@ const VideoCall = props => {
             streamInit = stream;
         });
 
+        //senderPeerID = null if Doctor requests a call (socket) to Customer.
         if (!senderPeerID) {
-            //senderPeerID = null if Doctor requests a call to Doctor (to socket)
             peer.on("call", call => {
+                setCancelCallRequest(false);
                 call.answer(streamInit);
                 call.on("stream", customerVideoStream => {
                     setCustomerStreamData(customerVideoStream);
@@ -270,16 +267,7 @@ const VideoCall = props => {
             console.log("peer error: " + err.message);
             message.info(err.message);
         });
-
-        return () => {
-            //on unmount this component
-            dispatch(setCallStatus(false));
-        };
     }, []);
-
-    window.addEventListener("beforeunload", event => {
-        dispatch(setCallStatus(false));
-    });
 
     return (
         <div className="video-call-wrapper">

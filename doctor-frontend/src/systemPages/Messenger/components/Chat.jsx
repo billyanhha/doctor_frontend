@@ -7,18 +7,18 @@ import { FolderAddFilled, CloseCircleFilled } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getThreadChat, getMoreThreadChat, sendMessage, updateIsRead, getChat } from '../../../redux/chat';
+import { setOpenVideoCall, setOpponentData, setCallStatus } from '../../../redux/call';
 import moment from "moment";
 import { LoadingOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import _ from "lodash"
 import { animateScroll } from 'react-scroll'
-import Portal from "../../../components/Portal/Portal";
+
 
 const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
 const Chat = (props) => {
 
     const ref = useRef(null)
-
     const [fileList, setFileList] = useState([]);
     const [file, setfile] = useState({});
     const [openUploadFile, setopenUploadFile] = useState(false);
@@ -26,8 +26,6 @@ const Chat = (props) => {
     const [page, setpage] = useState(1);
     const [chatText, setchatText] = useState('');
     const [isLoadMore, setisLoadMore] = useState(false);
-    
-    const [openVideoCall, setOpenVideoCall] = useState(false);
     const [confirmVisiable, setConfirmVisiable] = useState(false);
 
     const dispatch = useDispatch();
@@ -35,7 +33,7 @@ const Chat = (props) => {
     const { currenThreadChat, threadLoad, sendChatLoad } = useSelector(state => state.chat);
     const { isLoad } = useSelector(state => state.ui);
     const { io } = useSelector(state => state.notify);
-    const videoCallStatus = useSelector(state => state.call.callStatus);
+    const {openVideoCall, callStatus} = useSelector(state => state.call);
 
     const customer_id = props.match.params.id;
     const params = new URLSearchParams(props.location.search);
@@ -244,18 +242,25 @@ const Chat = (props) => {
         if(openVideoCall) {
             setConfirmVisiable(true);
         }else {
-            if(videoCallStatus){
+            if(callStatus){
                 message.destroy();
                 message.info("Bạn đang trong một cuộc gọi video, xin hãy kết thúc cuộc gọi hiện tại trước!", 4);
             }else{
-                setOpenVideoCall(true);
+                let oppData = {id: customer_id, name: getCustomerName(), avatar: getCustomerAva()}
+                dispatch(setOpponentData(oppData))
+                dispatch(setOpenVideoCall(true));
             }
         }
     }
 
     const closeWindowPortal = () => {
         if(openVideoCall) {
-            setOpenVideoCall(false);
+            if (io && customer_id) {
+                io.emit("cancel-video", customer_id + "customer");
+            }
+            dispatch(setOpponentData(null));
+            dispatch(setOpenVideoCall(false));
+            dispatch(setCallStatus(false));
             setConfirmVisiable(false);
         }
     }
@@ -273,7 +278,6 @@ const Chat = (props) => {
             <div className="messenger-content-wrapper" >
                 <div className="messenger-content" id="messenger-chat-content-list-13" >
                     <div className="messenger-chat" >
-                        {openVideoCall && <Portal url={`${process.env.PUBLIC_URL}/call/video/${customer_id}?name=${getCustomerName()}&avatar=${getCustomerAva()}`} closeWindowPortal={closeWindowPortal} />}
                         <div className="messenger-chat-header">
                             <div>
                                 <Avatar
