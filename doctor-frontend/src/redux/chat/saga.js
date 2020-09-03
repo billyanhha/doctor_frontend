@@ -53,6 +53,7 @@ function* watchGetThreadChatWorker(action) {
     try {
         
         yield put(openThreadLoad())
+        yield put(getThreadChatSuccessful([]));
         const {token} = yield select(state => state.auth)
         const result = yield chatService.getThreadChat(action.payload , token);
         if (!_.isEmpty(result?.result)) {
