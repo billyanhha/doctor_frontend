@@ -125,7 +125,7 @@ const Notify = (props) => {
             message.info("Bệnh nhân đã huỷ cuộc gọi", 4);
         } else {
             if (notify?.io && opponentData) {
-                notify.io.emit("cancel-video", opponentData?.id + "doctor");
+                notify.io.emit("cancel-video", opponentData?.id + "customer");
                 message.info("Đã từ chối cuộc gọi");
             }
         }
@@ -137,6 +137,9 @@ const Notify = (props) => {
     
     const closeWindowPortal = () => {
         if (openVideoCall) {
+            if (notify?.io && opponentData){
+                notify.io.emit("cancel-video", opponentData?.id + "customer");
+            }
             dispatch(setOpenVideoCall(false));
             dispatch(setOpponentData(null));
             dispatch(setCallStatus(false));
