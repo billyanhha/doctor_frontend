@@ -368,7 +368,7 @@ function* watchUpdateAppointmentPackageWorker(action) {
             token
         );
         if (!_.isEmpty(result)) {
-            yield put(getPackageAppointments(action?.packageId))
+            yield put(getPackageAppointments(action?.packageId));
             yield put(getAppointmentsFromTo(action?.doctorId, 
                 moment().format('YYYY-MM-DD'), moment().add(12, 'days').format('YYYY-MM-DD')));
             message.success("Sửa thành công")
