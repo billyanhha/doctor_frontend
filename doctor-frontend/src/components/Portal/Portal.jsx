@@ -1,16 +1,11 @@
 import React, {useState, useEffect} from "react";
 import {createPortal} from "react-dom";
 import usePortal from "./usePortal";
-import {message} from 'antd';
-
-import { setCallStatus } from "../../redux/call";
 
 // import './_videoCall.css';
 
 const Portal = props => {
-
     const urlVideoCall = props.url ?? "";
-
     /**
      * →    tl;dr: create a customize Portal base on React.usePortal
      *
@@ -25,9 +20,9 @@ const Portal = props => {
 
     /**
      * This 2 func below is blocked by CORS policy. Dang it!!
-     * 
+     *
      * @summary https://stackoverflow.com/a/49160760
-     *  
+     *
      */
     // const copyStyles = (sourceDoc, targetDoc) => {
     //     Array.from(sourceDoc.styleSheets).forEach(styleSheet => {
@@ -52,9 +47,9 @@ const Portal = props => {
     // }
 
     /**
-     * 
+     *
      *  Copy styles from a source document to a target (parent DOM to new window)
-     * 
+     *
      */
     // const copyStyles = (source, target) => {
     //     Array.from(source.styleSheets).forEach(styleSheet => {
@@ -75,9 +70,9 @@ const Portal = props => {
 
     //                 /**
     //                  *  Check if the cssRule type is CSSImportRule (3) or CSSFontFaceRule (5) to handle local imports on a about:blank page
-    //                  * 
+    //                  *
     //                  * @example '/custom.css' turns to 'http://ikemen-hhs.com/custom.css'
-    //                  * 
+    //                  *
     //                  */
     //                 if ([3, 5].includes(type)) {
     //                     returnText = cssText
@@ -121,13 +116,13 @@ const Portal = props => {
         const width = window.innerWidth
             ? window.innerWidth
             : document.documentElement.clientWidth
-                ? document.documentElement.clientWidth
-                : window.screen.width;
+            ? document.documentElement.clientWidth
+            : window.screen.width;
         const height = window.innerHeight
             ? window.innerHeight
             : document.documentElement.clientHeight
-                ? document.documentElement.clientHeight
-                : window.screen.height;
+            ? document.documentElement.clientHeight
+            : window.screen.height;
 
         /**
          * @requires systemZoom for users who use on a split screen option of any monitor. Not really neccesary, just center correction.
@@ -164,9 +159,7 @@ const Portal = props => {
         return newWindow;
     };
 
-    
     useEffect(() => {
-        
         let customWindow = customWindowCenter(urlVideoCall, "", (window.screen.width * 60) / 100, (window.screen.height * 70) / 100);
 
         customWindow.document.title = "IKEMEN Video Call service";

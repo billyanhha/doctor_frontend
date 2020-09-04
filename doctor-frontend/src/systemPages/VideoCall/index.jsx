@@ -1,5 +1,5 @@
 import React, {useState, useEffect, createRef} from "react";
-import {useSelector} from "react-redux";
+import {useSelector, useDispatch} from "react-redux";
 import {withRouter} from "react-router-dom";
 import Peer from "peerjs";
 
@@ -18,6 +18,8 @@ import cameraOff from "../../assest/images/no-video.png";
 // import audioOff from "../../assest/images/mute.png";
 import close from "../../assest/images/close.png";
 
+import {setOpenVideoCall, setCallStatus, setOpponentData} from "../../redux/call";
+
 import "./style.css";
 
 const VideoCall = props => {
@@ -29,9 +31,10 @@ const VideoCall = props => {
     const params = new URLSearchParams(props.location.search);
     const senderPeerID = params.get("distract"); //null: this call is a call away (NOT an incomming call).
 
+    const dispatch = useDispatch();
     const {io} = useSelector(state => state.notify);
     const {currentDoctor} = useSelector(state => state.doctor);
-    const videoCallStatus = useSelector(state => state.notify.callStatus);
+    const videoCallStatus = useSelector(state => state.call.callStatus);
 
     const myFaceRef = createRef();
     const oppFaceRef = createRef();
@@ -139,6 +142,13 @@ const VideoCall = props => {
     };
 
     const closeWindow = () => {
+        // console.log("vafo closeWindowPortal");
+        // if (io) {
+        //     io.emit("cancel-video", receiverID + "customer");
+        //     dispatch(setOpponentData(null));
+        // }
+        // dispatch(setOpenVideoCall(false));
+        // dispatch(setCallStatus(false));
         window.close();
     };
 

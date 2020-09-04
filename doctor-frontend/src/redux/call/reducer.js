@@ -1,13 +1,13 @@
 import { SET_RINGTONE, SET_CALL_STATUS, SET_OPEN_VIDEOCALL, SET_OPPONENT_DATA } from "./action";
 
 const initialState = {
-    callStatus: false,
     openVideoCall: false,
-    opponentData: null
+    opponentData: null,
+    callStatus: false
 };
 
 const ringtoneState = {
-    ringtone: null
+    ringtone: null,
 };
 
 export const callReducer = (state = initialState, action) => {

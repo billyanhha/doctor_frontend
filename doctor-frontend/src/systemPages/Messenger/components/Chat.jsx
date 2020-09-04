@@ -249,6 +249,7 @@ const Chat = (props) => {
                 let oppData = {id: customer_id, name: getCustomerName(), avatar: getCustomerAva()}
                 dispatch(setOpponentData(oppData))
                 dispatch(setOpenVideoCall(true));
+                dispatch(setCallStatus(true));
             }
         }
     }

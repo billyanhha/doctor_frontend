@@ -18,8 +18,8 @@ const Notify = (props) => {
     const notify = useSelector(state => state.notify);
     const {currentDoctor} = useSelector(state => state.doctor);
     const { token } = useSelector(state => state.auth);
-    const ringtone = useSelector(state => state.ringtone.ringtone);
-    const {callStatus, openVideoCall, opponentData} = useSelector(state => state.call);
+    const {ringtone} = useSelector(state => state.ringtone);
+    const {openVideoCall, opponentData} = useSelector(state => state.call);
     const {isLoad} = useSelector(state => state.ui);
 
     const dispatch = useDispatch();
@@ -139,9 +139,9 @@ const Notify = (props) => {
         if (openVideoCall) {
             if (notify?.io && opponentData){
                 notify.io.emit("cancel-video", opponentData?.id + "customer");
+                dispatch(setOpponentData(null));
             }
             dispatch(setOpenVideoCall(false));
-            dispatch(setOpponentData(null));
             dispatch(setCallStatus(false));
             setIncomingCall(false);
             setSenderPeerID(null);
@@ -180,9 +180,9 @@ const Notify = (props) => {
     window.addEventListener("beforeunload", event => {
         //cancel call if user reload page when a call is coming.
         if (incomingCall && io && opponentData) {
-            if (callStatus) {
-                dispatch(setCallStatus(false));
-            }
+            // if (callStatus) {
+            //     dispatch(setCallStatus(false));
+            // }
             handleCancelCall(null);
         }
     });
