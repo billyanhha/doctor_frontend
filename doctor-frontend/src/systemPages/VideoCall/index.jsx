@@ -317,7 +317,7 @@ const VideoCall = props => {
                                     <LoadingOutlined /> Đang khởi tạo...
                                 </div>
                             )}
-                            <video ref={myFaceRef} id="myVideo" autoPlay />
+                            <video ref={myFaceRef} id="myVideo" autoPlay muted/>
                         </div>
                     </>
                 ) : (
