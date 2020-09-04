@@ -368,9 +368,9 @@ function* watchUpdateAppointmentPackageWorker(action) {
             token
         );
         if (!_.isEmpty(result)) {
+            yield put(getPackageAppointments(action?.packageId))
             yield put(getAppointmentsFromTo(action?.doctorId, 
                 moment().format('YYYY-MM-DD'), moment().add(12, 'days').format('YYYY-MM-DD')));
-            yield put(getPackageAppointments(action?.packageId))
             message.success("Sửa thành công")
             window.location.hash = action?.appointmentId;
         }
@@ -407,8 +407,8 @@ function* watchChangePackageStatusWorker(action) {
         yield put(openLoading());
         const { token } = yield select(state => state.auth)
         const result = yield packageService.changePackageStatus(action?.data, token);
-        message.success("Thay đổi trạng thái thành công");
         if (!_.isEmpty(result)) {
+            message.success("Thay đổi trạng thái thành công");
             yield put(getPackageStatus(action?.data?.packageId))
             yield put(getPackageAppointments(action?.data?.packageId))
         }

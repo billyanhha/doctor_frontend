@@ -16,7 +16,7 @@ const FloatingButton = (props) => {
 
     useEffect(() => {
         
-        if(currentDoctor?.id){
+        if(currentDoctor?.id && io){
             dispatch(getUnreadGroup({ id: currentDoctor?.id }))
             if(io) {
                 io.on('server-send-notification-chat', data => {
@@ -33,7 +33,7 @@ const FloatingButton = (props) => {
     }
 
 
-    return (props.location.pathname.includes('/messenger') || !token) ? '' : (
+    return (props.location.pathname.includes('/messenger') || props.location.pathname.includes('/call/') || !token) ? '' : (
         <Fab
             // mainButtonStyles={mainButtonStyles}
             // actionButtonStyles={actionButtonStyles}

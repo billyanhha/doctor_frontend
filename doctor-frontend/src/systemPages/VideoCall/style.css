@@ -1,0 +1,141 @@
+.video-call-wrapper {
+    color: #fff !important;
+    height: 100vh;
+    background-color: #141414;
+    overflow: hidden;
+}
+
+.call-opposite-camera {
+    text-align: center;
+    font-size: 1rem;
+    width: 100%;
+    height: 100%;
+}
+
+.call-opposite-camera video {
+    width: 100%;
+    height: auto;
+}
+
+.call-opposite-camera:hover .call-opposite-info {
+    visibility: visible;
+    opacity: 1;
+    transition: visibility 0s linear, opacity 0.2s ease-in;
+}
+
+.call-opposite-info {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: #25252599;
+    text-align: left;
+    padding: 10px;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s linear 0.2s, opacity 0.2s ease;
+}
+
+.call-opposite-info b {
+    margin-left: 5px;
+}
+
+.call-my-camera {
+    z-index: 2;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 20%;
+    height: fit-content;
+    text-align: center;
+    background-color: #252525;
+    border-bottom-left-radius: 10px;
+    border-left: 2px solid #252525;
+    border-bottom: 2px solid #252525;
+    cursor: pointer;
+    transition: 0.4s ease-in;
+    overflow: hidden;
+}
+
+.call-my-camera video {
+    width: 100%;
+    height: auto;
+    margin-bottom: -5px;
+}
+
+.call-my-camera-full {
+    background-color: #141414;
+    width: 100%;
+    height: 100%;
+}
+
+.call-my-camera-full:hover .call-hover-action {
+    visibility: visible;
+    opacity: 0.5;
+    transition: visibility 0s linear, opacity 0.5s ease-in;
+}
+
+.call-hover-action {
+    z-index: 3;
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 90%;
+    background-color: #252525;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s linear 0.5s, opacity 0.5s ease;
+}
+
+.call-action-bar {
+    z-index: 4;
+    position: fixed;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    height: 10%;
+    width: 100%;
+    background-color: #252525be;
+}
+
+.call-action-image {
+    /* background-color: #141414; */
+    background-color: #666666;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: box-shadow 0.2s ease-in;
+}
+
+.call-action-image:hover {
+    -webkit-box-shadow: 0px 0px 20px 0px #666666;
+    -moz-box-shadow: 0px 0px 20px 0px #666666;
+    box-shadow: 0px 0px 15px 0px #666666;
+}
+
+.call-action-image:not(:last-child) {
+    margin-right: 20px;
+}
+
+.call-action-image > img {
+    mix-blend-mode: luminosity;
+    filter: contrast(120%);
+    width: 70%;
+    height: 70%;
+    margin: 15%;
+}
+
+.call-action-off-image {
+    border: 2px solid #fff;
+    background-color: #ff6347;
+}
+
+.call-action-close {
+    background-color: transparent;
+    border: 2px solid #fff;
+}

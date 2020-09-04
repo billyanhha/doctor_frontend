@@ -23,7 +23,7 @@ function* watchDoctorLoginWorker(action) {
 
     } catch (error) {
         message.destroy();
-        message.error(error?.response?.data?.err)
+        message.error(error?.response?.data?.err?? 'Vui lòng kiểm tra kết nối internet')
         console.log(error);
     } finally {
         // message.destroy()
@@ -33,13 +33,13 @@ function* watchDoctorLoginWorker(action) {
 
 function* watchDoctorLogoutWorker() {
     try {
+        yield put(openLoading())
+        yield put(clearDoctorLogin())
+        yield put(clearIoInstance())
         const { io } = yield select(state => state.notify)
         if(io){
             io.emit("logout", "");
         }
-        yield put(openLoading())
-        yield put(clearDoctorLogin())
-        yield put(clearIoInstance())
 
     } catch (error) {
         console.log(error);

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Link as LinkScroll, Element, Events } from 'react-scroll';
+import { Link as LinkScroll, Element } from 'react-scroll';
 
-import _ from 'lodash'
+import _ from 'lodash';
 import moment from 'moment';
 import axios from '../../axios'
 import { Modal, Spin } from 'antd';
@@ -37,6 +37,8 @@ const DoctorDashboard = (props) => {
     const [timeStart, setTimeStart] = useState([moment(startDate).format('DD/MM'), moment(startDate).add('days', 6).format('DD/MM')]);
     const dayOfWeek = ['Thứ hai', 'Thứ ba', 'Thứ tư', 'Thứ năm', 'Thứ sáu', 'Thứ bảy', 'Chủ nhật'];
     const colorBlock = ['bg-dark-blue', 'bg-yellow', 'bg-pink', 'bg-cyan', 'bg-deep-orange', 'bg-cyan-blue', 'bg-purple-darken', 'bg-brown-darken', 'bg-blue-grey-darken', 'bg-green-hhs', 'bg-stripes-blue'];
+
+    const hint = Math.floor(Math.random() * 50) + 1;
 
     //========================  Call Api getAppointments then save to redux store  ========================
     const getAppointments = () => {
@@ -313,7 +315,6 @@ const DoctorDashboard = (props) => {
                                 <button className="button-today" onClick={presentWeek}>Hiện tại</button>
                             </div>
                             <div className="timetable-time-range">{moment(startDate).format('DD/MM')} - {moment(startDate).add(6, 'days').format('DD/MM')} năm {moment(startDate).format('YYYY')}</div>
-
                             <div className="timetable">
                                 <div className="timetable-content-days">
                                     {renderDays}
@@ -326,6 +327,7 @@ const DoctorDashboard = (props) => {
                                 </div>
                             </div>
                         </div>
+                        {hint <= 5 ? <div className="timetable-hint">Mẹo: Khi nhấn vào cuộc hẹn trong Bảng thời gian, phần "Các cuộc hẹn" sẽ hiển thị cuộc hẹn tương ứng.</div> : " "}
                     </div>
                 </div>
             </div>

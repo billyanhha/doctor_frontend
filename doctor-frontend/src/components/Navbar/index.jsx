@@ -3,7 +3,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Redirect, Link, withRouter } from 'react-router-dom';
 import { getDoctorLogin } from '../../redux/doctor';
 import { doctorLogout } from '../../redux/auth';
-import { PageHeader, Tabs, Button, Menu, Badge, Avatar, Popover } from 'antd'
+import { PageHeader, Button, Menu, Badge, Avatar, Popover } from 'antd';
+
 import Skeleton from "react-loading-skeleton";
 // import logo from '../../logo.svg';
 import './style.css';
@@ -21,8 +22,6 @@ const Navbar = (props) => {
     const dispatch = useDispatch();
     const [drawerVisible, setdrawerVisible] = useState(false);
     const { unreadNotifyNumber } = useSelector(state => state.notify);
-
-
     const { location } = props;
 
     useEffect(() => {
@@ -37,10 +36,6 @@ const Navbar = (props) => {
             dispatch(countUnreadNotify(data))
         }
     }, [currentDoctor]);
-
-    useEffect(() => {
-
-    }, [io]);
 
     const logout = () => {
         if(io) {
@@ -76,7 +71,6 @@ const Navbar = (props) => {
     const closeDrawer = () => {
         setdrawerVisible(false)
     }
-
 
     return (
         <div>

@@ -15,11 +15,12 @@ import { accountReducer } from '../account/reducer';
 import { chatReducer } from '../chat/reducer';
 import { serviceReducer } from '../service/reducer';
 import { emailReducer } from '../email/reducer';
+import { callReducer, ringtoneReducer } from '../call/reducer';
 
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['auth', 'doctor'] // only navigation will be persisted
+  whitelist: ['auth', 'doctor', 'ringtone'] // only navigation will be persisted
 };
 
 const rootReducers = combineReducers({
@@ -34,7 +35,9 @@ const rootReducers = combineReducers({
   account: accountReducer,
   chat: chatReducer,
   service: serviceReducer,
-  email : emailReducer
+  email : emailReducer,
+  call: callReducer,
+  ringtone: ringtoneReducer
 });
 
 const saga = createSagaMiddleware();

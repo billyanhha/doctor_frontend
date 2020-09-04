@@ -2,22 +2,23 @@ import React, { useState, useEffect, useRef } from 'react';
 import "../style.css"
 import { Avatar, MessageBox } from 'react-chat-elements'
 import { Input, Spin } from 'antd';
-import { Upload, Button } from 'antd';
+import { Upload, Button, Tooltip, Popconfirm, message } from 'antd';
 import { FolderAddFilled, CloseCircleFilled } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getThreadChat, getMoreThreadChat, sendMessage, updateIsRead, getChat } from '../../../redux/chat';
+import { setOpenVideoCall, setOpponentData, setCallStatus } from '../../../redux/call';
 import moment from "moment";
-import { LoadingOutlined } from '@ant-design/icons';
+import { LoadingOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import _ from "lodash"
 import { animateScroll } from 'react-scroll'
+
 
 const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
 const Chat = (props) => {
 
     const ref = useRef(null)
-
     const [fileList, setFileList] = useState([]);
     const [file, setfile] = useState({});
     const [openUploadFile, setopenUploadFile] = useState(false);
@@ -25,12 +26,14 @@ const Chat = (props) => {
     const [page, setpage] = useState(1);
     const [chatText, setchatText] = useState('');
     const [isLoadMore, setisLoadMore] = useState(false);
+    const [confirmVisiable, setConfirmVisiable] = useState(false);
 
     const dispatch = useDispatch();
     const { currentDoctor } = useSelector(state => state.doctor);
     const { currenThreadChat, threadLoad, sendChatLoad } = useSelector(state => state.chat);
     const { isLoad } = useSelector(state => state.ui);
     const { io } = useSelector(state => state.notify);
+    const {openVideoCall, callStatus} = useSelector(state => state.call);
 
     const customer_id = props.match.params.id;
     const params = new URLSearchParams(props.location.search);
@@ -235,6 +238,34 @@ const Chat = (props) => {
 
     }
 
+    const actionVideoCall = () => {
+        if(openVideoCall) {
+            setConfirmVisiable(true);
+        }else {
+            if(callStatus){
+                message.destroy();
+                message.info("Bạn đang trong một cuộc gọi video, xin hãy kết thúc cuộc gọi hiện tại trước!", 4);
+            }else{
+                let oppData = {id: customer_id, name: getCustomerName(), avatar: getCustomerAva()}
+                dispatch(setOpponentData(oppData))
+                dispatch(setOpenVideoCall(true));
+                dispatch(setCallStatus(true));
+            }
+        }
+    }
+
+    const closeWindowPortal = () => {
+        if(openVideoCall) {
+            if (io && customer_id) {
+                io.emit("cancel-video", customer_id + "customer");
+            }
+            dispatch(setOpponentData(null));
+            dispatch(setOpenVideoCall(false));
+            dispatch(setCallStatus(false));
+            setConfirmVisiable(false);
+        }
+    }
+
     return (customer_id === 't') ?
 
         (
@@ -249,12 +280,21 @@ const Chat = (props) => {
                 <div className="messenger-content" id="messenger-chat-content-list-13" >
                     <div className="messenger-chat" >
                         <div className="messenger-chat-header">
-                            <Avatar
-                                src={getCustomerAva()}
-                                alt={getCustomerName()}
-                                size="large"
-                                type="circle flexible" />
-                            <b>{getCustomerName()}</b>
+                            <div>
+                                <Avatar
+                                    src={getCustomerAva()}
+                                    alt={getCustomerName()}
+                                    size="large"
+                                    type="circle flexible" />
+                                <b>{getCustomerName()}</b>
+                            </div>
+                            <Tooltip title="Bắt đầu gọi video" placement="bottom">
+                                <Popconfirm visible={confirmVisiable} placement="left" title={"Xác nhận kết thúc cuộc gọi video hiện tại?"} onConfirm={closeWindowPortal} onCancel={()=>setConfirmVisiable(false)} okText="Xác nhận" cancelText="Huỷ">
+                                    <div className="messenger-chat-video" onClick={actionVideoCall}>
+                                        <VideoCameraOutlined style={{fontSize:"1.2rem", color:"#40a9ff"}} />
+                                    </div>
+                                </Popconfirm>
+                            </Tooltip>
                         </div>
                         <div className="messenger-chat-content" >
                             <div className="messenger-chat-content-list">

@@ -19,6 +19,7 @@ import FloatingButton from './components/FloatingButton';
 import ViewForm from './systemPages/ViewForm';
 import Service from './systemPages/Service';
 import VerifyEmail from './systemPages/VerifyEmail';
+import VideoCall from './systemPages/VideoCall';
 
 require('dotenv').config()
 
@@ -58,6 +59,9 @@ const App = () => {
         </PrivateRoute>
         <PrivateRoute exact path="/messenger/:id">
           <Messenger />
+        </PrivateRoute>
+        <PrivateRoute exact path="/call/video/:direct">
+          <VideoCall />
         </PrivateRoute>
         <PrivateRoute exact path='/viewForm'>
           <ViewForm />
