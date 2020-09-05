@@ -1,11 +1,14 @@
 import React, { useRef, useEffect } from 'react';
 import { useState } from 'react';
 import JoditEditor from "jodit-react";
-import { Button } from 'antd';
+import { Button, Spin } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { updateAppointmentPackage } from '../../redux/package';
-import _ from "lodash"
+import _ from "lodash";
+import { getForm } from '../../redux/form';
+import { LoadingOutlined } from '@ant-design/icons';
+const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
 const config = {
     readonly: false // all options from https://xdsoft.net/jodit/doc/
@@ -28,15 +31,20 @@ const FormResult = (props) => {
 
     useEffect(() => {
         if (!currentAppointment?.result_content) {
-            if (!_.isEmpty(appointmentResultForm?.content)) {
-                setContent(
-                    appointmentResultForm?.content
-                )
-            }
+            dispatch(getForm('appointment_result_form'))
+
         } else {
             setContent(currentAppointment?.result_content)
         }
     }, [currentAppointment]);
+
+    useEffect(() => {
+        if (!_.isEmpty(appointmentResultForm?.content)) {
+            setContent(
+                appointmentResultForm?.content
+            )
+        }
+    }, [appointmentResultForm]);
 
     const submitForm = () => {
         setdisable(true);
@@ -54,7 +62,7 @@ const FormResult = (props) => {
     }
 
     return (
-        <div>
+        <Spin size="large" indicator={antIcon} spinning={!appointmentResultForm?.content} >
             <JoditEditor
                 required
                 ref={editor}
@@ -70,7 +78,7 @@ const FormResult = (props) => {
                 loading={disable || isLoad}
                 onClick={submitForm} type="primary"
             >Gửi</Button>
-        </div>
+        </Spin>
     );
 };
 

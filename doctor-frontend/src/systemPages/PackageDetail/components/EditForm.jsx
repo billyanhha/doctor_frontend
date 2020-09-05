@@ -1,11 +1,14 @@
 import React, { useRef, useEffect } from 'react';
 import { useState } from 'react';
 import JoditEditor from "jodit-react";
-import { Button } from 'antd';
+import { Button, Spin } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { updatePackage } from '../../../redux/package';
 import _ from "lodash"
+import { getForm } from '../../../redux/form';
+import { LoadingOutlined } from '@ant-design/icons';
+const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
 const config = {
     readonly: false // all options from https://xdsoft.net/jodit/doc/
@@ -25,6 +28,12 @@ const EditForm = (props) => {
 
 
     useEffect(() => {
+        dispatch(getForm('package_result_form'))
+
+    }, []);
+
+    useEffect(() => {
+
         if (props?.editfor === 'result_content' && !props?.content) {
             if (!_.isEmpty(packageResultForm?.content)) {
                 setContent(
@@ -32,7 +41,7 @@ const EditForm = (props) => {
                 )
             }
         }
-    }, []);
+    }, [packageResultForm]);
 
     const submitForm = () => {
         setdisable(true);
@@ -54,7 +63,7 @@ const EditForm = (props) => {
     }
 
     return (
-        <div>
+        <Spin size="large" indicator={antIcon} spinning={!packageResultForm?.content} >
             <JoditEditor
                 required
                 ref={editor}
@@ -70,7 +79,7 @@ const EditForm = (props) => {
                 loading={disable || isLoad}
                 onClick={submitForm} type="primary"
             >Gửi</Button>
-        </div>
+        </Spin>
     );
 };
 

@@ -11,7 +11,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 import { updateAppointmentPackage } from '../../redux/package';
 import FormResult from './FormResult';
-import { getForm } from '../../redux/form';
 
 const { TabPane } = Tabs;
 
@@ -25,7 +24,6 @@ const AppointmentDetail = (props) => {
 
     useEffect(() => {
 
-        dispatch(getForm('appointment_result_form'))
 
     }, [currentAppointment]);
 

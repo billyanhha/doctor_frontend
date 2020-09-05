@@ -8,7 +8,6 @@ import Appointment from './Appointment.jsx';
 import Mycalendar from './Calendar';
 import { useEffect } from 'react';
 import { getPackageServices, getPackageAppointments, getAllAppointmentByPackage } from '../../../../redux/package';
-import { getForm } from '../../../../redux/form';
 
 
 const PackageAppointment = (props) => {
@@ -21,7 +20,6 @@ const PackageAppointment = (props) => {
         Promise.all([
             dispatch(getPackageAppointments(props.id)),
             dispatch(getPackageServices(props.id)),
-            dispatch(getForm('package_result_form')),
             dispatch(getAllAppointmentByPackage(props.id))
         ])
 

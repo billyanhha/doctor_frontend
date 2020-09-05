@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import "../style.css"
-import { Avatar, MessageBox } from 'react-chat-elements'
+import { Avatar } from 'react-chat-elements'
 import { Input, Spin } from 'antd';
 import { Upload, Button, Tooltip, Popconfirm, message } from 'antd';
 import { FolderAddFilled, CloseCircleFilled } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getThreadChat, getMoreThreadChat, sendMessage, updateIsRead, getChat } from '../../../redux/chat';
+import { getThreadChat, getMoreThreadChat, sendMessage, updateIsRead, getChat, getThreadChatSuccessful } from '../../../redux/chat';
 import { setOpenVideoCall, setOpponentData, setCallStatus } from '../../../redux/call';
 import moment from "moment";
 import { LoadingOutlined, VideoCameraOutlined } from '@ant-design/icons';
@@ -39,6 +39,7 @@ const Chat = (props) => {
     const params = new URLSearchParams(props.location.search);
 
     useEffect(() => {
+        dispatch(getThreadChatSuccessful([]));
 
         getChatThreadData();
         updateThreadIsReadFunc()
