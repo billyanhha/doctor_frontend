@@ -178,6 +178,7 @@ const Mycalendar = (props) => {
                     let appointmentId = info.event._def?.publicId
                     let packageId = props.match.params.id
                     data.token = token;
+                    data.editResult = true
                     data.date = moment(info.event.start).format('YYYY-MM-DD');
                     data.slot_id = getSlot(info.event.start)
                     dispatch(updateAppointmentPackage(data, appointmentId, doctorId, packageId))

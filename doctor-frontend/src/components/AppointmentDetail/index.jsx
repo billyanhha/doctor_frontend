@@ -46,6 +46,7 @@ const AppointmentDetail = (props) => {
         data.token = token;
         let doctorId = doctor?.currentDoctor?.id
         let appointmentId = currentAppointment.id
+        data.editResult = true
         let packageId = props.match.params.id
         dispatch(updateAppointmentPackage(data, appointmentId, doctorId, packageId))
         props.close()

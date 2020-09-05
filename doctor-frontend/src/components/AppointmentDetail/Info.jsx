@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import _ from "lodash"
 import { updateAppointmentPackage } from '../../redux/package';
 import { withRouter } from 'react-router-dom';
+import appointment_status from "../../configs/appointment_status"
 
 const Info = (props) => {
 
@@ -71,9 +72,13 @@ const Info = (props) => {
             let packageId = props.match.params.id
             data.note = note;
             data.token = token;
-            data.services = services.map((value, index) => {
-                return { package_service_id: value }
-            })
+            if((currentAppointment.status_id === appointment_status.dueDate) ) {
+                data.services = services.map((value, index) => {
+                    return { package_service_id: value }
+                })
+            } else {
+                data.editResult = true
+            }
             dispatch(updateAppointmentPackage(data, appointmentId, doctorId, packageId))
 
             props.close()
