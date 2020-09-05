@@ -142,13 +142,6 @@ const VideoCall = props => {
     };
 
     const closeWindow = () => {
-        // console.log("vafo closeWindowPortal");
-        // if (io) {
-        //     io.emit("cancel-video", receiverID + "customer");
-        //     dispatch(setOpponentData(null));
-        // }
-        // dispatch(setOpenVideoCall(false));
-        // dispatch(setCallStatus(false));
         window.close();
     };
 
@@ -274,7 +267,6 @@ const VideoCall = props => {
         }
 
         peer.on("error", err => {
-            console.log("peer error: " + err.message);
             message.info(err.message);
         });
     }, []);
@@ -317,7 +309,7 @@ const VideoCall = props => {
                                     <LoadingOutlined /> Đang khởi tạo...
                                 </div>
                             )}
-                            <video ref={myFaceRef} id="myVideo" autoPlay muted/>
+                            <video ref={myFaceRef} id="myVideo" muted autoPlay />
                         </div>
                     </>
                 ) : (
