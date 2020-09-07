@@ -78,14 +78,30 @@ const VideoCall = props => {
         errorStreamCustomer
     ] = useCamera(oppFaceRef);
 
-    // const peer = new Peer(undefined, {
-    //     host: "ikemen-api.herokuapp.com",
-    //     secure: true,
-    //     port: 443,
-    //     path: "/peerjs"
-    // });
+    const peer = new Peer(undefined, {
+        host: "ikemen-api.herokuapp.com",
+        secure: true,
+        port: 443,
+        path: "/peerjs",
+        config: {
+            'iceServers': [{
+                urls: [ "stun:ss-turn1.xirsys.com" ]
+             }, {
+                username: "_2zQaLPJyiXxYBLA3n-HEuubEOlUU4lAYcN3c-PgPZwbAqH_Q4r82zItcHHeC11QAAAAAF9U2m10YW5kZXB0cmFp",
+                credential: "26b0f6e8-f03f-11ea-add9-0242ac140004",
+                urls: [
+                    "turn:ss-turn1.xirsys.com:80?transport=udp",
+                    "turn:ss-turn1.xirsys.com:3478?transport=udp",
+                    "turn:ss-turn1.xirsys.com:80?transport=tcp",
+                    "turn:ss-turn1.xirsys.com:3478?transport=tcp",
+                    "turns:ss-turn1.xirsys.com:443?transport=tcp",
+                    "turns:ss-turn1.xirsys.com:5349?transport=tcp"
+                ]
+             }]
+        }
+    });
 
-    const peer = new Peer({host: "peerjs-server.herokuapp.com", secure: true, port: 443});
+    // const peer = new Peer({host: "peerjs-server.herokuapp.com", secure: true, port: 443});
 
     const [peerID, setPeerID] = useState(null);
     const [toggleAction, setToggleAction] = useState(true); //true: calling || call again, false: end call
