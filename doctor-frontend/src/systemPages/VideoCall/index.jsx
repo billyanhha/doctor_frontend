@@ -79,7 +79,7 @@ const VideoCall = props => {
     ] = useCamera(oppFaceRef);
 
     const peer = new Peer(undefined, {
-        host: "ikemen-api.herokuapp.com",
+        host: process.env.REACT_APP_SERVER,
         secure: true,
         port: 443,
         path: "/peerjs",
